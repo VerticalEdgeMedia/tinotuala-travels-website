@@ -1,21 +1,407 @@
 <!doctype html>
 <html lang="en-AU">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tino Tuala Travels</title>
-  <meta name="robots" content="noindex">
-  <style>
-    html { background: #0B0B0B; color: #EFEFEC; font: 400 18px/1.5 system-ui, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 2rem; }
-    h1 { font-size: clamp(2rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.03em; margin: 0 0 .5rem; }
-    p { margin: 0; opacity: .7; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Tino Tuala Travels</title>
+<meta name="description" content="Preview mock-up. Custom holidays designed one at a time, built for immersion, with room in the schedule to go by feel.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230C4B4E'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23E9A227'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <main>
-    <h1>Tino Tuala Travels</h1>
-    <p>Tino Tuala Travels. Site coming.</p>
-  </main>
+
+<div class="preview-bar">
+  <span class="chip chip-alert">Preview</span>
+  <span>Mock-up site. Draft copy, placeholder contact details, stand-in photography.</span>
+</div>
+
+<header class="site-header" id="siteHeader">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">Tino Tuala <em>Travels</em></span>
+  </a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="#offer">The offer</a>
+    <a href="#moments">Moments</a>
+    <a href="#how">How it works</a>
+    <a class="btn btn-small" href="#enquire">Plan my trip</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- 1. HERO ------------------------------------------------------------ -->
+  <section class="hero">
+    <div class="hero-media">
+      <img src="img/hero-krabi-longtail.jpg" width="2200" height="1466" fetchpriority="high"
+           alt="A wooden longtail boat moored on pale sand at Railay in Krabi, a limestone cliff rising out of turquoise water behind it.">
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-body">
+      <p class="kicker kicker-light">Custom holidays, designed one at a time</p>
+      <h1>Built around you.<br>Loose enough to wander.</h1>
+      <p class="lede">Tino Tuala designs holidays for people who want the real version of a place: time with locals, days with room in them, and not one minute of cattle sightseeing.</p>
+      <p class="hero-actions">
+        <a class="btn" href="#enquire">Plan my trip</a>
+        <a class="btn btn-ghost" href="#moments">See what that looks like</a>
+      </p>
+    </div>
+    <p class="hero-caption">Railay, Krabi Province, Thailand</p>
+  </section>
+
+  <!-- 2. THE OFFER -------------------------------------------------------- -->
+  <section class="offer" id="offer">
+    <div class="wrap">
+      <p class="kicker" data-reveal>The offer</p>
+      <h2 class="display" data-reveal>One trip. Designed for the people going on it.</h2>
+      <div class="beats">
+        <div class="beat" data-reveal>
+          <p class="beat-no">01</p>
+          <h3>Designed around you</h3>
+          <p>You tell Tino how you like to spend a day. He builds the trip out of that, not out of a catalogue. Nobody else gets this one.</p>
+        </div>
+        <div class="beat" data-reveal>
+          <p class="beat-no">02</p>
+          <h3>Room to wander</h3>
+          <p>Slack in the schedule, on purpose. If the market turns out to be the best thing all week, stay at the market.</p>
+        </div>
+        <div class="beat" data-reveal>
+          <p class="beat-no">03</p>
+          <h3>The locals' version</h3>
+          <p>The bakery the island actually uses. The table nobody photographs. The part you would never have found on your own.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. MOMENTS ---------------------------------------------------------- -->
+  <section class="moments" id="moments">
+
+    <!-- drifting strip -->
+    <div class="filmstrip" aria-label="Places Tino plans trips to">
+      <div class="filmstrip-track">
+        <figure class="fs"><img src="img/mykonos-windmills.jpg" width="1500" height="939" loading="lazy" alt="Two whitewashed Mykonos windmills with bare timber sails against a deep blue sky."><figcaption>Mykonos</figcaption></figure>
+        <figure class="fs"><img src="img/bangkok-yaowarat-neon.jpg" width="1400" height="933" loading="lazy" alt="Yaowarat Road in Bangkok seen from above at night, lanes of traffic between tall neon signs."><figcaption>Bangkok</figcaption></figure>
+        <figure class="fs"><img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" loading="lazy" alt="Carved longtail boat prows strung with coloured ribbons resting in shallow green water below jungle cliffs."><figcaption>Krabi</figcaption></figure>
+        <figure class="fs"><img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy" alt="A three-storey Tokyo restaurant lit top to bottom with rows of red and gold paper lanterns at dusk."><figcaption>Tokyo</figcaption></figure>
+        <figure class="fs"><img src="img/barcelona-placa-reial.jpg" width="1400" height="933" loading="lazy" alt="Placa Reial in Barcelona at blue hour, strings of lights crossing above the palms and arcades."><figcaption>Barcelona</figcaption></figure>
+        <figure class="fs"><img src="img/phuket-banana-beach-dusk.jpg" width="1500" height="843" loading="lazy" alt="A quiet curve of sand at Banana Beach in Phuket, a headland dark against a pale dusk sky."><figcaption>Phuket</figcaption></figure>
+        <figure class="fs"><img src="img/mykonos-little-venice-sunset.jpg" width="1500" height="996" loading="lazy" alt="Wooden balconies hanging over the water at Little Venice in Mykonos as the sun drops behind the hills."><figcaption>Mykonos</figcaption></figure>
+        <figure class="fs"><img src="img/bangkok-wat-arun-sunset.jpg" width="1600" height="1066" loading="lazy" alt="The spires of Wat Arun silhouetted against an orange sunset over the Chao Phraya, a long rowing barge crossing the water."><figcaption>Bangkok</figcaption></figure>
+      </div>
+      <div class="filmstrip-track" aria-hidden="true">
+        <figure class="fs"><img src="img/mykonos-windmills.jpg" width="1500" height="939" loading="lazy" alt=""><figcaption>Mykonos</figcaption></figure>
+        <figure class="fs"><img src="img/bangkok-yaowarat-neon.jpg" width="1400" height="933" loading="lazy" alt=""><figcaption>Bangkok</figcaption></figure>
+        <figure class="fs"><img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" loading="lazy" alt=""><figcaption>Krabi</figcaption></figure>
+        <figure class="fs"><img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy" alt=""><figcaption>Tokyo</figcaption></figure>
+        <figure class="fs"><img src="img/barcelona-placa-reial.jpg" width="1400" height="933" loading="lazy" alt=""><figcaption>Barcelona</figcaption></figure>
+        <figure class="fs"><img src="img/phuket-banana-beach-dusk.jpg" width="1500" height="843" loading="lazy" alt=""><figcaption>Phuket</figcaption></figure>
+        <figure class="fs"><img src="img/mykonos-little-venice-sunset.jpg" width="1500" height="996" loading="lazy" alt=""><figcaption>Mykonos</figcaption></figure>
+        <figure class="fs"><img src="img/bangkok-wat-arun-sunset.jpg" width="1600" height="1066" loading="lazy" alt=""><figcaption>Bangkok</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="wrap moments-intro">
+      <p class="kicker kicker-light" data-reveal>Moments, not itineraries</p>
+      <h2 class="display display-light" data-reveal>Nobody gets home and talks about the itinerary.</h2>
+      <p class="moments-sub" data-reveal>They talk about the ten minutes nobody planned. Here is the sort of thing a Tino trip is built to leave you with.</p>
+    </div>
+
+    <!-- Krabi: full bleed with an overlapping inset -->
+    <article class="m m-krabi">
+      <figure class="frame frame-wide m-hero-frame" data-reveal>
+        <img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" loading="lazy"
+             alt="Carved longtail boat prows strung with coloured ribbons resting in shallow green water below jungle cliffs at Maya Bay.">
+        <figcaption class="place">Maya Bay, Ko Phi Phi, Krabi Province</figcaption>
+      </figure>
+      <div class="wrap m-krabi-grid">
+        <div class="m-copy" data-reveal>
+          <h3 class="m-title">Krabi</h3>
+          <p>The engine cuts and the longtail slides onto the sand. For about a minute the loudest thing in Thailand is water coming off a cliff.</p>
+        </div>
+        <figure class="frame inset" data-reveal>
+          <img src="img/krabi-railay-cliff.jpg" width="1124" height="1500" loading="lazy"
+               alt="A huge limestone cliff above Railay West Beach at golden hour, longtail boats drawn up on the sand below.">
+          <figcaption class="place">Railay West Beach, Krabi</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <!-- Phuket: offset pair -->
+    <article class="m wrap">
+      <div class="m-copy m-copy-lead" data-reveal>
+        <h3 class="m-title">Phuket</h3>
+        <p>Shophouse pink, a cold drink, the afternoon rain arriving sideways. Nobody moves, and nobody minds.</p>
+      </div>
+      <div class="pair">
+        <figure class="frame frame-tall" data-reveal>
+          <img src="img/phuket-soi-rommanee.jpg" width="1400" height="1050" loading="lazy"
+               alt="A narrow street of pink and yellow Sino-Portuguese shophouses in Phuket Old Town, red lanterns strung overhead after rain.">
+          <figcaption class="place">Soi Rommanee, Phuket Old Town</figcaption>
+        </figure>
+        <figure class="frame frame-wide" data-reveal>
+          <img src="img/phuket-banana-beach-dusk.jpg" width="1500" height="843" loading="lazy"
+               alt="A quiet curve of sand at Banana Beach in Phuket, a headland dark against a pale dusk sky.">
+          <figcaption class="place">Banana Beach, Phuket</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <!-- Bangkok: horizontal scroll strip -->
+    <article class="m m-bangkok">
+      <div class="wrap">
+        <div class="m-copy m-copy-lead" data-reveal>
+          <h3 class="m-title">Bangkok</h3>
+          <p>Flame at head height, a plastic stool at knee height. You point at something, eat it, then point at it again.</p>
+          <p class="hint" aria-hidden="true">Scroll sideways</p>
+        </div>
+      </div>
+      <div class="scroller" tabindex="0" aria-label="Bangkok, four photographs">
+        <figure class="frame frame-wide" data-reveal>
+          <img src="img/bangkok-street-food-wok.jpg" width="1600" height="1067" loading="lazy"
+               alt="A street cook tossing a wok over a tall orange flame at a Bangkok food stall at night.">
+          <figcaption class="place">Street kitchen, Bangkok</figcaption>
+        </figure>
+        <figure class="frame frame-wide" data-reveal>
+          <img src="img/bangkok-yaowarat-neon.jpg" width="1400" height="933" loading="lazy"
+               alt="Yaowarat Road in Bangkok seen from above at night, lanes of traffic between tall Chinese-lettered neon signs.">
+          <figcaption class="place">Yaowarat Road, Bangkok</figcaption>
+        </figure>
+        <figure class="frame frame-wide" data-reveal>
+          <img src="img/bangkok-wat-arun-sunset.jpg" width="1600" height="1066" loading="lazy"
+               alt="The spires of Wat Arun silhouetted against an orange sunset over the Chao Phraya, a long rowing barge crossing the water.">
+          <figcaption class="place">Wat Arun and the Chao Phraya, Bangkok</figcaption>
+        </figure>
+        <figure class="frame frame-wide" data-reveal>
+          <img src="img/bangkok-tuktuk.jpg" width="1400" height="942" loading="lazy"
+               alt="A teal tuk-tuk moving down an empty Bangkok street, the driver leaning into the turn.">
+          <figcaption class="place">Bangkok</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <!-- Tokyo: mosaic -->
+    <article class="m wrap">
+      <div class="mosaic mosaic-tokyo">
+        <div class="m-copy cell-copy" data-reveal>
+          <h3 class="m-title">Tokyo</h3>
+          <p>Six seats, one chef, a door you would have walked straight past. Two hours later you know everyone's name.</p>
+        </div>
+        <figure class="frame frame-wide cell-a" data-reveal>
+          <img src="img/tokyo-golden-gai-alley.jpg" width="1500" height="1000" loading="lazy"
+               alt="A narrow Golden Gai alley in Shinjuku at night, hung with small hand-painted signs and lit by a line of paper lamps.">
+          <figcaption class="place">Golden Gai, Shinjuku</figcaption>
+        </figure>
+        <figure class="frame frame-portrait cell-b" data-reveal>
+          <img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy"
+               alt="A three-storey Tokyo restaurant lit top to bottom with rows of red and gold paper lanterns at dusk.">
+          <figcaption class="place">Chiyoda, Tokyo</figcaption>
+        </figure>
+        <figure class="frame frame-wide cell-c" data-reveal>
+          <img src="img/tokyo-kabukicho-gate.jpg" width="1300" height="1158" loading="lazy"
+               alt="The red neon arch over Kabukicho Ichibangai in Shinjuku, a wall of illuminated signs down the street beyond.">
+          <figcaption class="place">Kabukicho, Shinjuku</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <!-- Mykonos: mosaic -->
+    <article class="m wrap">
+      <div class="m-copy m-copy-lead" data-reveal>
+        <h3 class="m-title">Mykonos</h3>
+        <p>Quad bike, sun on your forearms, straight over the middle of the island because somebody said the bakery there is worth it. It was.</p>
+      </div>
+      <div class="mosaic mosaic-mykonos">
+        <figure class="frame frame-portrait cell-lane" data-reveal>
+          <img src="img/mykonos-lane-bougainvillea.jpg" width="933" height="1400" loading="lazy"
+               alt="A whitewashed lane in Mykonos town climbing between blue-railed steps, bougainvillea spilling over a doorway.">
+          <figcaption class="place">Chora, Mykonos</figcaption>
+        </figure>
+        <figure class="frame frame-wide cell-sunset" data-reveal>
+          <img src="img/mykonos-little-venice-sunset.jpg" width="1500" height="996" loading="lazy"
+               alt="Wooden balconies hanging over the water at Little Venice in Mykonos as the sun drops behind the hills.">
+          <figcaption class="place">Little Venice, Mykonos</figcaption>
+        </figure>
+        <figure class="frame frame-wide cell-wind" data-reveal>
+          <img src="img/mykonos-windmills.jpg" width="1500" height="939" loading="lazy"
+               alt="Two whitewashed Mykonos windmills with bare timber sails against a deep blue sky.">
+          <figcaption class="place">The windmills, Mykonos</figcaption>
+        </figure>
+        <figure class="frame frame-wide cell-table" data-reveal>
+          <img src="img/mykonos-table-by-the-sea.jpg" width="1400" height="934" loading="lazy"
+               alt="Blue and white tables set out on the rocks at the water's edge in Mykonos, a parasol open above them.">
+          <figcaption class="place">Little Venice, Mykonos</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <!-- Barcelona: full bleed + pair -->
+    <article class="m m-barcelona">
+      <figure class="frame frame-wide m-hero-frame" data-reveal>
+        <img src="img/barcelona-gothic-lane-night.jpg" width="1600" height="1104" loading="lazy"
+             alt="A stone lane in old Barcelona at night, lit by a single wrought-iron lamp, one figure walking away into the dark.">
+        <figcaption class="place">Barcelona, after dark</figcaption>
+      </figure>
+      <div class="wrap">
+        <div class="m-copy m-copy-lead" data-reveal>
+          <h3 class="m-title">Barcelona</h3>
+          <p>Eight of you around one long table in the Gothic Quarter, three floors up, the last plate arriving somewhere near midnight.</p>
+        </div>
+        <div class="pair">
+          <figure class="frame frame-wide" data-reveal>
+            <img src="img/barcelona-carrer-del-bisbe.jpg" width="1400" height="933" loading="lazy"
+                 alt="The carved Gothic footbridge across Carrer del Bisbe in Barcelona, a Catalan flag hanging from a balcony.">
+            <figcaption class="place">Carrer del Bisbe, Barcelona</figcaption>
+          </figure>
+          <figure class="frame frame-wide" data-reveal>
+            <img src="img/barcelona-placa-reial.jpg" width="1400" height="933" loading="lazy"
+                 alt="Placa Reial in Barcelona at blue hour, strings of lights crossing above the palms and arcades.">
+            <figcaption class="place">Placa Reial, Barcelona</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- 4. NO CATTLE SIGHTSEEING --------------------------------------------- -->
+  <section class="cattle" id="cattle">
+    <div class="wrap">
+      <p class="kicker" data-reveal>Plain speaking</p>
+      <h2 class="display" data-reveal>No cattle sightseeing.</h2>
+      <div class="contrast">
+        <div class="contrast-head" data-reveal>
+          <p class="col-label col-label-them">The forty-seater version</p>
+          <p class="col-label col-label-us">Yours</p>
+        </div>
+        <div class="row" data-reveal>
+          <p class="them"><span class="lbl">Them</span>Forty-two of you, one coach, one aisle seat.</p>
+          <p class="us"><span class="lbl">You</span>Four of you, a hire car, the windows down.</p>
+        </div>
+        <div class="row" data-reveal>
+          <p class="them"><span class="lbl">Them</span>Nine minutes at the lookout, then the horn goes.</p>
+          <p class="us"><span class="lbl">You</span>As long as the light holds.</p>
+        </div>
+        <div class="row" data-reveal>
+          <p class="them"><span class="lbl">Them</span>Lunch where the menu is laminated in six languages.</p>
+          <p class="us"><span class="lbl">You</span>Lunch where the taxi drivers eat.</p>
+        </div>
+        <div class="row" data-reveal>
+          <p class="them"><span class="lbl">Them</span>A flag on a stick to follow.</p>
+          <p class="us"><span class="lbl">You</span>A person to message when you want a second opinion.</p>
+        </div>
+      </div>
+      <p class="kind-note" data-reveal>Nothing wrong with a coach tour. Plenty of people have a lovely time on one. This is simply not that.</p>
+    </div>
+  </section>
+
+  <!-- 5. HOW IT WORKS ------------------------------------------------------ -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <p class="kicker kicker-light" data-reveal>How it works</p>
+      <h2 class="display display-light" data-reveal>Four steps, and one of them is the holiday.</h2>
+      <ol class="steps">
+        <li data-reveal><span class="step-no">01</span><h3>A chat</h3><p>Where you are drawn to, who is coming, how you like to spend a day. Tino asks a lot of questions, and the answers are the brief.</p></li>
+        <li data-reveal><span class="step-no">02</span><h3>A trip, designed</h3><p>Built out of your answers: where you stay, how you move between places, what is worth locking in early and what is much better left open.</p></li>
+        <li data-reveal><span class="step-no">03</span><h3>You go</h3><p>With room left in the schedule, so one good tip from someone who lives there can change the whole afternoon.</p></li>
+        <li data-reveal><span class="step-no">04</span><h3>Tino stays in the loop</h3><p>Plans move. Weather turns. Someone falls for a town and wants two more nights in it. He would much rather you asked.</p></li>
+      </ol>
+      <p class="how-note" data-reveal><span class="chip">Placeholder</span> Timings, inclusions and anything to do with money are Tino's to write. Nothing about them has been assumed here.</p>
+    </div>
+  </section>
+
+  <!-- 6. ABOUT ------------------------------------------------------------- -->
+  <section class="about" id="about">
+    <div class="wrap about-grid">
+      <div class="about-photo" data-reveal>
+        <div class="ph-box">
+          <span class="chip chip-alert">Placeholder</span>
+          <p>A photograph of Tino goes here.</p>
+        </div>
+      </div>
+      <div class="about-copy" data-reveal>
+        <p class="kicker">About</p>
+        <h2 class="display">Tino designs and plans people's holidays.</h2>
+        <p>That is the whole business. One trip at a time, built for the people going on it, with enough air in it that the trip can change its mind halfway through.</p>
+        <p class="ph-quote"><span class="chip chip-alert">Placeholder</span> Tino's own words go here. Every line on this page is a draft written for him to correct, not a statement from him.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. ENQUIRY ----------------------------------------------------------- -->
+  <section class="enquire" id="enquire">
+    <div class="wrap enquire-grid">
+      <div class="enquire-intro" data-reveal>
+        <p class="kicker kicker-light">Start here</p>
+        <h2 class="display display-light">Where do you want to wake up?</h2>
+        <p>Give Tino the rough shape of it. A place, a season, who is coming. The rest is a conversation.</p>
+        <ul class="contact-list">
+          <li><span class="chip chip-alert">Placeholder</span> <a href="#enquire">hello@example.com</a></li>
+          <li><span class="chip chip-alert">Placeholder</span> Phone number to come</li>
+          <li><span class="chip chip-alert">Placeholder</span> City and time zone to come</li>
+        </ul>
+      </div>
+
+      <form class="enquiry-form" id="enquiryForm" novalidate data-reveal>
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="f-where">Where do you dream of going?</label>
+          <input id="f-where" name="where" type="text" placeholder="Anywhere from a firm plan to a vague feeling">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-when">Roughly when?</label>
+            <input id="f-when" name="when" type="text" placeholder="A month, a season, or no idea">
+          </div>
+          <div class="field">
+            <label for="f-who">Who is coming?</label>
+            <input id="f-who" name="who" type="text" placeholder="Two of you, eight of you, the whole family">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-more">Anything else worth knowing?</label>
+          <textarea id="f-more" name="more" rows="4" placeholder="How you like to spend a day. What you never want to do again."></textarea>
+        </div>
+        <button class="btn btn-send" type="submit">Send it to Tino</button>
+        <p class="form-note" id="formNote" hidden role="status"></p>
+        <p class="form-small">This is a preview of a website. The form is not connected to anything and nothing you type here is sent or stored.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p class="footer-brand">Tino Tuala <em>Travels</em></p>
+      <p class="footer-line">Krabi. Phuket. Bangkok. Tokyo. Mykonos. Barcelona. And wherever you were actually thinking of.</p>
+      <ul class="footer-nav">
+        <li><a href="#offer">The offer</a></li>
+        <li><a href="#moments">Moments</a></li>
+        <li><a href="#cattle">No cattle sightseeing</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#enquire">Plan my trip</a></li>
+      </ul>
+    </div>
+    <div class="footer-meta">
+      <p><a href="credits.html">Photo credits and licences</a></p>
+      <p class="footer-small">Preview mock-up built for review. Draft copy, placeholder contact details. Photographs are freely licensed stand-ins from Wikimedia Commons and are not from Tino's trips.</p>
+      <p class="footer-small">&copy; <span id="year">2026</span> Tino Tuala Travels</p>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js" defer></script>
 </body>
 </html>
