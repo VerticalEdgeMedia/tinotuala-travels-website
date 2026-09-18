@@ -382,6 +382,8 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   display: flex;
   gap: clamp(.8rem, 2vw, 1.4rem);
   overflow-x: auto;
+  overflow-y: hidden;                 /* sideways only: without this the strip also scrolls a few pixels vertically and traps the page scroll */
+  overscroll-behavior-x: contain;     /* reaching the end does not trigger the browser's back swipe */
   scroll-snap-type: x proximity;
   scroll-padding-inline: var(--gutter);
   padding: 0 var(--gutter) 1.2rem;
