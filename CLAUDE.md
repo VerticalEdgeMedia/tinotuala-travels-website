@@ -124,3 +124,24 @@ Do not wire it to an endpoint without being asked.
   `[copy] fix: …`, `[a11y] fix: …`. One change per commit.
 - Check `git status --short` before committing: nothing from `RESEARCH/` or
   `Temporary Screenshots/` belongs in a commit.
+
+## Versions — test-site scaffolding
+
+While the site lives on its workers.dev address, earlier builds stay browsable so they can be
+compared. `public/versions/` holds one folder per locked version plus a list page, and every
+page carries a small dock (v1, v2, Versions) in its bottom corner.
+
+- **v1** is locked at `public/versions/2026-09-18-v1-editorial/` (18 Sep 2026). The front page is the working
+  version, currently **v2**, which started as a copy of v1.
+- A frozen folder holds its own copy of the pages, `site.css` and `site.js`. **Media is
+  shared:** frozen pages point at `/img/` and `/video/` from the site root, so the repo does not
+  carry the same photos and loops once per version. **Never delete or overwrite a media file a
+  frozen version still uses.** Add new files under new names instead.
+- To lock the next version: copy the current pages, stylesheet and script into a new dated
+  folder, rewrite `img/` and `video/` references to start with `/`, add the version to the dock
+  in every page (live and frozen) and to `versions/index.html`, and mark the right one
+  `aria-current`.
+- The dock is self-contained between `<!-- TEMP:versions … -->` and `<!-- /TEMP:versions -->` at
+  the end of index.html and credits.html. Nothing in `site.css` or `site.js` refers to it.
+- **Before a real domain goes live:** delete `public/versions/` and remove every TEMP:versions
+  block. `grep -rn "TEMP:versions" public/` must return nothing.

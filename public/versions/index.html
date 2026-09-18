@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Versions. Tino Tuala Travels test site.</title>
+<!-- TEMPORARY. This whole folder is deleted before the real domain goes live. See CLAUDE.md. -->
+<style>
+  *{box-sizing:border-box}
+  body{font:17px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif;background:#16120F;color:#F6EFE3;margin:0;min-height:100vh;display:grid;place-items:center;padding:48px 24px}
+  main{width:min(100%,900px)}
+  h1{font:800 clamp(34px,5vw,56px)/1 system-ui,sans-serif;letter-spacing:-.03em;margin:0 0 8px}
+  .sub{margin:0 0 36px;opacity:.75}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .v{display:flex;flex-direction:column;gap:6px;padding:28px 24px 24px;border:1.5px solid rgba(255,255,255,.18);border-radius:16px;text-decoration:none;color:inherit;background:rgba(255,255,255,.04);transition:border-color .2s,transform .2s,background-color .2s}
+  .v:hover,.v:focus-visible{border-color:#E9A227;background:rgba(255,255,255,.08);transform:translateY(-3px);outline:none}
+  .v .n{font:800 clamp(44px,6vw,64px)/1 system-ui,sans-serif;letter-spacing:-.04em}
+  .v.now .n{color:#E9A227}
+  .v .t{font-weight:700;margin-top:8px}
+  .v .d{opacity:.75;font-size:15px}
+  .v .tag{align-self:flex-start;font:700 11px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#FFFFFF;background:#E0417E;padding:6px 8px;border-radius:3px;margin-bottom:10px}
+  .foot{margin-top:28px;opacity:.75;font-size:15px} .foot a{color:inherit}
+  @media (prefers-reduced-motion:reduce){.v{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Versions</h1>
+  <p class="sub">Tino Tuala Travels. Test site only. Pick a build. Every page has a Versions button in its bottom corner, with a version strip beside it, to bring you back here.</p>
+  <div class="grid">
+    <a class="v" href="/versions/2026-09-18-v1-editorial/"><span class="n">v1</span><span class="t">Editorial</span><span class="d">Locked 18 Sep 2026. A long travel-magazine page. Maya Bay hero, six places, no cattle sightseeing, Tino in his own words.</span></a>
+    <a class="v now" href="/"><span class="tag">Working version</span><span class="n">v2</span><span class="t">In progress</span><span class="d">Starts as a copy of v1. This is the live front page.</span></a>
+  </div>
+  <p class="foot"><a href="/">Back to the site</a></p>
+</main>
+</body>
+</html>
