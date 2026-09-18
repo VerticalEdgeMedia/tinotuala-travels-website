@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Local Claude settings (machine-specific, not shared)
+.claude/
+
+# Wrangler local state, if `npx wrangler dev` is ever run here
+.wrangler/
+node_modules/
+
+# Raw masters, research and drafts dropped in for site work — never published from here
+Images (Raw Uncompressed Copies)/
+Reference Images/
+Temporary Screenshots/
+RESEARCH/
