@@ -36,8 +36,8 @@ animals are worked into the edges rather than boxed off.
 
 | Token | Value | Role |
 |---|---|---|
-| `--forest-900` / `--forest-800` / `--forest-700` | `#071310` / `#0B1C16` / `#10261D` | The room. Near-black forest through bottle green. |
-| `--emerald` / `--moss` | `#163F2E` / `#2C4833` | Mottling in the grounds. |
+| `--forest-900` / `--forest-800` / `--forest-700` | `#0A2219` / `#0F2D21` / `#15392A` | The room. Near-black forest through bottle green. |
+| `--emerald` / `--moss` | `#1D5A3F` / `#2C4833` | Mottling in the grounds. |
 | `--teal-900` / `--teal` | `#052B2B` / `#0A4A44` | The film-strip band, the how-it-works band, the hero ribbon. |
 | `--gold-deep` / `--gold` / `--gold-lite` | `#8A6A24` / `#C9A227` / `#E9CE7A` | Rules, keylines, numerals, ornament. Never body copy. |
 | `--ivory` / `--ivory-2` | `#F3ECDC` / `#E7DCC4` | Parchment. Every panel that has to be read. |
