@@ -1,5 +1,5 @@
 /* Tino Tuala Travels - mock-up behaviour.
-   Three jobs: reveal on scroll, a form that goes nowhere on purpose, the year.
+   Four jobs: reveal on scroll, a form that goes nowhere on purpose, the film strip, the year.
    Everything degrades to "visible and usable" if any of it fails. */
 
 (function () {
@@ -70,6 +70,69 @@
     });
   }
 
+  /* --- film strip ---------------------------------------------------------
+     Always drifting. A sideways scroll or a drag pushes it either way, then it
+     eases back to its own pace. Reduced motion keeps the plain scrollable row. */
+
+  function setupStrip() {
+    var strip = document.querySelector('.filmstrip');
+    if (!strip || reduce || shot) return;
+    var tracks = strip.querySelectorAll('.filmstrip-track');
+    if (tracks.length < 2) return;
+    strip.classList.add('is-live');
+
+    var GAP = 14, BASE = 26, x = 0, span = 0, boost = 0, hot = false;
+    var down = false, lastX = 0, lastT = 0, vel = 0, last = performance.now();
+
+    function measure() { span = tracks[0].getBoundingClientRect().width + GAP; }
+    function wrap() { if (!span) return; while (x <= -span) x += span; while (x > 0) x -= span; }
+    function paint() {
+      var t = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
+      tracks[0].style.transform = t; tracks[1].style.transform = t;
+    }
+    function frame(now) {
+      var dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (!span) measure();
+      if (!down) {
+        x -= (BASE + boost) * dt;
+        boost *= Math.pow(hot ? 0.5 : 0.12, dt);          /* lingers while the pointer is over it */
+        if (Math.abs(boost) < 1) boost = 0;
+      }
+      wrap(); paint();
+      requestAnimationFrame(frame);
+    }
+
+    strip.addEventListener('mouseenter', function () { hot = true; });
+    strip.addEventListener('mouseleave', function () { hot = false; });
+    strip.addEventListener('wheel', function (e) {
+      var d = e.deltaX;                                    /* sideways only: up and down belongs to the page */
+      if (!d || Math.abs(d) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      boost = Math.max(-700, Math.min(700, boost + d * 2.4));
+    }, { passive: false });
+
+    strip.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      down = true; lastX = e.clientX; lastT = performance.now(); vel = 0; boost = 0;
+      strip.classList.add('dragging');
+      if (strip.setPointerCapture) { try { strip.setPointerCapture(e.pointerId); } catch (err) {} }
+    });
+    strip.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      var now = performance.now(), dx = e.clientX - lastX, dt = Math.max(1, now - lastT);
+      x += dx; vel = dx / dt * 1000; lastX = e.clientX; lastT = now;
+    });
+    function release() {
+      if (!down) return;
+      down = false; strip.classList.remove('dragging');
+      boost = Math.max(-900, Math.min(900, -vel * 0.9)) - 0;   /* a flick carries on, then settles */
+    }
+    strip.addEventListener('pointerup', release);
+    strip.addEventListener('pointercancel', release);
+    window.addEventListener('resize', measure);
+    requestAnimationFrame(frame);
+  }
+
   /* --- the year ----------------------------------------------------------- */
 
   function setupYear() {
@@ -80,6 +143,7 @@
   function init() {
     setupReveal();
     setupForm();
+    setupStrip();
     setupYear();
   }
 

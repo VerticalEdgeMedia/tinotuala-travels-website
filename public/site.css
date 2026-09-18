@@ -485,7 +485,7 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 .about { background: var(--paper); padding: clamp(4rem, 8vw, 7rem) 0; }
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(200px, 300px) 1fr;
+  grid-template-columns: minmax(240px, 420px) 1fr;
   gap: clamp(1.8rem, 5vw, 4.5rem);
   align-items: center;
 }
@@ -719,3 +719,19 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 
 /* The hero kicker sits on bright sky on phones: keep it readable */
 .hero .kicker-light { text-shadow: 0 1px 2px rgba(10,8,6,.7), 0 0 14px rgba(10,8,6,.55); }
+
+/* --- about: Tino's own photos --------------------------------------------- */
+.about-photo { position: relative; padding: 0 12% 14% 0; }
+.tino-main, .tino-inset { margin: 0; }
+.tino-main img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 4px; box-shadow: 0 24px 50px -22px rgba(22,18,15,.55); }
+.tino-inset { position: absolute; right: 0; bottom: 0; width: 46%; transform: rotate(3deg); }
+.tino-inset img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 18%; border: 6px solid var(--paper); border-radius: 4px; box-shadow: 0 18px 40px -16px rgba(22,18,15,.6); }
+.about-lead { font-family: var(--f-display); font-size: clamp(1.2rem, 1.9vw, 1.55rem); line-height: 1.32; font-weight: 600; color: var(--ink); }
+.about-copy .btn { margin-top: .6rem; }
+@media (max-width: 760px) { .about-photo { max-width: 380px; } }
+
+/* --- film strip: driven by script so it can be scrolled and dragged both ways --- */
+.filmstrip.is-live { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.filmstrip.is-live.dragging { cursor: grabbing; }
+.filmstrip.is-live .filmstrip-track { animation: none; will-change: transform; }
+.filmstrip.is-live img { pointer-events: none; }
