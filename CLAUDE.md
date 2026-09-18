@@ -14,8 +14,8 @@ folder paths, no contact details, no credentials, no client information.
 | | |
 |---|---|
 | Source | `public/index.html` (one long scrolling home page) and `public/credits.html`, sharing `public/site.css` and `public/site.js`. |
-| Assets | `public/img/` — 19 JPEGs, plus `public/img/_credits.json`, the machine-readable credit list. |
-| Fonts | Google Fonts: **Fraunces** (display) and **DM Sans** (text), loaded by `<link>`. |
+| Assets | `public/img/` — 29 JPEGs (19 place photographs, 2 supplied photographs of Tino, 8 public-domain or freely licensed artworks), plus `public/img/_credits.json`, the machine-readable credit list. |
+| Fonts | Google Fonts: **Cormorant Garamond** (display), **Cinzel** (letterspaced capitals) and **Jost** (text), loaded by `<link>`. |
 | Deploy | Cloudflare Workers static assets, `wrangler.jsonc`, serving `./public`. |
 | Build step | **None.** No bundler, no framework, no npm, no `package.json`, no `node_modules`. |
 | Preview | Open `public/index.html`, or serve `public/` on a local port, or `npx wrangler dev`. |
@@ -27,41 +27,108 @@ change. Raise it before building it.
 
 ---
 
-## Design tokens
+## Design system - v2 "the green room"
+
+A grand tropical hotel: you step into a dark green lacquered room. Near-black jungle greens,
+antique gold, a deep teal band, and warm parchment panels that carry all the reading. The
+photographs are the proof, hung in gold-lined temple niches; painted foliage and engraved
+animals are worked into the edges rather than boxed off.
 
 | Token | Value | Role |
 |---|---|---|
-| `--sand` / `--sand-2` / `--sand-3` | `#F7F1E6` / `#EFE3D0` / `#E4D6C0` | Warm paper. The offer and the contrast sections. |
-| `--ink` / `--ink-2` | `#16120F` / `#241D17` | The Moments section, the footer. |
-| `--sea` / `--sea-deep` | `#0C4B4E` / `#062F31` | Deep sea teal. How it works, the enquiry block. |
-| `--pink` | `#E0417E` | Bougainvillea. Buttons, kickers, the "yours" column, placeholder chips. |
-| `--saffron` | `#E9A227` | Step numerals, focus rings, links on dark. |
-| `--paper` | `#F6EFE3` | Type on dark grounds. |
+| `--forest-900` / `--forest-800` / `--forest-700` | `#071310` / `#0B1C16` / `#10261D` | The room. Near-black forest through bottle green. |
+| `--emerald` / `--moss` | `#163F2E` / `#2C4833` | Mottling in the grounds. |
+| `--teal-900` / `--teal` | `#052B2B` / `#0A4A44` | The film-strip band, the how-it-works band, the hero ribbon. |
+| `--gold-deep` / `--gold` / `--gold-lite` | `#8A6A24` / `#C9A227` / `#E9CE7A` | Rules, keylines, numerals, ornament. Never body copy. |
+| `--ivory` / `--ivory-2` | `#F3ECDC` / `#E7DCC4` | Parchment. Every panel that has to be read. |
+| `--ink` / `--ink-2` / `--ink-soft` | `#1A1611` / `#3B3427` / `#5C5240` | Type on parchment. |
+| `--hibiscus` / `--lacquer` | `#C1356C` / `#A63329` | The small hits of quirk. Placeholder chips only. |
 
-Type: Fraunces 800 for display lines and place names, Fraunces 600 for sub-heads, DM Sans for
-everything else. Rhythm comes from `--gutter` (`clamp(20px, 5vw, 76px)`) and a `1280px` max width.
+`--foil` is a seven-stop gold gradient. It fills the SVG ornaments (`fill="url(#foil)"`), the
+buttons, and large display headings through `background-clip: text`. The text version is inside
+an `@supports` guard so unsupported browsers keep a solid gold colour rather than invisible type.
+
+### Type
+**Cormorant Garamond** for display, set large and lightish. **Cinzel** for every label, kicker,
+place name, button and caption, always uppercase and widely letterspaced (`.18em` to `.34em`).
+**Jost** for body copy. Three families, no more. Body copy is never gold and never a display
+face; gold is for large type and ornament only, where it clears contrast comfortably.
+
+### Ornament
+Everything ornamental is drawn by hand in the inline `<svg class="sprite">` at the top of each
+page. Three symbols and two clip paths:
+
+- `#orn-lotus` - a lotus medallion. The brand mark, the centre of every gold rule, and the
+  surround for each step numeral.
+- `#orn-corner` - a corner flourish, mirrored into all four corners of a panel with
+  `transform: scale(-1)` and friends.
+- `#orn-frond` - a gold fern frond, generated leaflet by leaflet, that leans over the hero arch.
+- `#ogee` / `#dome` - `clipPathUnits="objectBoundingBox"` arches. `.niche-art img` is clipped by
+  one of them and an overlaid `<svg preserveAspectRatio="none">` draws the arch outline twice in
+  gold with `vector-effect: non-scaling-stroke`, so the keyline stays 1-2px at every size.
+- `.frame-dome` is the cheaper version: the same arch as a `border-radius` pair, with the double
+  gold keyline drawn by an inset `box-shadow` on `::after`.
+
+### Artwork, and how it is blended
+Public-domain and freely licensed paintings, wallpapers and natural-history plates, chosen so
+each blend suits its ground:
+
+- **On parchment**, light-ground plates use `mix-blend-mode: multiply` plus a soft radial
+  `mask-image` so the paper's edges dissolve: the Audubon parrots on the offer panel, the Lear
+  macaw on Tino's frame, the Barye tiger looking over the top of the No-cattle panel.
+- **On the dark grounds**, the Blake monkey engraving is inverted and crushed to black, tinted
+  gold with `sepia`/`saturate`/`hue-rotate`, then `mix-blend-mode: screen` drops the paper away
+  and leaves gold line-work glowing. It hangs off the corner of the enquiry form.
+- **Murals** are `<img>` elements behind a two-layer gradient veil: Rousseau's jungle behind the
+  hero and the enquiry, his monkeys behind the "moments, not itineraries" band.
+- **Patterns**: Morris's Blackthorn is a repeating band under the film strip; Willow Bough is
+  tiled at low opacity, inverted and tinted gold, as the wall texture behind Moments and the
+  footer.
+
+Every one of them is credited in `credits.html` and `img/_credits.json` with artist, work, year
+where the file states it, holding collection where the file states it, licence and source.
+
+### Texture
+No flat fills on large areas. An `feTurbulence` grain sits over the whole page
+(`.grain`, fixed, `mix-blend-mode: overlay`), a coarser paper grain multiplies inside every
+parchment panel, and the green grounds carry layered radial gradients plus a vignette.
 
 ## Section order (home page)
 
-1. Preview bar and sticky header
-2. Hero: one full-bleed photograph, the offer in a sentence, one button to the enquiry form
-3. The offer in three beats: designed around you / room to wander / the locals' version
-4. Moments, not itineraries: a slow drifting film strip, then six places, each with a different
-   treatment (full bleed with an overlapping inset, an offset pair, a horizontal scroll strip,
-   two mosaics, a full bleed with a pair underneath)
-5. No cattle sightseeing: a two-column contrast, kept kind
-6. How it works: four steps
-7. About Tino: two visibly marked placeholders
-8. Enquiry form
-9. Footer, with a link to `credits.html`
+1. Preview bar and sticky header (frosted forest, gold hairline, lotus mark)
+2. Hero: the jungle mural, the pitch on the left, the Maya Bay photograph in a pointed gold
+   niche on the right, gold fronds leaning in
+3. The offer in three beats, on a parchment panel with four corner flourishes and a lotus rule
+4. The mural band: monkeys in the foliage behind "Nobody gets home and talks about the itinerary"
+5. Moments: the drifting film strip on a teal band, a Morris pattern band under it, then the six
+   places, each place name in letterspaced gold capitals, photographs in arched gold frames
+6. No cattle sightseeing: a parchment panel with the tiger looking over its top edge
+7. How it works: four steps on the teal band, numerals in lotus medallions
+8. About Tino: parchment, his photo in a gold niche with a macaw perched on it
+9. Enquiry: the mural again, the form on parchment, a monkey hanging off its corner
+10. Footer, with a link to `credits.html`
 
 ## Motion
 
-Reveal on scroll via IntersectionObserver, a slow CSS marquee on the film strip, a small scale
-on image hover. `prefers-reduced-motion: reduce` switches **every** animation and transition
-off, stops the marquee and drops its duplicate track. `?shot=1` reveals everything immediately
-so screenshots show the real layout, and the reveal degrades to "visible" if the observer never
-fires or JavaScript never runs.
+Reveal on scroll via IntersectionObserver; a slow parallax drift on the murals and fronds
+(transform only, capped at 90px, rAF-throttled); a gold shimmer sweep across display headings as
+they reveal; the film strip drifting, draggable and scrollable both ways. `?shot=1` adds a
+`shot` class that reveals everything and freezes every animation and transition, and the reveal
+degrades to "visible" if the observer never fires or JavaScript never runs.
+
+**Horizontal scrollers.** `overflow-x: auto` makes `overflow-y` compute to `auto` as well, and a
+few pixels of vertical overflow then swallow the page's scroll when the pointer is over the
+strip. Every sideways-scrolling container therefore carries `overflow-y: hidden` and
+`overscroll-behavior-x: contain`, the script-driven film strip keeps `touch-action: pan-y`, and
+the strip's `wheel` handler only calls `preventDefault()` when the horizontal delta is the
+larger one.
+
+## Phones
+
+Designed at 390px first. Ornaments scale down or drop (`.frond` is hidden below 860px), the
+niche arch changes ratio rather than growing tall, the two-column vignettes and the contrast
+rows stack, corner flourishes shrink to 42px, the perched plates shrink, and the tiger's aside
+moves out of the corner into the flow. Nothing may scroll the page sideways at any width.
 
 ---
 
@@ -74,7 +141,7 @@ Instagram, Pinterest, tourism-board, hotel or news photography, and never AI-gen
 
 A CC BY or CC BY-SA image without a visible credit is a licence breach. So:
 
-- every file in `public/img/` that the site uses has a row in `public/credits.html`
+- every file in `public/img/` that the live pages use has a row in `public/credits.html`
 - the same data lives in `public/img/_credits.json`
 - the counts must match; check them after any image change.
 
