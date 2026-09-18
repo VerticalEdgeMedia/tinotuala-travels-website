@@ -6,14 +6,95 @@
 <meta name="robots" content="noindex">
 <title>Tino Tuala Travels</title>
 <meta name="description" content="Preview mock-up. Custom holidays designed one at a time, built for immersion, with room in the schedule to go by feel.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230C4B4E'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23E9A227'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23081410'/%3E%3Cpath d='M16 5c3 5 3.4 10 0 21-3.4-11-3-16 0-21z' fill='%23C9A227'/%3E%3Cpath d='M9.6 10.5c3.6 3.6 5 7.6 6.4 15.5-5.6-7-7-11-6.4-15.5z' fill='%23A8842E'/%3E%3Cpath d='M22.4 10.5c-3.6 3.6-5 7.6-6.4 15.5 5.6-7 7-11 6.4-15.5z' fill='%23A8842E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');if(/[?&]shot=1\b/.test(location.search))document.documentElement.classList.add('shot');</script>
 </head>
 <body>
+
+<!-- ============================================================= ORNAMENT SPRITE
+     Every ornament on this page is drawn here by hand: the lotus medallion, the
+     corner flourish, the temple-niche arches. Nothing traced, nothing imported. -->
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <linearGradient id="foil" x1="0" y1="0" x2="1" y2="0.9">
+      <stop offset="0"   stop-color="#8A6A24"/>
+      <stop offset=".17" stop-color="#C9A227"/>
+      <stop offset=".33" stop-color="#F6E7B0"/>
+      <stop offset=".49" stop-color="#C9A227"/>
+      <stop offset=".65" stop-color="#96752A"/>
+      <stop offset=".82" stop-color="#EBD28A"/>
+      <stop offset="1"   stop-color="#A8842E"/>
+    </linearGradient>
+
+    <!-- A pointed temple niche, and a plain dome. Object-bounding-box units, so
+         they scale with whatever they clip. -->
+    <clipPath id="ogee" clipPathUnits="objectBoundingBox">
+      <path d="M0,1 V0.40 C0,0.225 0.175,0.135 0.335,0.095 C0.435,0.070 0.478,0.038 0.5,0 C0.522,0.038 0.565,0.070 0.665,0.095 C0.825,0.135 1,0.225 1,0.40 V1 Z"/>
+    </clipPath>
+    <clipPath id="dome" clipPathUnits="objectBoundingBox">
+      <path d="M0,1 V0.42 C0,0.188 0.224,0 0.5,0 C0.776,0 1,0.188 1,0.42 V1 Z"/>
+    </clipPath>
+  </defs>
+
+  <symbol id="orn-lotus" viewBox="0 0 120 88">
+    <g fill="url(#foil)" stroke="rgba(0,0,0,.22)" stroke-width=".7">
+      <path transform="rotate(-62 60 82)" d="M60 40c12 8 15 20 0 42-15-22-12-34 0-42z"/>
+      <path transform="rotate(62 60 82)"  d="M60 40c12 8 15 20 0 42-15-22-12-34 0-42z"/>
+      <path transform="rotate(-32 60 82)" d="M60 26c14 12 17 28 0 56-17-28-14-44 0-56z"/>
+      <path transform="rotate(32 60 82)"  d="M60 26c14 12 17 28 0 56-17-28-14-44 0-56z"/>
+      <path d="M60 6c15 20 18 40 0 76-18-36-15-56 0-76z"/>
+    </g>
+    <g fill="none" stroke="url(#foil)" stroke-linecap="round">
+      <path d="M18 74c12 10 26 14 42 14s30-4 42-14" stroke-width="2.6"/>
+      <path d="M32 84c8 4 18 6 28 6s20-2 28-6" stroke-width="1.4"/>
+    </g>
+  </symbol>
+
+  <symbol id="orn-corner" viewBox="0 0 130 130">
+    <g fill="none" stroke="url(#foil)" stroke-width="2" stroke-linecap="round">
+      <path d="M3 70C3 28 28 3 70 3"/>
+      <path d="M3 90C3 18 18 3 90 3"/>
+      <path d="M12 62c14-2 22-10 22-22 0-8-7-13-12-8s-1 13 7 12"/>
+      <path d="M62 12c-2 14-10 22-22 22"/>
+    </g>
+    <path d="M70 3c10 2 17 9 19 19-11-1-18-8-19-19z" fill="url(#foil)"/>
+    <circle cx="44" cy="44" r="2.6" fill="url(#foil)"/>
+  </symbol>
+
+  <symbol id="orn-frond" viewBox="0 0 140 240">
+    <g fill="url(#foil)" opacity=".92">
+      <path transform="translate(44.4,23.2) rotate(23.7)" d="M0,0 C8.7,-4.9 20.8,-4.0 28.9,0 C20.8,4.0 8.7,4.9 0,0Z"/>
+      <path transform="translate(44.4,23.2) rotate(131.3)" d="M0,0 C8.7,-4.9 20.8,-4.0 28.9,0 C20.8,4.0 8.7,4.9 0,0Z"/>
+      <path transform="translate(47.7,39.6) rotate(24.5)" d="M0,0 C9.8,-5.5 23.4,-4.5 32.6,0 C23.4,4.5 9.8,5.5 0,0Z"/>
+      <path transform="translate(47.7,39.6) rotate(135.2)" d="M0,0 C9.8,-5.5 23.4,-4.5 32.6,0 C23.4,4.5 9.8,5.5 0,0Z"/>
+      <path transform="translate(50.5,57.2) rotate(24.6)" d="M0,0 C10.9,-6.1 26.1,-5.0 36.2,0 C26.1,5.0 10.9,6.1 0,0Z"/>
+      <path transform="translate(50.5,57.2) rotate(138.4)" d="M0,0 C10.9,-6.1 26.1,-5.0 36.2,0 C26.1,5.0 10.9,6.1 0,0Z"/>
+      <path transform="translate(53.1,75.8) rotate(24.2)" d="M0,0 C12.0,-6.8 28.7,-5.5 39.9,0 C28.7,5.5 12.0,6.8 0,0Z"/>
+      <path transform="translate(53.1,75.8) rotate(141.1)" d="M0,0 C12.0,-6.8 28.7,-5.5 39.9,0 C28.7,5.5 12.0,6.8 0,0Z"/>
+      <path transform="translate(55.5,95.4) rotate(23.3)" d="M0,0 C13.1,-7.4 31.4,-6.0 43.6,0 C31.4,6.0 13.1,7.4 0,0Z"/>
+      <path transform="translate(55.5,95.4) rotate(143.3)" d="M0,0 C13.1,-7.4 31.4,-6.0 43.6,0 C31.4,6.0 13.1,7.4 0,0Z"/>
+      <path transform="translate(57.8,115.6) rotate(22.0)" d="M0,0 C13.4,-7.6 32.2,-6.1 44.7,0 C32.2,6.1 13.4,7.6 0,0Z"/>
+      <path transform="translate(57.8,115.6) rotate(145.1)" d="M0,0 C13.4,-7.6 32.2,-6.1 44.7,0 C32.2,6.1 13.4,7.6 0,0Z"/>
+      <path transform="translate(60.2,136.5) rotate(20.4)" d="M0,0 C12.3,-7.0 29.5,-5.6 41.0,0 C29.5,5.6 12.3,7.0 0,0Z"/>
+      <path transform="translate(60.2,136.5) rotate(146.5)" d="M0,0 C12.3,-7.0 29.5,-5.6 41.0,0 C29.5,5.6 12.3,7.0 0,0Z"/>
+      <path transform="translate(62.7,157.7) rotate(18.4)" d="M0,0 C11.2,-6.3 26.9,-5.1 37.4,0 C26.9,5.1 11.2,6.3 0,0Z"/>
+      <path transform="translate(62.7,157.7) rotate(147.7)" d="M0,0 C11.2,-6.3 26.9,-5.1 37.4,0 C26.9,5.1 11.2,6.3 0,0Z"/>
+      <path transform="translate(65.4,179.2) rotate(16.1)" d="M0,0 C10.1,-5.7 24.2,-4.6 33.7,0 C24.2,4.6 10.1,5.7 0,0Z"/>
+      <path transform="translate(65.4,179.2) rotate(148.5)" d="M0,0 C10.1,-5.7 24.2,-4.6 33.7,0 C24.2,4.6 10.1,5.7 0,0Z"/>
+      <path transform="translate(68.6,200.7) rotate(13.5)" d="M0,0 C9.0,-5.1 21.6,-4.1 30.0,0 C21.6,4.1 9.0,5.1 0,0Z"/>
+      <path transform="translate(68.6,200.7) rotate(148.9)" d="M0,0 C9.0,-5.1 21.6,-4.1 30.0,0 C21.6,4.1 9.0,5.1 0,0Z"/>
+      <path transform="translate(72.1,222.1) rotate(10.5)" d="M0,0 C7.9,-4.5 19.0,-3.6 26.3,0 C19.0,3.6 7.9,4.5 0,0Z"/>
+      <path transform="translate(72.1,222.1) rotate(149.0)" d="M0,0 C7.9,-4.5 19.0,-3.6 26.3,0 C19.0,3.6 7.9,4.5 0,0Z"/>
+    </g>
+    <path d="M40,6 C56,60 58,150 74,232" fill="none" stroke="url(#foil)" stroke-width="2.6" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<span class="grain" aria-hidden="true"></span>
 
 <div class="preview-bar">
   <span class="chip chip-alert">Preview</span>
@@ -22,7 +103,7 @@
 
 <header class="site-header" id="siteHeader">
   <a class="brand" href="#top">
-    <span class="brand-mark" aria-hidden="true"></span>
+    <svg class="brand-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg>
     <span class="brand-name">Tino Tuala <em>Travels</em></span>
   </a>
   <nav class="site-nav" aria-label="Main">
@@ -37,79 +118,115 @@
 
   <!-- 1. HERO ------------------------------------------------------------ -->
   <section class="hero">
-    <div class="hero-media">
-      <img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" fetchpriority="high"
-           alt="Carved longtail boat prows strung with coloured ribbons resting in shallow green water below jungle cliffs at Maya Bay.">
+    <div class="hero-bg" aria-hidden="true">
+      <img class="mural" src="img/art-rousseau-equatorial-jungle.jpg" width="1380" height="1500" alt=""
+           fetchpriority="high" data-parallax="-0.06">
+      <span class="hero-veil"></span>
     </div>
-    <div class="hero-scrim" aria-hidden="true"></div>
-    <div class="hero-body">
-      <p class="kicker kicker-light">Custom holidays, designed one at a time</p>
-      <h1>Built around you.<br>Loose enough to wander.</h1>
-      <p class="lede">Tino Tuala designs holidays for people who want the real version of a place: time with locals, days with room in them, and not one minute of cattle sightseeing.</p>
-      <p class="hero-actions">
-        <a class="btn" href="#enquire">Plan my trip</a>
-        <a class="btn btn-ghost" href="#moments">See what that looks like</a>
-      </p>
+
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="ribbon">Custom holidays, designed one at a time</p>
+        <h1>Built around you.<br>Loose enough to wander.</h1>
+        <p class="lede">Tino Tuala designs holidays for people who want the real version of a place: time with locals, days with room in them, and not one minute of cattle sightseeing.</p>
+        <p class="hero-actions">
+          <a class="btn" href="#enquire">Plan my trip</a>
+          <a class="btn btn-ghost" href="#moments">See what that looks like</a>
+        </p>
+      </div>
+
+      <div class="hero-art">
+        <figure class="niche niche-ogee hero-niche">
+          <span class="niche-art">
+          <img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" fetchpriority="high"
+               alt="Carved longtail boat prows strung with coloured ribbons resting in shallow green water below jungle cliffs at Maya Bay.">
+          <svg class="niche-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0.8,100 V40 C0.8,22.5 18.3,13.5 34.3,9.5 C44.3,7 47.8,3.8 50,0.6 C52.2,3.8 55.7,7 65.7,9.5 C81.7,13.5 99.2,22.5 99.2,40 V100"/>
+            <path class="inner" d="M5,100 V41 C5,25 21,17 36,13 C45,10.8 48,8 50,5 C52,8 55,10.8 64,13 C79,17 95,25 95,41 V100"/>
+          </svg>
+          </span>
+          <figcaption>Maya Bay, Ko Phi Phi, Krabi Province</figcaption>
+        </figure>
+        <svg class="frond frond-l" aria-hidden="true" data-parallax="0.05"><use href="#orn-frond"></use></svg>
+        <svg class="frond frond-r" aria-hidden="true" data-parallax="0.08"><use href="#orn-frond"></use></svg>
+      </div>
     </div>
-    <p class="hero-caption">Maya Bay, Ko Phi Phi, Krabi Province</p>
   </section>
 
   <!-- 2. THE OFFER -------------------------------------------------------- -->
   <section class="offer" id="offer">
     <div class="wrap">
-      <p class="kicker" data-reveal>The offer</p>
-      <h2 class="display" data-reveal>One trip. Designed for the people going on it.</h2>
-      <div class="beats">
-        <div class="beat" data-reveal>
-          <p class="beat-no">01</p>
-          <h3>Designed around you</h3>
-          <p>You tell Tino how you like to spend a day. He builds the trip out of that, not out of a catalogue. Nobody else gets this one.</p>
-        </div>
-        <div class="beat" data-reveal>
-          <p class="beat-no">02</p>
-          <h3>Room to wander</h3>
-          <p>Slack in the schedule, on purpose. If the market turns out to be the best thing all week, stay at the market.</p>
-        </div>
-        <div class="beat" data-reveal>
-          <p class="beat-no">03</p>
-          <h3>The locals' version</h3>
-          <p>The bakery the island actually uses. The table nobody photographs. The part you would never have found on your own.</p>
+      <div class="panel" data-reveal>
+        <img class="perch perch-parrot" src="img/art-audubon-carolina-parrot.jpg" width="882" height="1200" loading="lazy" alt="" aria-hidden="true">
+        <svg class="corner tl" aria-hidden="true"><use href="#orn-corner"></use></svg>
+        <svg class="corner tr" aria-hidden="true"><use href="#orn-corner"></use></svg>
+        <svg class="corner bl" aria-hidden="true"><use href="#orn-corner"></use></svg>
+        <svg class="corner br" aria-hidden="true"><use href="#orn-corner"></use></svg>
+
+        <p class="kicker">The offer</p>
+        <h2 class="display">One trip. Designed for the people going on it.</h2>
+        <p class="rule"><svg class="rule-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg></p>
+
+        <div class="beats">
+          <div class="beat" data-reveal>
+            <p class="beat-no">I</p>
+            <h3>Designed around you</h3>
+            <p>You tell Tino how you like to spend a day. He builds the trip out of that, not out of a catalogue. Nobody else gets this one.</p>
+          </div>
+          <div class="beat" data-reveal>
+            <p class="beat-no">II</p>
+            <h3>Room to wander</h3>
+            <p>Slack in the schedule, on purpose. If the market turns out to be the best thing all week, stay at the market.</p>
+          </div>
+          <div class="beat" data-reveal>
+            <p class="beat-no">III</p>
+            <h3>The locals' version</h3>
+            <p>The bakery the island actually uses. The table nobody photographs. The part you would never have found on your own.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. MOMENTS ---------------------------------------------------------- -->
+  <!-- 3. THE MURAL BAND ---------------------------------------------------- -->
+  <section class="mural-band">
+    <img class="mural" src="img/art-rousseau-merry-jesters.jpg" width="1009" height="1300" loading="lazy" alt="" aria-hidden="true" data-parallax="-0.08">
+    <span class="mural-veil" aria-hidden="true"></span>
+    <div class="wrap mural-copy">
+      <p class="kicker kicker-gold" data-reveal>Moments, not itineraries</p>
+      <h2 class="display gold-text" data-reveal>Nobody gets home and talks about the itinerary.</h2>
+      <p class="mural-sub" data-reveal>They talk about the ten minutes nobody planned. Here is the sort of thing a Tino trip is built to leave you with.</p>
+    </div>
+  </section>
+
+  <!-- 4. MOMENTS ---------------------------------------------------------- -->
   <section class="moments" id="moments">
 
-    <!-- drifting strip -->
-    <div class="filmstrip" aria-label="Places Tino plans trips to">
-      <div class="filmstrip-track">
-        <figure class="fs"><img src="img/mykonos-windmills.jpg" width="1500" height="939" loading="lazy" alt="Two whitewashed Mykonos windmills with bare timber sails against a deep blue sky."><figcaption>Mykonos</figcaption></figure>
-        <figure class="fs"><img src="img/bangkok-yaowarat-neon.jpg" width="1400" height="933" loading="lazy" alt="Yaowarat Road in Bangkok seen from above at night, lanes of traffic between tall neon signs."><figcaption>Bangkok</figcaption></figure>
-        <figure class="fs"><img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" loading="lazy" alt="Carved longtail boat prows strung with coloured ribbons resting in shallow green water below jungle cliffs."><figcaption>Krabi</figcaption></figure>
-        <figure class="fs"><img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy" alt="A three-storey Tokyo restaurant lit top to bottom with rows of red and gold paper lanterns at dusk."><figcaption>Tokyo</figcaption></figure>
-        <figure class="fs"><img src="img/barcelona-placa-reial.jpg" width="1400" height="933" loading="lazy" alt="Placa Reial in Barcelona at blue hour, strings of lights crossing above the palms and arcades."><figcaption>Barcelona</figcaption></figure>
-        <figure class="fs"><img src="img/phuket-banana-beach-dusk.jpg" width="1500" height="843" loading="lazy" alt="A quiet curve of sand at Banana Beach in Phuket, a headland dark against a pale dusk sky."><figcaption>Phuket</figcaption></figure>
-        <figure class="fs"><img src="img/mykonos-little-venice-sunset.jpg" width="1500" height="996" loading="lazy" alt="Wooden balconies hanging over the water at Little Venice in Mykonos as the sun drops behind the hills."><figcaption>Mykonos</figcaption></figure>
-        <figure class="fs"><img src="img/bangkok-wat-arun-sunset.jpg" width="1600" height="1066" loading="lazy" alt="The spires of Wat Arun silhouetted against an orange sunset over the Chao Phraya, a long rowing barge crossing the water."><figcaption>Bangkok</figcaption></figure>
+    <!-- drifting strip, on its own teal band -->
+    <div class="strip-band">
+      <div class="filmstrip" aria-label="Places Tino plans trips to">
+        <div class="filmstrip-track">
+          <figure class="fs"><img src="img/mykonos-windmills.jpg" width="1500" height="939" loading="lazy" alt="Two whitewashed Mykonos windmills with bare timber sails against a deep blue sky."><figcaption>Mykonos</figcaption></figure>
+          <figure class="fs"><img src="img/bangkok-yaowarat-neon.jpg" width="1400" height="933" loading="lazy" alt="Yaowarat Road in Bangkok seen from above at night, lanes of traffic between tall neon signs."><figcaption>Bangkok</figcaption></figure>
+          <figure class="fs"><img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" loading="lazy" alt="Carved longtail boat prows strung with coloured ribbons resting in shallow green water below jungle cliffs."><figcaption>Krabi</figcaption></figure>
+          <figure class="fs"><img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy" alt="A three-storey Tokyo restaurant lit top to bottom with rows of red and gold paper lanterns at dusk."><figcaption>Tokyo</figcaption></figure>
+          <figure class="fs"><img src="img/barcelona-placa-reial.jpg" width="1400" height="933" loading="lazy" alt="Placa Reial in Barcelona at blue hour, strings of lights crossing above the palms and arcades."><figcaption>Barcelona</figcaption></figure>
+          <figure class="fs"><img src="img/phuket-banana-beach-dusk.jpg" width="1500" height="843" loading="lazy" alt="A quiet curve of sand at Banana Beach in Phuket, a headland dark against a pale dusk sky."><figcaption>Phuket</figcaption></figure>
+          <figure class="fs"><img src="img/mykonos-little-venice-sunset.jpg" width="1500" height="996" loading="lazy" alt="Wooden balconies hanging over the water at Little Venice in Mykonos as the sun drops behind the hills."><figcaption>Mykonos</figcaption></figure>
+          <figure class="fs"><img src="img/bangkok-wat-arun-sunset.jpg" width="1600" height="1066" loading="lazy" alt="The spires of Wat Arun silhouetted against an orange sunset over the Chao Phraya, a long rowing barge crossing the water."><figcaption>Bangkok</figcaption></figure>
+        </div>
+        <div class="filmstrip-track" aria-hidden="true">
+          <figure class="fs"><img src="img/mykonos-windmills.jpg" width="1500" height="939" loading="lazy" alt=""><figcaption>Mykonos</figcaption></figure>
+          <figure class="fs"><img src="img/bangkok-yaowarat-neon.jpg" width="1400" height="933" loading="lazy" alt=""><figcaption>Bangkok</figcaption></figure>
+          <figure class="fs"><img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" loading="lazy" alt=""><figcaption>Krabi</figcaption></figure>
+          <figure class="fs"><img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy" alt=""><figcaption>Tokyo</figcaption></figure>
+          <figure class="fs"><img src="img/barcelona-placa-reial.jpg" width="1400" height="933" loading="lazy" alt=""><figcaption>Barcelona</figcaption></figure>
+          <figure class="fs"><img src="img/phuket-banana-beach-dusk.jpg" width="1500" height="843" loading="lazy" alt=""><figcaption>Phuket</figcaption></figure>
+          <figure class="fs"><img src="img/mykonos-little-venice-sunset.jpg" width="1500" height="996" loading="lazy" alt=""><figcaption>Mykonos</figcaption></figure>
+          <figure class="fs"><img src="img/bangkok-wat-arun-sunset.jpg" width="1600" height="1066" loading="lazy" alt=""><figcaption>Bangkok</figcaption></figure>
+        </div>
       </div>
-      <div class="filmstrip-track" aria-hidden="true">
-        <figure class="fs"><img src="img/mykonos-windmills.jpg" width="1500" height="939" loading="lazy" alt=""><figcaption>Mykonos</figcaption></figure>
-        <figure class="fs"><img src="img/bangkok-yaowarat-neon.jpg" width="1400" height="933" loading="lazy" alt=""><figcaption>Bangkok</figcaption></figure>
-        <figure class="fs"><img src="img/krabi-phiphi-prows.jpg" width="1600" height="985" loading="lazy" alt=""><figcaption>Krabi</figcaption></figure>
-        <figure class="fs"><img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy" alt=""><figcaption>Tokyo</figcaption></figure>
-        <figure class="fs"><img src="img/barcelona-placa-reial.jpg" width="1400" height="933" loading="lazy" alt=""><figcaption>Barcelona</figcaption></figure>
-        <figure class="fs"><img src="img/phuket-banana-beach-dusk.jpg" width="1500" height="843" loading="lazy" alt=""><figcaption>Phuket</figcaption></figure>
-        <figure class="fs"><img src="img/mykonos-little-venice-sunset.jpg" width="1500" height="996" loading="lazy" alt=""><figcaption>Mykonos</figcaption></figure>
-        <figure class="fs"><img src="img/bangkok-wat-arun-sunset.jpg" width="1600" height="1066" loading="lazy" alt=""><figcaption>Bangkok</figcaption></figure>
-      </div>
-    </div>
-
-    <div class="wrap moments-intro">
-      <p class="kicker kicker-light" data-reveal>Moments, not itineraries</p>
-      <h2 class="display display-light" data-reveal>Nobody gets home and talks about the itinerary.</h2>
-      <p class="moments-sub" data-reveal>They talk about the ten minutes nobody planned. Here is the sort of thing a Tino trip is built to leave you with.</p>
+      <div class="toile" aria-hidden="true"></div>
     </div>
 
     <!-- Krabi: full bleed with an overlapping inset -->
@@ -121,10 +238,10 @@
       </figure>
       <div class="wrap m-krabi-grid">
         <div class="m-copy" data-reveal>
-          <h3 class="m-title">Krabi</h3>
+          <h3 class="m-title gold-text">Krabi</h3>
           <p>The engine cuts and the longtail slides onto the sand. For about a minute the loudest thing in Thailand is water coming off a cliff.</p>
         </div>
-        <figure class="frame inset" data-reveal>
+        <figure class="frame frame-dome inset" data-reveal>
           <img src="img/krabi-railay-cliff.jpg" width="1124" height="1500" loading="lazy"
                alt="A huge limestone cliff above Railay West Beach at golden hour, longtail boats drawn up on the sand below.">
           <figcaption class="place">Railay West Beach, Krabi</figcaption>
@@ -135,11 +252,11 @@
     <!-- Phuket: offset pair -->
     <article class="m wrap">
       <div class="m-copy m-copy-lead" data-reveal>
-        <h3 class="m-title">Phuket</h3>
+        <h3 class="m-title gold-text">Phuket</h3>
         <p>Shophouse pink, a cold drink, the afternoon rain arriving sideways. Nobody moves, and nobody minds.</p>
       </div>
       <div class="pair">
-        <figure class="frame frame-tall" data-reveal>
+        <figure class="frame frame-tall frame-dome" data-reveal>
           <img src="img/phuket-soi-rommanee.jpg" width="1400" height="1050" loading="lazy"
                alt="A narrow street of pink and yellow Sino-Portuguese shophouses in Phuket Old Town, red lanterns strung overhead after rain.">
           <figcaption class="place">Soi Rommanee, Phuket Old Town</figcaption>
@@ -149,6 +266,7 @@
                alt="A quiet curve of sand at Banana Beach in Phuket, a headland dark against a pale dusk sky.">
           <figcaption class="place">Banana Beach, Phuket</figcaption>
         </figure>
+        <svg class="frond frond-phuket" aria-hidden="true" data-parallax="0.05"><use href="#orn-frond"></use></svg>
       </div>
     </article>
 
@@ -156,7 +274,7 @@
     <article class="m m-bangkok">
       <div class="wrap">
         <div class="m-copy m-copy-lead" data-reveal>
-          <h3 class="m-title">Bangkok</h3>
+          <h3 class="m-title gold-text">Bangkok</h3>
           <p>Flame at head height, a plastic stool at knee height. You point at something, eat it, then point at it again.</p>
           <p class="hint" aria-hidden="true">Scroll sideways</p>
         </div>
@@ -189,7 +307,7 @@
     <article class="m wrap">
       <div class="mosaic mosaic-tokyo">
         <div class="m-copy cell-copy" data-reveal>
-          <h3 class="m-title">Tokyo</h3>
+          <h3 class="m-title gold-text">Tokyo</h3>
           <p>Six seats, one chef, a door you would have walked straight past. Two hours later you know everyone's name.</p>
         </div>
         <figure class="frame frame-wide cell-a" data-reveal>
@@ -197,7 +315,7 @@
                alt="A narrow Golden Gai alley in Shinjuku at night, hung with small hand-painted signs and lit by a line of paper lamps.">
           <figcaption class="place">Golden Gai, Shinjuku</figcaption>
         </figure>
-        <figure class="frame frame-portrait cell-b" data-reveal>
+        <figure class="frame frame-portrait frame-dome cell-b" data-reveal>
           <img src="img/tokyo-lantern-facade.jpg" width="1072" height="1300" loading="lazy"
                alt="A three-storey Tokyo restaurant lit top to bottom with rows of red and gold paper lanterns at dusk.">
           <figcaption class="place">Chiyoda, Tokyo</figcaption>
@@ -213,11 +331,11 @@
     <!-- Mykonos: mosaic -->
     <article class="m wrap">
       <div class="m-copy m-copy-lead" data-reveal>
-        <h3 class="m-title">Mykonos</h3>
+        <h3 class="m-title gold-text">Mykonos</h3>
         <p>Quad bike, sun on your forearms, straight over the middle of the island because somebody said the bakery there is worth it. It was.</p>
       </div>
       <div class="mosaic mosaic-mykonos">
-        <figure class="frame frame-portrait cell-lane" data-reveal>
+        <figure class="frame frame-portrait frame-dome cell-lane" data-reveal>
           <img src="img/mykonos-lane-bougainvillea.jpg" width="933" height="1400" loading="lazy"
                alt="A whitewashed lane in Mykonos town climbing between blue-railed steps, bougainvillea spilling over a doorway.">
           <figcaption class="place">Chora, Mykonos</figcaption>
@@ -249,7 +367,7 @@
       </figure>
       <div class="wrap">
         <div class="m-copy m-copy-lead" data-reveal>
-          <h3 class="m-title">Barcelona</h3>
+          <h3 class="m-title gold-text">Barcelona</h3>
           <p>Eight of you around one long table in the Gothic Quarter, three floors up, the last plate arriving somewhere near midnight.</p>
         </div>
         <div class="pair">
@@ -268,81 +386,115 @@
     </article>
   </section>
 
-  <!-- 4. NO CATTLE SIGHTSEEING --------------------------------------------- -->
+  <!-- 5. NO CATTLE SIGHTSEEING --------------------------------------------- -->
   <section class="cattle" id="cattle">
     <div class="wrap">
-      <p class="kicker" data-reveal>Plain speaking</p>
-      <h2 class="display" data-reveal>No cattle sightseeing.</h2>
-      <div class="contrast">
-        <div class="contrast-head" data-reveal>
-          <p class="col-label col-label-them">The forty-seater version</p>
-          <p class="col-label col-label-us">Yours</p>
+      <div class="panel panel-tiger" data-reveal>
+        <img class="tiger" src="img/art-barye-tiger.jpg" width="1200" height="587" loading="lazy" alt="" aria-hidden="true">
+        <p class="aside aside-tiger">The tiger agrees.</p>
+
+        <svg class="corner bl" aria-hidden="true"><use href="#orn-corner"></use></svg>
+        <svg class="corner br" aria-hidden="true"><use href="#orn-corner"></use></svg>
+
+        <p class="kicker">Plain speaking</p>
+        <h2 class="display">No cattle sightseeing.</h2>
+
+        <div class="contrast">
+          <div class="contrast-head" data-reveal>
+            <p class="col-label col-label-them">The forty-seater version</p>
+            <p class="col-label col-label-us">Yours</p>
+          </div>
+          <div class="row" data-reveal>
+            <p class="them"><span class="lbl">Them</span>Forty-two of you, one coach, one aisle seat.</p>
+            <p class="us"><span class="lbl">You</span>Four of you, a hire car, the windows down.</p>
+          </div>
+          <div class="row" data-reveal>
+            <p class="them"><span class="lbl">Them</span>Nine minutes at the lookout, then the horn goes.</p>
+            <p class="us"><span class="lbl">You</span>As long as the light holds.</p>
+          </div>
+          <div class="row" data-reveal>
+            <p class="them"><span class="lbl">Them</span>Lunch where the menu is laminated in six languages.</p>
+            <p class="us"><span class="lbl">You</span>Lunch where the taxi drivers eat.</p>
+          </div>
+          <div class="row" data-reveal>
+            <p class="them"><span class="lbl">Them</span>A flag on a stick to follow.</p>
+            <p class="us"><span class="lbl">You</span>A person to message when you want a second opinion.</p>
+          </div>
         </div>
-        <div class="row" data-reveal>
-          <p class="them"><span class="lbl">Them</span>Forty-two of you, one coach, one aisle seat.</p>
-          <p class="us"><span class="lbl">You</span>Four of you, a hire car, the windows down.</p>
-        </div>
-        <div class="row" data-reveal>
-          <p class="them"><span class="lbl">Them</span>Nine minutes at the lookout, then the horn goes.</p>
-          <p class="us"><span class="lbl">You</span>As long as the light holds.</p>
-        </div>
-        <div class="row" data-reveal>
-          <p class="them"><span class="lbl">Them</span>Lunch where the menu is laminated in six languages.</p>
-          <p class="us"><span class="lbl">You</span>Lunch where the taxi drivers eat.</p>
-        </div>
-        <div class="row" data-reveal>
-          <p class="them"><span class="lbl">Them</span>A flag on a stick to follow.</p>
-          <p class="us"><span class="lbl">You</span>A person to message when you want a second opinion.</p>
-        </div>
+        <p class="kind-note" data-reveal>Nothing wrong with a coach tour. Plenty of people have a lovely time on one. This is simply not that.</p>
       </div>
-      <p class="kind-note" data-reveal>Nothing wrong with a coach tour. Plenty of people have a lovely time on one. This is simply not that.</p>
     </div>
   </section>
 
-  <!-- 5. HOW IT WORKS ------------------------------------------------------ -->
+  <!-- 6. HOW IT WORKS ------------------------------------------------------ -->
   <section class="how" id="how">
     <div class="wrap">
-      <p class="kicker kicker-light" data-reveal>How it works</p>
-      <h2 class="display display-light" data-reveal>Four steps, and one of them is the holiday.</h2>
+      <p class="kicker kicker-gold" data-reveal>How it works</p>
+      <h2 class="display gold-text" data-reveal>Four steps, and one of them is the holiday.</h2>
+      <p class="rule rule-light"><svg class="rule-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg></p>
       <ol class="steps">
-        <li data-reveal><span class="step-no">01</span><h3>A chat</h3><p>Where you are drawn to, who is coming, how you like to spend a day. Tino asks a lot of questions, and the answers are the brief.</p></li>
-        <li data-reveal><span class="step-no">02</span><h3>A trip, designed</h3><p>Built out of your answers: where you stay, how you move between places, what is worth locking in early and what is much better left open.</p></li>
-        <li data-reveal><span class="step-no">03</span><h3>You go</h3><p>With room left in the schedule, so one good tip from someone who lives there can change the whole afternoon.</p></li>
-        <li data-reveal><span class="step-no">04</span><h3>Tino stays in the loop</h3><p>Plans move. Weather turns. Someone falls for a town and wants two more nights in it. He would much rather you asked.</p></li>
+        <li data-reveal>
+          <span class="medal"><svg aria-hidden="true"><use href="#orn-lotus"></use></svg><span class="step-no">I</span></span>
+          <h3>A chat</h3><p>Where you are drawn to, who is coming, how you like to spend a day. Tino asks a lot of questions, and the answers are the brief.</p>
+        </li>
+        <li data-reveal>
+          <span class="medal"><svg aria-hidden="true"><use href="#orn-lotus"></use></svg><span class="step-no">II</span></span>
+          <h3>A trip, designed</h3><p>Built out of your answers: where you stay, how you move between places, what is worth locking in early and what is much better left open.</p>
+        </li>
+        <li data-reveal>
+          <span class="medal"><svg aria-hidden="true"><use href="#orn-lotus"></use></svg><span class="step-no">III</span></span>
+          <h3>You go</h3><p>With room left in the schedule, so one good tip from someone who lives there can change the whole afternoon.</p>
+        </li>
+        <li data-reveal>
+          <span class="medal"><svg aria-hidden="true"><use href="#orn-lotus"></use></svg><span class="step-no">IV</span></span>
+          <h3>Tino stays in the loop</h3><p>Plans move. Weather turns. Someone falls for a town and wants two more nights in it. He would much rather you asked.</p>
+        </li>
       </ol>
       <p class="how-note" data-reveal><span class="chip">Placeholder</span> Timings, inclusions and anything to do with money are Tino's to write. Nothing about them has been assumed here.</p>
     </div>
   </section>
 
-  <!-- 6. ABOUT ------------------------------------------------------------- -->
+  <!-- 7. ABOUT ------------------------------------------------------------- -->
   <section class="about" id="about">
     <div class="wrap about-grid">
       <div class="about-photo" data-reveal>
-        <figure class="tino-main">
+        <figure class="niche niche-ogee tino-main">
+          <span class="niche-art">
           <img src="img/tino-rooftop.jpg" width="1200" height="1195" loading="lazy"
                alt="Tino Tuala in sunglasses and a black jumper, walking along a glass rooftop walkway in front of a huge round window, a city skyline far below.">
+          <svg class="niche-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0.8,100 V40 C0.8,22.5 18.3,13.5 34.3,9.5 C44.3,7 47.8,3.8 50,0.6 C52.2,3.8 55.7,7 65.7,9.5 C81.7,13.5 99.2,22.5 99.2,40 V100"/>
+            <path class="inner" d="M5,100 V41 C5,25 21,17 36,13 C45,10.8 48,8 50,5 C52,8 55,10.8 64,13 C79,17 95,25 95,41 V100"/>
+          </svg>
+          </span>
         </figure>
-        <figure class="tino-inset">
+        <figure class="frame frame-dome tino-inset">
           <img src="img/tino-laughing.jpg" width="877" height="1100" loading="lazy"
                alt="Tino Tuala laughing, perched on a bar stool in a tropical-print shirt, with palms and hanging plants behind him.">
         </figure>
+        <img class="perch perch-macaw" src="img/art-lear-macaw.jpg" width="1100" height="1032" loading="lazy" alt="" aria-hidden="true">
+        <p class="aside aside-macaw">Uninvited. Stayed anyway.</p>
       </div>
+
       <div class="about-copy" data-reveal>
         <p class="kicker">About</p>
         <h2 class="display">Hi! I'm Tino.</h2>
         <p class="about-lead">I'm a vibe booster and citizen of the world! I LOVE encouraging everybody to travel. I believe it's where life's greatest memories are made.</p>
         <p>Tell me how you like to spend a day, who you're bringing and what you never want to do again, and I'll design the trip around that. Proper time with the locals, room in the schedule to follow your nose, and zero cattle sightseeing. Got a place in mind, or just a feeling? Hit me up!</p>
-        <p><a class="btn btn-pink" href="#enquire">Hit me up</a></p>
+        <p><a class="btn btn-ink" href="#enquire">Hit me up</a></p>
       </div>
     </div>
   </section>
 
-  <!-- 7. ENQUIRY ----------------------------------------------------------- -->
+  <!-- 8. ENQUIRY ----------------------------------------------------------- -->
   <section class="enquire" id="enquire">
+    <img class="mural" src="img/art-rousseau-equatorial-jungle.jpg" width="1380" height="1500" loading="lazy" alt="" aria-hidden="true" data-parallax="-0.05">
+    <span class="mural-veil" aria-hidden="true"></span>
+
     <div class="wrap enquire-grid">
       <div class="enquire-intro" data-reveal>
-        <p class="kicker kicker-light">Start here</p>
-        <h2 class="display display-light">Where do you want to wake up?</h2>
+        <p class="kicker kicker-gold">Start here</p>
+        <h2 class="display gold-text">Where do you want to wake up?</h2>
         <p>Give Tino the rough shape of it. A place, a season, who is coming. The rest is a conversation.</p>
         <ul class="contact-list">
           <li><span class="chip chip-alert">Placeholder</span> <a href="#enquire">hello@example.com</a></li>
@@ -351,37 +503,44 @@
         </ul>
       </div>
 
-      <form class="enquiry-form" id="enquiryForm" novalidate data-reveal>
-        <div class="field">
-          <label for="f-name">Your name</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="f-email">Email</label>
-          <input id="f-email" name="email" type="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="f-where">Where do you dream of going?</label>
-          <input id="f-where" name="where" type="text" placeholder="Anywhere from a firm plan to a vague feeling">
-        </div>
-        <div class="field-row">
+      <div class="form-wrap" data-reveal>
+        <img class="perch perch-monkey" src="img/art-blake-monkey.jpg" width="665" height="860" loading="lazy" alt="" aria-hidden="true">
+        <p class="aside aside-monkey">He is not on staff.</p>
+
+        <form class="enquiry-form" id="enquiryForm" novalidate>
+          <svg class="corner tl" aria-hidden="true"><use href="#orn-corner"></use></svg>
+          <svg class="corner br" aria-hidden="true"><use href="#orn-corner"></use></svg>
           <div class="field">
-            <label for="f-when">Roughly when?</label>
-            <input id="f-when" name="when" type="text" placeholder="A month, a season, or no idea">
+            <label for="f-name">Your name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required>
           </div>
           <div class="field">
-            <label for="f-who">Who is coming?</label>
-            <input id="f-who" name="who" type="text" placeholder="Two of you, eight of you, the whole family">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
           </div>
-        </div>
-        <div class="field">
-          <label for="f-more">Anything else worth knowing?</label>
-          <textarea id="f-more" name="more" rows="4" placeholder="How you like to spend a day. What you never want to do again."></textarea>
-        </div>
-        <button class="btn btn-send" type="submit">Send it to Tino</button>
-        <p class="form-note" id="formNote" hidden role="status"></p>
-        <p class="form-small">This is a preview of a website. The form is not connected to anything and nothing you type here is sent or stored.</p>
-      </form>
+          <div class="field">
+            <label for="f-where">Where do you dream of going?</label>
+            <input id="f-where" name="where" type="text" placeholder="Anywhere from a firm plan to a vague feeling">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-when">Roughly when?</label>
+              <input id="f-when" name="when" type="text" placeholder="A month, a season, or no idea">
+            </div>
+            <div class="field">
+              <label for="f-who">Who is coming?</label>
+              <input id="f-who" name="who" type="text" placeholder="Two of you, eight of you, the whole family">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-more">Anything else worth knowing?</label>
+            <textarea id="f-more" name="more" rows="4" placeholder="How you like to spend a day. What you never want to do again."></textarea>
+          </div>
+          <button class="btn btn-send" type="submit">Send it to Tino</button>
+          <p class="form-note" id="formNote" hidden role="status"></p>
+          <p class="form-small">This is a preview of a website. The form is not connected to anything and nothing you type here is sent or stored.</p>
+        </form>
+      </div>
     </div>
   </section>
 </main>
@@ -389,7 +548,7 @@
 <footer class="site-footer">
   <div class="wrap footer-grid">
     <div>
-      <p class="footer-brand">Tino Tuala <em>Travels</em></p>
+      <p class="footer-brand"><svg class="brand-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg> Tino Tuala <em>Travels</em></p>
       <p class="footer-line">Krabi. Phuket. Bangkok. Tokyo. Mykonos. Barcelona. And wherever you were actually thinking of.</p>
       <ul class="footer-nav">
         <li><a href="#offer">The offer</a></li>
@@ -400,8 +559,8 @@
       </ul>
     </div>
     <div class="footer-meta">
-      <p><a href="credits.html">Photo credits and licences</a></p>
-      <p class="footer-small">Preview mock-up built for review. Draft copy, placeholder contact details. Photographs are freely licensed stand-ins from Wikimedia Commons and are not from Tino's trips.</p>
+      <p><a href="credits.html">Picture credits and licences</a></p>
+      <p class="footer-small">Preview mock-up built for review. Draft copy, placeholder contact details. Photographs are freely licensed stand-ins from Wikimedia Commons and are not from Tino's trips. The paintings and engravings are public-domain or freely licensed works, credited in full.</p>
       <p class="footer-small">&copy; <span id="year">2026</span> Tino Tuala Travels</p>
     </div>
   </div>
@@ -411,7 +570,7 @@
 <!-- TEMP:versions — test-site only, delete before the real domain goes live. Self-contained: style, markup, script. -->
 <style>
 .vdock{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;font:700 13px/1 'DM Sans',system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em}
-.vdock .versions-tag{background:#E0417E;color:#FFFFFF;padding:12px 16px;border-radius:999px;text-decoration:none;box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .3s,box-shadow .3s;flex:none}
+.vdock .versions-tag{background:#C9A227;color:#0B0B0B;padding:12px 16px;border-radius:999px;text-decoration:none;box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .3s,box-shadow .3s;flex:none}
 .vdock .versions-tag:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.4)}
 .vdock .vstrip{display:flex;gap:6px;max-width:calc(4 * 54px + 3 * 6px);overflow-x:auto;scrollbar-width:none;padding:4px 0}
 .vdock .vstrip::-webkit-scrollbar{display:none}

@@ -1,5 +1,6 @@
 /* Tino Tuala Travels - mock-up behaviour.
-   Four jobs: reveal on scroll, a form that goes nowhere on purpose, the film strip, the year.
+   Five jobs: reveal on scroll, a slow parallax drift on the foliage layers, a
+   form that goes nowhere on purpose, the film strip, the year.
    Everything degrades to "visible and usable" if any of it fails. */
 
 (function () {
@@ -51,6 +52,44 @@
     }, 2500);
   }
 
+  /* --- parallax ------------------------------------------------------------
+     Foliage and murals drift a little slower than the page. Transform only,
+     small distances, capped, and never anything that moves the reading line. */
+
+  function setupParallax() {
+    if (reduce || shot) return;
+    var nodes = document.querySelectorAll('[data-parallax]');
+    if (!nodes.length) return;
+
+    var items = [];
+    for (var i = 0; i < nodes.length; i++) {
+      items.push({ el: nodes[i], k: parseFloat(nodes[i].getAttribute('data-parallax')) || 0 });
+    }
+
+    var ticking = false;
+    function paint() {
+      ticking = false;
+      var vh = window.innerHeight;
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        var r = it.el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) continue;
+        var mid = r.top + r.height / 2 - vh / 2;       /* distance from viewport centre */
+        var y = Math.max(-90, Math.min(90, mid * it.k));
+        it.el.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0)';
+      }
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(paint);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint();
+  }
+
   /* --- enquiry form: a preview, wired to nothing -------------------------- */
 
   function setupForm() {
@@ -81,7 +120,7 @@
     if (tracks.length < 2) return;
     strip.classList.add('is-live');
 
-    var GAP = 14, BASE = 26, x = 0, span = 0, boost = 0, hot = false;
+    var GAP = 16, BASE = 26, x = 0, span = 0, boost = 0, hot = false;
     var down = false, lastX = 0, lastT = 0, vel = 0, last = performance.now();
 
     function measure() { span = tracks[0].getBoundingClientRect().width + GAP; }
@@ -142,6 +181,7 @@
 
   function init() {
     setupReveal();
+    setupParallax();
     setupForm();
     setupStrip();
     setupYear();
