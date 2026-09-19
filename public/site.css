@@ -401,6 +401,14 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   margin: 0 0 2rem;
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin: 0; }
+/* The buttons and the bell on one line.  The key tray is fixed in the
+   bottom-left corner, so the bell may never sit down there with it. */
+.hero-do {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: clamp(16px, 2.6vw, 44px);
+}
 
 .hero-art { position: relative; }
 .hero-niche { max-width: 470px; margin-inline: auto; }
@@ -1255,9 +1263,14 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   display: flex;
   align-items: flex-end;
   gap: 14px;
-  margin-top: clamp(22px, 3vw, 34px);
+  margin-top: 0;
   padding-bottom: 14px;
 }
+/* Always pushed to the right-hand end of its line, whether it shares the row
+   with the buttons or wraps under them: the fixed key tray owns the
+   bottom-LEFT corner and the bell may never end up underneath it. */
+.hero-do .reception { margin-left: auto; margin-right: clamp(0px, 7vw, 132px); }
+@media (max-width: 720px) { .reception { margin-top: 16px; } }
 .ledge {
   position: absolute;
   left: -10px;
@@ -1318,8 +1331,8 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 .torch {
   position: absolute;
   bottom: 2%;
-  width: clamp(68px, 9vw, 132px);
-  height: clamp(186px, 25vw, 352px);
+  width: clamp(76px, 7vw, 104px);
+  height: clamp(206px, 21vw, 306px);
   pointer-events: none;
   z-index: 2;
 }
@@ -1333,9 +1346,13 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   background: linear-gradient(180deg, #C79E3C, #7A5C19 60%, #493609);
   box-shadow: inset 0 1px 0 rgba(255,244,205,.6), 0 6px 14px rgba(0,0,0,.5);
 }
-.torch-l { left: -6%; }
-.torch-r { right: -6%; }
-@media (max-width: 860px) { .torch { display: none; } }
+/* They flank the arch like sconces either side of a doorway and never
+   overlap the photograph: anchored to the middle, then pushed out past the
+   niche's half-width (the niche is min(470px, 100%) wide).  Below 1180 there
+   is no room for them outside the frame, so they go. */
+.torch-l { right: calc(50% + min(235px, 50%) + 8px); left: auto; }
+.torch-r { left: calc(50% + min(235px, 50%) + 8px); right: auto; }
+@media (max-width: 1180px) { .torch { display: none; } }
 
 /* --- the fire pit --------------------------------------------------------- */
 

@@ -759,6 +759,9 @@
       }).join('');
     }
     if (el.count) el.count.textContent = state.stamps.length + '/' + DOORS.length;
+    /* With nothing in it the tray is a slim chip: an empty felt saying NO KEYS
+       YET is dead weight, and it sits exactly where the reception bell is. */
+    if (el.tray) el.tray.classList.toggle('is-compact', state.keys.length === 0);
   }
 
   function syncSoundButtons() {
