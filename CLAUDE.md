@@ -209,8 +209,13 @@ While the site lives on its workers.dev address, earlier builds stay browsable s
 compared. `public/versions/` holds one folder per locked version plus a list page, and every
 page carries a small dock (v1, v2, Versions) in its bottom corner.
 
-- **v1** is locked at `public/versions/2026-09-18-v1-editorial/` (18 Sep 2026). The front page is the working
-  version, currently **v2**, which started as a copy of v1.
+- **v1** is locked at `public/versions/2026-09-18-v1-editorial/` (18 Sep 2026) and **v2** at
+  `public/versions/2026-09-19-v2-green-room/` (19 Sep 2026). The front page is the working version, currently
+  **v3**, which started as a copy of v2.
+- **To lock a version, use the script**, not hands: `lock_version.py` in the site-setup master
+  folder's version-lock kit. It reads everything first, then writes; it rewrites `img/` and `video/`
+  paths to the site root in the frozen HTML, CSS `url()`s **and JS strings**, adds the version to every
+  dock, live and frozen, and to `versions/index.html`.
 - A frozen folder holds its own copy of the pages, `site.css` and `site.js`. **Media is
   shared:** frozen pages point at `/img/` and `/video/` from the site root, so the repo does not
   carry the same photos and loops once per version. **Never delete or overwrite a media file a
