@@ -1415,3 +1415,78 @@ html:not(.js) .roomfull .lost-list { position: static; width: auto; height: auto
    860px; this is the fix, and it applies to 102B as well. */
 @media (max-width: 860px) { .roomfull .held { bottom: 132px; } }
 @media (max-width: 640px) { .roomfull .held { bottom: 196px; } }
+
+/* --- Tino's Black Book ---------------------------------------------------- */
+
+/* The two page controls sit at the page edges, left and right, where the
+   corners of the book are.  The bottom of the screen is spoken for: tray,
+   card, way out, dock. */
+.book-nav {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 7;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 clamp(12px, 2.4vw, 34px);
+  margin: 0;
+  pointer-events: none;
+}
+.book-nav .btn { pointer-events: auto; }
+.book-nav .btn[disabled] { opacity: .35; pointer-events: none; }
+@media (max-width: 860px) { .book-nav { top: 42%; } }
+
+/* the flat book: two pages side by side over the drawing */
+.book-flat {
+  position: absolute;
+  left: 50%; top: 46%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+  width: min(62%, 660px);
+}
+.book-flat[hidden] { display: none !important; }
+.bf-page {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: clamp(12px, 1.4vw, 20px);
+  background:
+    linear-gradient(170deg, rgba(255,255,255,.4), rgba(255,255,255,0) 36%),
+    linear-gradient(160deg, #EFE6D0, #E3D8BA);
+  color: var(--ink, #1A1611);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.4), 0 18px 40px rgba(0,0,0,.5);
+  min-height: 210px;
+  position: relative;
+}
+.bf-head { margin: 0; font: 500 clamp(1.2rem, 1.8vw, 1.7rem)/1.05 var(--f-display, Georgia, serif); }
+.bf-sub {
+  margin: .2rem 0 .7rem;
+  font: 500 .5rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .24em; text-transform: uppercase; color: #8A6A24;
+}
+.bf-stamp {
+  display: inline-block; margin: 0 0 .6rem; padding: .3em .7em;
+  border: 2px dashed rgba(122,35,64,.7);
+  font: 600 .5rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em; text-transform: uppercase; color: #7A2340;
+  transform: rotate(-2deg);
+}
+.bf-ask { margin: 0 0 .8rem; font: italic 400 .86rem/1.45 var(--f-display, Georgia, serif); color: #5C5240; }
+.bf-tape {
+  position: absolute; right: 8px; top: 8px; margin: 0;
+  padding: .2em .5em;
+  background: rgba(226,212,168,.8);
+  box-shadow: inset 0 0 0 1px rgba(160,140,90,.6);
+  font: 500 .46rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em; text-transform: uppercase; color: #6E5A32;
+  transform: rotate(6deg);
+}
+.bf-rules { height: 96px; background: repeating-linear-gradient(180deg,
+  rgba(120,100,60,0) 0 21px, rgba(120,100,60,.32) 21px 22px); }
+.bf-blank { margin: 0; font: italic 400 .9rem/1.5 var(--f-display, Georgia, serif); color: #7A6B4C; }
+@media (max-width: 860px) {
+  .book-flat { width: calc(100% - 24px); top: 36%; }
+  .bf-rules { height: 50px; }
+}

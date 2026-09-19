@@ -139,6 +139,10 @@
       img: 'img/reward-label-03.jpg', w: 787, h: 1100,
       alt: 'A gummed hotel luggage label: a dark sailing boat on a red lake below white mountains, lettered Touring Hotel Balance, Geneve.'
     },
+    flower: { title: 'A pressed flower', icon: 'flower', carried: true,
+      note: 'Out of Tino\u2019s book. Flat, brown, and still faintly a flower.' },
+    stub: { title: 'Half a ticket', icon: 'stub', carried: true,
+      note: 'The half that gets you in is not this one.' },
     backlabel: {
       title: 'A label off the back of a frame',
       img: 'img/reward-label-04.jpg', w: 1100, h: 1092,
@@ -717,7 +721,9 @@
     passport: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5zM7 3v18" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="13" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9.8 10h6.4M13 6.8c1.6 2 1.6 4.4 0 6.4-1.6-2-1.6-4.4 0-6.4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',
     soundOn: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h3.5L12 5v14l-4.5-4H4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>',
     soundOff: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h3.5L12 5v14l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-    hat: '<svg viewBox="0 0 120 80" aria-hidden="true"><ellipse cx="60" cy="58" rx="52" ry="14" fill="#D9BE7E" stroke="#8A6A24" stroke-width="2"/><path d="M28 56c0-18 10-32 32-32s32 14 32 32" fill="#E7D3A0" stroke="#8A6A24" stroke-width="2"/><path d="M28 50c14 7 50 7 64 0" fill="none" stroke="#A63329" stroke-width="5"/></svg>'
+    hat: '<svg viewBox="0 0 120 80" aria-hidden="true"><ellipse cx="60" cy="58" rx="52" ry="14" fill="#D9BE7E" stroke="#8A6A24" stroke-width="2"/><path d="M28 56c0-18 10-32 32-32s32 14 32 32" fill="#E7D3A0" stroke="#8A6A24" stroke-width="2"/><path d="M28 50c14 7 50 7 64 0" fill="none" stroke="#A63329" stroke-width="5"/></svg>',
+    flower: '<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 112 C66 84 62 68 60 56" fill="none" stroke="#584A26" stroke-width="3"/><g stroke="#604226" stroke-width="2"><ellipse cx="60" cy="30" rx="10" ry="22" fill="#A87C5C"/><ellipse cx="60" cy="30" rx="10" ry="22" fill="#A87C5C" transform="rotate(60 60 52)"/><ellipse cx="60" cy="30" rx="10" ry="22" fill="#966854" transform="rotate(120 60 52)"/><ellipse cx="60" cy="30" rx="10" ry="22" fill="#A87C5C" transform="rotate(180 60 52)"/><ellipse cx="60" cy="30" rx="10" ry="22" fill="#966854" transform="rotate(240 60 52)"/><ellipse cx="60" cy="30" rx="10" ry="22" fill="#A87C5C" transform="rotate(300 60 52)"/></g><circle cx="60" cy="52" r="10" fill="#785C28"/><ellipse cx="44" cy="86" rx="16" ry="6" fill="#606E3E" transform="rotate(-25 44 86)"/><ellipse cx="78" cy="96" rx="16" ry="6" fill="#606E3E" transform="rotate(25 78 96)"/></svg>',
+    stub: '<svg viewBox="0 0 160 70" aria-hidden="true"><path d="M2 2 H138 l-8 8 8 8 -8 8 8 8 -8 8 8 8 -8 8 8 6 H2 Z" fill="#E6D3A4" stroke="#8A2E2E" stroke-width="3"/><text x="16" y="30" font-family="Cinzel, Georgia, serif" font-size="15" font-weight="600" fill="#5E4A20">ADMIT ONE</text><text x="16" y="52" font-family="Georgia, serif" font-size="12" fill="#3A3226">no date, no seat</text><path d="M118 6 V64" stroke="rgba(58,44,20,.4)" stroke-width="2" stroke-dasharray="4 4"/></svg>'
   };
 
   /* ------------------------------------------------------------------- DOM */

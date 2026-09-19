@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>Tino's Black Book | Tino Tuala Travels</title>
-<meta name="description" content="Preview mock-up. A worn leather notebook you leaf through: the bakery, the table nobody photographs.">
+<meta name="description" content="Preview mock-up. A notebook with a page for every place and nothing written in it yet.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23081410'/%3E%3Cpath d='M16 5c3 5 3.4 10 0 21-3.4-11-3-16 0-21z' fill='%23C9A227'/%3E%3Cpath d='M9.6 10.5c3.6 3.6 5 7.6 6.4 15.5-5.6-7-7-11-6.4-15.5z' fill='%23A8842E'/%3E%3Cpath d='M22.4 10.5c-3.6 3.6-5 7.6-6.4 15.5 5.6-7 7-11 6.4-15.5z' fill='%23A8842E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,24 +70,86 @@
 </header>
 
 <main id="roomMain">
-  <!-- THE ROOM-PAGE SKELETON.  The room is the page: a full-bleed section
-       under the header with everything floating on it.  Part B replaces the
-       contents of .roomfull with its own scene and leaves the rest alone.
-       See the "For part B" section of CLAUDE.md. -->
-  <section class="roomfull room-waiting" id="roomStage">
-    <span class="waiting-ground" aria-hidden="true"></span>
+  <section class="roomfull" id="roomStage">
+
+    <div class="room-flat" id="roomFlat">
+      <svg viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" role="img"
+           aria-label="A worn leather notebook lying open on a desk under a brass lamp, with a few things tucked between its pages.">
+        <defs>
+          <linearGradient id="bbRoom" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0E2018"/><stop offset="1" stop-color="#06120C"/>
+          </linearGradient>
+          <linearGradient id="bbDesk" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4A3418"/><stop offset="1" stop-color="#22160A"/>
+          </linearGradient>
+        </defs>
+        <rect width="1000" height="620" fill="url(#bbRoom)"/>
+        <rect y="330" width="1000" height="290" fill="url(#bbDesk)"/>
+        <ellipse cx="500" cy="330" rx="420" ry="90" fill="#6A4A1E" opacity=".35"/>
+        <g>
+          <path d="M150 470 L500 400 L850 470 L500 545 Z" fill="#2A1A0E"/>
+          <path d="M175 462 L500 404 L500 528 L175 470 Z" fill="#EFE6D0"/>
+          <path d="M825 462 L500 404 L500 528 L825 470 Z" fill="#E7DCC4"/>
+          <g stroke="rgba(120,100,60,.45)" stroke-width="2">
+            <path d="M215 470 L495 425"/><path d="M215 482 L495 440"/><path d="M215 494 L495 455"/>
+            <path d="M785 470 L505 425"/><path d="M785 482 L505 440"/><path d="M785 494 L505 455"/>
+          </g>
+          <path d="M500 404 L500 528" stroke="#6A5232" stroke-width="4"/>
+        </g>
+        <g>
+          <rect x="835" y="150" width="22" height="180" fill="#8A6A24"/>
+          <path d="M780 150 h130 l-24 -54 h-82 z" fill="#B08A2E"/>
+          <ellipse cx="846" cy="160" rx="50" ry="10" fill="#FFD79A" opacity=".3"/>
+        </g>
+      </svg>
+      <div class="flat-veil" aria-hidden="true"></div>
+      <div class="book-flat" id="bookFlat" hidden>
+        <article class="bf-page" id="bfLeft"></article>
+        <article class="bf-page" id="bfRight"></article>
+      </div>
+    </div>
 
     <h1 class="room-plate">
       <span class="rp-no">214</span>
       <span class="rp-name">Tino's Black Book</span>
     </h1>
 
-    <div class="waiting-card">
-      <p class="room-lede">A worn leather notebook you leaf through: the bakery, the table nobody photographs.</p>
-      <p class="rule"><svg class="rule-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg></p>
-      <p><span class="chip">Being prepared</span> The book is here and the pages are blank. They stay blank until Tino fills them in, because nothing in it is going to be invented for him.</p>
-      <p class="room-small">Your passport has been stamped for 214. The door stays open from here on.</p>
+    <p class="room-hint" id="roomHint">Take the corner of the page and turn it. Gently.</p>
+    <p class="book-count room-count">Page <span id="bkNum">1</span> of <span id="bkTot">9</span></p>
+
+    <ul class="lost-list" id="ephList" aria-label="Things tucked between the pages">
+      <li style="--x:34%;--y:44%"><button type="button" class="lost-btn" data-obj="eph-label">
+        <span class="lost-name">A luggage label, pressed flat</span>
+        <span class="tag-line">Somebody used it as a bookmark and never came back for it.</span>
+      </button></li>
+      <li style="--x:48%;--y:50%"><button type="button" class="lost-btn" data-obj="eph-flower">
+        <span class="lost-name">A flower, pressed between two pages</span>
+        <span class="tag-line">Flat, brown, and still faintly a flower.</span>
+      </button></li>
+      <li style="--x:62%;--y:56%"><button type="button" class="lost-btn" data-obj="eph-stub">
+        <span class="lost-name">A ticket stub, torn in half</span>
+        <span class="tag-line">The half that gets you in is not this one.</span>
+      </button></li>
+    </ul>
+
+    <p class="book-nav" id="bookNav">
+      <button type="button" class="btn btn-small btn-ghost" id="pagePrev">Back a page</button>
+      <button type="button" class="btn btn-small" id="pageNext">Turn the page</button>
+    </p>
+
+    <div class="held" id="held" hidden>
+      <p class="held-kick" id="heldKick">Tucked between the pages</p>
+      <p class="held-name" id="heldName"></p>
+      <p class="held-tag" id="heldTag"></p>
+      <p class="held-acts">
+        <button type="button" class="btn btn-small" id="heldAct" hidden>Keep it</button>
+        <button type="button" class="btn btn-small btn-ghost" id="heldBack">Put it back</button>
+      </p>
     </div>
+
+    <p class="room-draft"><span class="chip">Draft</span> Every page in this book is empty on
+    purpose. The headings and the prompts are the hotel asking Tino a question; not one word of
+    it is his advice, and no name, address or recommendation has been invented to fill it in.</p>
 
     <a class="room-out" href="index.html#corridor">
       <span class="ro-arrow" aria-hidden="true"></span>
@@ -111,13 +173,7 @@
 
 <script src="hotel.js"></script>
 <script src="vendor/gsap.min.js"></script>
-<script>
-/* Every room page is the same one line: gate on the key, and the shared code
-   opens the door, stamps the passport and burns the paper off the doorway. */
-Hotel.ready(function () {
-  if (!Hotel.gateRoom('black-book')) return;
-});
-</script>
+<script src="room-book.js" type="module"></script>
 <!-- TEMP:versions — test-site only, delete before the real domain goes live. Self-contained: style, markup, script. -->
 <style>
 .vdock{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;font:700 13px/1 'DM Sans',system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em}
