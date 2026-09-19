@@ -1341,7 +1341,7 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 
 .firepit-band {
   position: relative;
-  height: clamp(170px, 20vw, 280px);
+  height: clamp(240px, 27vw, 380px);
   margin-top: clamp(30px, 5vw, 70px);
   overflow: hidden;
   background:
@@ -1653,7 +1653,7 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   .door-plaque { font-size: .46rem; }
   .bell { width: 74px; height: 58px; }
   .ledge { width: 132px; }
-  .firepit-band { height: 150px; }
+  .firepit-band { height: 210px; }
   .hunt { width: 46px; height: 46px; }
 }
 

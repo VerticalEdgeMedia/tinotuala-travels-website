@@ -1107,35 +1107,44 @@
 
   var fires = [];
 
-  /* six cut sheets, each a hand-drawn torn flame, stacked and swaying */
-  var PF_PATH = 'M50 2 C57 22 64 31 69 42 L74 36 C79 55 87 64 84 84 L91 78 C93 100 85 114 87 131 ' +
-    'L78 124 C77 142 66 150 59 155 L62 144 C55 152 45 152 39 148 L42 138 C32 145 21 137 19 124 ' +
-    'L12 131 C9 111 16 97 21 83 L11 87 C14 67 24 57 30 43 L35 49 C41 33 46 21 50 2 Z';
-  var PF_COLS = ['#531017', '#8F1B14', '#C33A12', '#E2661A', '#F19C2B', '#F9DCA4'];
+  /* THE LIGHTER VERSION of the paper fire: the same sculpture as stacked SVG
+     paths.  A run of tall, rounded, leaning flame tongues - never a saw-tooth
+     ridge - each one a smaller cut of the one behind it, swaying. */
+  var PF_PATH = 'M12 160 C6 122 24 96 36 68 C45 48 49 28 50 4 C51 28 55 48 64 68 ' +
+    'C76 96 94 122 88 160 Z';
+  var PF_COLS = ['#531017', '#7E1714', '#A82A13', '#C94A14', '#E28A24', '#F4CE8A'];
 
   function cssFire(target, opts) {
     if (target.querySelector('.paper-fire')) return null;
-    var count = Math.max(1, Math.round(opts.count || 1));
+    /* how many tongues run across: the same number the shader would cut */
+    var count = Math.max(1, Math.round(opts.count || (opts.licks ? opts.licks / 1.7 : 1)));
     var wrap = document.createElement('span');
     wrap.className = 'paper-fire';
     wrap.setAttribute('aria-hidden', 'true');
     var cells = '';
+    var boxH = Math.round((opts.height != null ? opts.height : 0.9) * 100);
     for (var c = 0; c < count; c++) {
+      /* a few tall, many medium, some low, and they overlap */
+      var tall = [1, 0.62, 0.84, 0.54, 1, 0.70, 0.58, 0.92][c % 8];
       var cx = ((c + 0.5) / count) * 100;
-      var cw = (100 / count) * (opts.spread != null ? Math.min(1.2, opts.spread * 1.15) : 0.95);
+      var cw = (100 / count) * 1.08 * (opts.spread != null ? opts.spread : 1);
+      var lean = (c % 3) - 1;
       var sheets = '';
       for (var i = 0; i < 6; i++) {
-        var s = 1 - i * 0.135;
+        var s = 1 - i * 0.088;
         sheets += '<path class="pf-sheet" d="' + PF_PATH + '" fill="' + PF_COLS[i] + '" ' +
-          'transform="translate(50 160) scale(' + s.toFixed(3) + ' ' + (s * (0.94 + (c % 3) * 0.06)).toFixed(3) +
-          ') translate(-50 -160)"/>';
+          'style="animation-delay:' + (-c * 0.7 - i * 0.35).toFixed(2) + 's" ' +
+          'transform="translate(50 160) rotate(' + (lean * 3.4) + ') scale(' +
+          s.toFixed(3) + ' ' + s.toFixed(3) + ') translate(-50 -160)"/>';
       }
       cells += '<svg viewBox="0 0 100 160" preserveAspectRatio="none" ' +
         'style="left:' + (cx - cw / 2) + '%;width:' + cw + '%;' +
-        'height:' + Math.round((opts.height != null ? opts.height : 0.94) * 100) + '%;' +
+        'height:' + Math.round(boxH * tall) + '%;' +
         'bottom:' + Math.round((opts.base != null ? opts.base : 0) * 100) + '%;top:auto">' +
         sheets + '</svg>';
     }
+    /* the lip of the trough, so the feet of the tongues are hidden */
+    cells += '<span class="pf-foot"></span>';
     wrap.innerHTML = cells;
     var cs = window.getComputedStyle(target);
     if (cs.position === 'static') target.style.position = 'relative';

@@ -65,14 +65,14 @@ async function lightTheFires() {
   const torches = $$('[data-fire="torch"]');
   for (const t of torches) {
     await Hotel.fire(t, {
-      sheets: 6, base: 0.02, height: 1.05, licks: 1.6, taper: 1,
+      sheets: 6, base: 0.03, height: 0.76, licks: 1.5, taper: 1,
       embers: 0.8, shotTime: 17 + torches.indexOf(t) * 9 + ft
     });
   }
   const pit = $('[data-fire="pit"]');
   if (pit) {
     await Hotel.fire(pit, {
-      sheets: 7, base: 0.05, height: 0.92, licks: 4.4, taper: 0,
+      sheets: 7, base: 0.04, height: 0.72, licks: 12, taper: 0,
       embers: 0.9, shotTime: 31 + ft
     });
   }

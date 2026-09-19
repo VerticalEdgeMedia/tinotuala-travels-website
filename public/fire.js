@@ -181,29 +181,68 @@ vec3 palette(float t){
   return mix(c5, c6, s - 5.0);
 }
 
-/* THE LICK FIELD.  Every sheet is cut from the SAME run of licks - tall
-   tongues, low dips, the odd leaning curl - so the stack nests: a deep red
-   tongue with a vermilion one inside it and a pale cream heart inside that.
-   Each sheet then sits lower by a fixed amount, which is what turns the
-   nesting into visible bands of graded colour.  It is one continuous piece of
-   paper running the whole width, never a row of separate cones. */
-float profileAt(float x, float speed, float t, float licks, float taper){
-  float d = t * speed;
-  float u = x * licks;
+/* ONE FLAME TONGUE, as a height field.  A candle-flame teardrop: the sides
+   stand up near-vertical at the foot, flare into soft shoulders, and close
+   over a rounded tip.  pow(1 - s*s, 0.58) is the whole shape.  A triangle
+   here is what turns a paper fire into a jagged mountain range, so there
+   isn't one anywhere in this file. */
+float tongueH(float s, float h){
+  float a = abs(s);
+  if (a >= 1.0) return 0.0;
+  return h * pow(1.0 - pow(a, 1.7), 0.62);
+}
 
-  float w1 = fbm(vec2(u * 0.85 + d * 0.28, 1.70));
-  float w3 = fbm(vec2(u * 4.40 + d * 1.15, 9.10));
-  /* warping the sampling makes the licks lean instead of standing as a row
-     of symmetrical hills */
-  float warp = 0.24 * (w1 - 0.5);
-  float w2 = fbm(vec2((u + warp) * 1.90 - d * 0.70, 5.40));
+/* THE LICK FIELD.  A run of tall, rounded, LEANING flame tongues standing on
+   a low continuous run of paper: a few tall, many medium, some low enough to
+   be swallowed by the run and read as a swell in it.  Each tongue leans, and
+   the lean sways.  The only small-scale texture is a fine torn deckle along
+   the cut.
 
-  float base   = 0.30 + 0.22 * w1;
-  float tongue = 1.18 * pow(smoothstep(0.38, 1.00, w2), 2.00) * (0.55 + 0.60 * w1);
-  float flick  = 0.26 * pow(smoothstep(0.62, 1.00, w3), 2.00);
-  float prof = base + tongue + flick;
+   Every sheet is cut from the SAME lattice of tongues, so the stack nests: a
+   deep lacquer red tongue with a vermilion one inside it and a pale cream
+   heart inside that.  A sheet differs from the one behind it by a sway (a
+   small bounded sideways slide, which is the 2.5D) and by how far down it
+   sits, which is what turns the nesting into visible bands of graded colour.
+   It is one continuous piece of paper running the whole width, never a row
+   of separate cones.
 
-  prof *= 1.0 + 0.06 * sin(t * (0.50 + speed) + 3.1);          /* breathing */
+   The y passed in is how high up the box this fragment is.  The tongues lean, so the
+   field is sheared, and a shear has to know the height it is shearing at. */
+float profileAt(float x, float y, float sway, float shrink, float t, float licks, float taper){
+  float u  = x * licks + t * 0.075 + sway;      /* the whole run drifts slowly */
+  float ly = clamp(y / max(0.05, uHeight), 0.0, 1.5);   /* 0 at the foot, 1 at the tip */
+
+  float top = 0.0;
+  float cell = floor(u);
+  for (int c = -2; c <= 2; c++){
+    float ci = cell + float(c);
+    float r1 = hash21(vec2(ci, 11.0));
+    float r2 = hash21(vec2(ci, 23.0));
+    float r3 = hash21(vec2(ci, 37.0));
+    float r4 = hash21(vec2(ci, 53.0));
+
+    /* a few tall, many medium, some low */
+    float h = 0.40 + 0.86 * pow(r2, 2.4);
+    /* the tall ones are the narrow ones */
+    float w = 0.42 + 0.26 * r3 + 0.14 * (1.0 - min(1.0, h));
+    float cx = ci + 0.20 + 0.60 * r1;
+
+    /* it breathes, it leans, and the lean sways */
+    h *= 1.0 + 0.09 * sin(t * (0.42 + 0.52 * r3) + r1 * 6.2832);
+    float lean = (r4 - 0.5) * 0.52 + 0.16 * sin(t * (0.21 + 0.15 * r4) + r2 * 6.2832);
+
+    /* the sheet in front is a SMALLER CUT of the same tongue, nested inside
+       the one behind it: shorter and narrower about the same foot.  A plain
+       vertical offset would only work on a gentle hill - on a tongue with
+       near-vertical sides it leaves a hairline instead of a band of colour. */
+    top = max(top, tongueH((u - lean * ly - cx) / (w * shrink), h * shrink));
+  }
+
+  /* the low continuous run the tongues stand on.  This is the thing that
+     keeps each sheet ONE piece of paper instead of a row of separate flames */
+  float run = (0.21 + 0.060 * vnoise(vec2(u * 0.70 + t * 0.05, 4.0))
+                    + 0.034 * vnoise(vec2(u * 1.90 - t * 0.09, 8.0))) * shrink;
+  float prof = max(run, top);
 
   /* a torch tapers away at the sides; a fire pit runs edge to edge */
   float env = smoothstep(0.0, 0.30, x) * smoothstep(1.0, 0.70, x);
@@ -211,8 +250,8 @@ float profileAt(float x, float speed, float t, float licks, float taper){
 
   /* a fine torn fray along the cut, and nothing coarser: these licks are cut
      by hand, they are not a saw blade */
-  float deckle = (vnoise(vec2(u * 22.0 + d * 1.8, 7.0)) - 0.5) * 0.032
-               + (vnoise(vec2(u * 58.0 - d * 2.6, 11.0)) - 0.5) * 0.013;
+  float deckle = (vnoise(vec2(u * 26.0 + t * 0.9, 7.0)) - 0.5) * 0.014
+               + (vnoise(vec2(u * 64.0 - t * 1.3, 13.0)) - 0.5) * 0.006;
 
   return max(0.0, prof + deckle);
 }
@@ -237,28 +276,31 @@ void main(){
     float x  = uv.x - uPointer.x * amt * 0.75;
     float yy = (uv.y - uBase) - uPointer.y * amt * 0.10 - uScroll * amt * 0.22;
 
-    /* the sheets share the licks and differ by how far down they sit */
-    float speed = mix(0.16, 0.34, k);
-    float off   = k * 0.62;
+    /* the sheets share the lattice of tongues and differ by how much smaller
+       a cut each one is, and by a small bounded sideways sway that never
+       de-nests them */
+    float speed  = mix(0.16, 0.34, k);
+    float sway   = k * 0.11 * sin(uTime * 0.19 + k * 2.3);
+    float shrink = 1.0 - k * 0.52;
 
     /* the soft shadow this sheet throws on to the taller one behind it.
        That band, just above this sheet's edge, is what sells thick paper. */
     float drop = 0.050 + 0.028 * (1.0 - k);
-    float eSh  = uHeight * max(0.0, profileAt(x - drop * 0.42, speed, uTime, uLicks, uTaper) - off);
+    float eSh  = uHeight * profileAt(x - drop * 0.13, yy, sway, shrink, uTime, uLicks, uTaper);
     float above = yy - eSh;
     float sh = (1.0 - smoothstep(0.0, drop, above)) * step(0.0, above);
-    col = mix(col, col * 0.40 + palette(0.0) * 0.20, sh * 0.96);
+    col = mix(col, col * 0.52 + palette(0.02) * 0.16, sh * 0.72);
 
-    float p = profileAt(x, speed, uTime, uLicks, uTaper);
-    float e = uHeight * max(0.0, p - off);
+    float p = profileAt(x, yy, sway, shrink, uTime, uLicks, uTaper);
+    float e = uHeight * p;
     if (e <= 0.0005) continue;
 
     float aa = fwidth(yy) * 1.2 + 0.0012;
     float m = smoothstep(aa, -aa, yy - e);            /* 1 inside the sheet */
 
     /* flat graded colour, foot to tip */
-    vec3 cA = palette(k * 0.94);
-    vec3 cB = palette(min(1.0, k * 0.94 + 0.18));
+    vec3 cA = palette(k * 0.78);
+    vec3 cB = palette(min(1.0, k * 0.78 + 0.15));
     float g = clamp(yy / max(0.03, e), 0.0, 1.0);
     vec3 c = mix(cA, cB, smoothstep(0.0, 1.0, g));
 
@@ -269,7 +311,7 @@ void main(){
 
     /* the deckle catching the light just inside the cut */
     float band = 1.0 - smoothstep(0.0, 0.024, e - yy);
-    c = mix(c, min(vec3(1.0), c * 1.32 + 0.16), clamp(band, 0.0, 1.0) * 0.55);
+    c = mix(c, min(vec3(1.0), c * 1.26 + 0.11), clamp(band, 0.0, 1.0) * 0.38);
 
     col = mix(col, c, m);
     alpha = max(alpha, m);
@@ -281,8 +323,10 @@ void main(){
      the way a trough hides the bottom of a real paper set. */
   if (alpha > 0.0) {
     float footG = texture2D(uPaper, uv * vec2(uAspect, 1.0) * 3.4).r;
-    float foot = smoothstep(uBase + 0.16, uBase - 0.01, uv.y);
-    col = mix(col, palette(0.04) * (0.72 + 0.26 * footG), foot * 0.94);
+    /* the lip of the trough is torn paper too, not a ruled line */
+    float lip = uBase + 0.115 + 0.034 * (vnoise(vec2(uv.x * uAspect * 7.0, 21.0)) - 0.5);
+    float foot = smoothstep(lip, uBase - 0.035, uv.y);
+    col = mix(col, palette(0.03) * (0.70 + 0.26 * footG), foot * 0.94);
   }
 
   /* paper embers: a few tiny cut flecks lifting off, turning as they go */

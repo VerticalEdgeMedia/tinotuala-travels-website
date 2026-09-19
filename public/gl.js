@@ -246,8 +246,13 @@ export function getStage() {
   if (!stagePromise) {
     stagePromise = new Promise((resolve) => {
       if (!webglAvailable()) { resolve(null); return; }
-      try { resolve(new Stage()); }
-      catch (e) { resolve(null); }
+      try {
+        const s = new Stage();
+        /* Shipped on purpose and harmless: a harness has to be able to reach
+           step() from outside the module to drive the clock by hand. */
+        window.__stage = s;
+        resolve(s);
+      } catch (e) { resolve(null); }
     });
   }
   return stagePromise;
