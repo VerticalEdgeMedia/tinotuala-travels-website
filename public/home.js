@@ -65,15 +65,15 @@ async function lightTheFires() {
   const torches = $$('[data-fire="torch"]');
   for (const t of torches) {
     await Hotel.fire(t, {
-      sheets: 6, spread: 0.86, base: 0.02, height: 0.88, count: 1,
-      embers: 0.9, shotTime: 17 + torches.indexOf(t) * 9 + ft
+      sheets: 6, base: 0.02, height: 1.05, licks: 1.6, taper: 1,
+      embers: 0.8, shotTime: 17 + torches.indexOf(t) * 9 + ft
     });
   }
   const pit = $('[data-fire="pit"]');
   if (pit) {
     await Hotel.fire(pit, {
-      sheets: 7, spread: 0.98, base: 0.08, height: 0.80, count: 6,
-      floor: 0.13, embers: 1, shotTime: 31 + ft
+      sheets: 7, base: 0.05, height: 0.92, licks: 4.4, taper: 0,
+      embers: 0.9, shotTime: 31 + ft
     });
   }
 }
@@ -650,7 +650,7 @@ async function buildCorridor3d(stageEl, doorEls) {
   const sconceMat = [];
   [[-1, -1.85], [1, -1.85], [-1, -3.85], [1, -3.85], [-1, -5.85], [1, -5.85]].forEach(([side, z], i) => {
     const m = fire.makeFireMaterial(THREE, {
-      aspect: 0.55, sheets: 5, spread: 0.9, base: 0.06, height: 0.9, count: 1, embers: 0.5
+      aspect: 0.55, sheets: 5, base: 0.04, height: 1.0, licks: 1.2, taper: 1, embers: 0.4
     });
     m.uniforms.uTime.value = i * 13.7;
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(0.46, 0.84), m);

@@ -1,14 +1,18 @@
 /* ==========================================================================
    fire.js - the paper fire, and the burn-away transition.  v3.
 
-   THE PAPER FIRE is not a simulation of fire.  It is a little sculpture made
-   of cut paper: five to seven flat sheets of graded colour, deep lacquer red
-   at the back through vermilion, orange and saffron to a pale cream core,
-   each one cut into a flame silhouette with a torn edge, each drifting at its
-   own speed, each dropping a soft shadow on the sheet behind it.  That shadow
-   is what makes the paper read as thick.  The sheets slide by different
-   amounts with the pointer and the scroll, which is the 2.5D, and they part a
-   little where the pointer is.  A few tiny paper flecks lift off it.
+   THE PAPER FIRE is not a simulation of fire.  It is a paper theatre set of
+   one: five to seven SHEETS of cut paper, stacked in depth, each one a single
+   continuous piece running the full width of the box.  Deep lacquer red at
+   the back through vermilion, orange and saffron to a pale cream at the
+   front, each sheet standing lower than the one behind it so the stack reads
+   as bands of graded colour.  The top edge of each is a long undulating run
+   of licks - tall tongues, low dips, the odd curl - finished with a torn
+   deckle.  Each sheet drifts sideways at its own speed and breathes in
+   height, and each drops a soft dark shadow on to the sheet behind it.  That
+   shadow is what makes the paper read as thick.  The sheets slide by
+   different amounts with the pointer and the scroll: that is the 2.5D.
+   It is never a row of separate cones.
 
    THE BURN-AWAY is the same paper, being eaten by a charred, glowing edge
    travelling out from a point (the lock).  What is behind shows through.
@@ -19,8 +23,10 @@
    Public API
    ----------
      mountFire(stage, el, opts)       -> { setNight, setIntensity, remove }
-         opts: sheets 5..7, spread 0..1 (how wide), base 0..1 (how far up the
-               foot of the flame sits), intensity, embers 0..1, night 0..1
+         opts: sheets 5..7, height 0..1 (how tall the back sheet stands),
+               base 0..1 (where the foot sits), licks (how many licks run
+               across the width), taper 0 a wide band / 1 a torch,
+               intensity, embers 0..1, night 0..1
      makeFireMaterial(THREE, opts)    -> ShaderMaterial, for a plane inside
                                           somebody else's 3D scene (sconces)
      burnAway(stage, opts)            -> Promise
@@ -144,12 +150,11 @@ uniform float uTime;
 uniform float uAspect;     /* width / height of the rectangle we fill */
 uniform vec2  uPointer;    /* -1..1 across the viewport, smoothed */
 uniform float uScroll;     /* -1..1, where this fire sits in the viewport */
-uniform float uSheets;     /* 5 to 7 */
-uniform float uSpread;     /* 0..1, how wide each flame stands in its cell */
-uniform float uBase;       /* 0..1, where the foot of the flame sits */
-uniform float uHeight;     /* 0..1, how far up the rectangle the tips reach */
-uniform float uCount;      /* how many flames across: 1 for a torch, 5 for a pit */
-uniform float uFloor;      /* 0, or the height of the paper band along the foot */
+uniform float uSheets;     /* 5 to 7 stacked sheets */
+uniform float uHeight;     /* 0..1, how tall the back sheet stands */
+uniform float uBase;       /* 0..1, where the foot of the sheets sits */
+uniform float uLicks;      /* how many licks run across the width */
+uniform float uTaper;      /* 0 a wide band, 1 a torch that tapers to the sides */
 uniform float uNight;      /* 0 afternoon, 1 night */
 uniform float uIntensity;
 uniform float uEmbers;
@@ -176,171 +181,118 @@ vec3 palette(float t){
   return mix(c5, c6, s - 5.0);
 }
 
-/* One cut sheet.  Positive inside the paper, negative outside.
-   p.x runs -1 to 1 across the flame's own cell; p.y is 0 at the foot and 1
-   where the tips reach.  The shapes are deliberately BOLD: paper cut by hand
-   into a few broad licks, not shredded.  Nearly all the difference between
-   one sheet and the next comes from scale, lean and seed, so they read as a
-   stack rather than as concentric outlines. */
-float sheet(vec2 p, float seed, float scale, float speed, float t,
-            float spread, float lean){
-  float y = clamp(p.y, -0.3, 1.8);
-  float rise = t * speed;
+/* THE LICK FIELD.  Every sheet is cut from the SAME run of licks - tall
+   tongues, low dips, the odd leaning curl - so the stack nests: a deep red
+   tongue with a vermilion one inside it and a pale cream heart inside that.
+   Each sheet then sits lower by a fixed amount, which is what turns the
+   nesting into visible bands of graded colour.  It is one continuous piece of
+   paper running the whole width, never a row of separate cones. */
+float profileAt(float x, float speed, float t, float licks, float taper){
+  float d = t * speed;
+  float u = x * licks;
 
-  float n1 = fbm(vec2(p.x * 1.10 + seed * 11.0, y * 0.95 - rise));
-  float n2 = fbm(vec2(p.x * 2.60 - seed * 7.00, y * 2.10 - rise * 1.45));
-  float n3 = vnoise(vec2(p.x * 21.0 + seed * 31.0, y * 27.0 - rise * 1.7));
+  float w1 = fbm(vec2(u * 0.85 + d * 0.28, 1.70));
+  float w3 = fbm(vec2(u * 4.40 + d * 1.15, 9.10));
+  /* warping the sampling makes the licks lean instead of standing as a row
+     of symmetrical hills */
+  float warp = 0.24 * (w1 - 0.5);
+  float w2 = fbm(vec2((u + warp) * 1.90 - d * 0.70, 5.40));
 
-  /* the body: wide at the foot, tapering to a rounded point */
-  float top = 1.00 + 0.10 * n1;
-  float w = pow(max(0.0, 1.0 - y / top), 0.44);
-  w *= scale * spread * (0.74 + 0.24 * n1);
+  float base   = 0.30 + 0.22 * w1;
+  float tongue = 1.18 * pow(smoothstep(0.38, 1.00, w2), 2.00) * (0.55 + 0.60 * w1);
+  float flick  = 0.26 * pow(smoothstep(0.62, 1.00, w3), 2.00);
+  float prof = base + tongue + flick;
 
-  /* a gentle lean and curl, and the sheet's own fixed cant so the stack fans */
-  float curl = (0.15 * sin(y * 2.2 + rise * 1.00 + seed * 5.3)
-              + 0.07 * sin(y * 4.4 - rise * 0.70 + seed * 2.1)) * y * 1.35 * scale * spread
-              + lean * y * y;
+  prof *= 1.0 + 0.06 * sin(t * (0.50 + speed) + 3.1);          /* breathing */
 
-  float d = w - abs(p.x - curl);
-  /* a few bold dents, easing off near the tip so it does not shred */
-  d += (n2 - 0.5) * 0.070 * scale * spread * (0.30 + 0.55 * y)
-       * (1.0 - 0.65 * smoothstep(0.55, 1.0, y));
-  d += (n3 - 0.5) * 0.017 * scale * spread;                /* the torn cut */
+  /* a torch tapers away at the sides; a fire pit runs edge to edge */
+  float env = smoothstep(0.0, 0.30, x) * smoothstep(1.0, 0.70, x);
+  prof *= mix(1.0, pow(env, 0.55) * 1.34, clamp(taper, 0.0, 1.0));
 
-  /* one broad lick splitting off to the side, low enough to read as paper */
-  float side = sin(seed * 17.0) > 0.0 ? 1.0 : -1.0;
-  float tx = curl + side * (0.44 + 0.13 * sin(rise * 0.6 + seed)) * scale * spread;
-  float ty = 0.38 + 0.16 * sin(rise * 0.8 + seed * 3.0);
-  float tw = 0.34 * scale * spread * max(0.0, 1.0 - abs(y - ty) / 0.52) * (0.62 + 0.45 * n2);
-  float tongue = tw - abs(p.x - tx) + (n3 - 0.5) * 0.016 * scale * spread;
+  /* a fine torn fray along the cut, and nothing coarser: these licks are cut
+     by hand, they are not a saw blade */
+  float deckle = (vnoise(vec2(u * 22.0 + d * 1.8, 7.0)) - 0.5) * 0.032
+               + (vnoise(vec2(u * 58.0 - d * 2.6, 11.0)) - 0.5) * 0.013;
 
-  d = max(d, tongue);
-  /* Cut it off cleanly above the tip.  Without this the dent noise leaves a
-     hair of paper running on up the middle. */
-  d -= smoothstep(top, top + 0.22, y) * 0.6;
-  return d;
-}
-
-/* The low band of paper along the foot of a fire pit, tying the row together.
-   A torn top edge, nothing else. */
-float floorBand(vec2 uv, float aspect, float h, float t){
-  float n = fbm(vec2(uv.x * aspect * 3.4, t * 0.25));
-  float n2 = vnoise(vec2(uv.x * aspect * 26.0, t * 0.4));
-  float edge = h * (0.72 + 0.34 * n) + (n2 - 0.5) * h * 0.16;
-  return edge - uv.y;
+  return max(0.0, prof + deckle);
 }
 
 void main(){
   vec2 uv = vUv;
-  float spread = clamp(uSpread, 0.15, 1.0);
-  float count = max(1.0, floor(uCount + 0.5));
-
-  /* Split the rectangle into uCount cells side by side.  A torch is one
-     cell; a fire pit is a row of them at different heights and phases. */
-  float cellW = uAspect / count;
-  float cx = uv.x * uAspect;
-  float idx = clamp(floor(cx / cellW), 0.0, count - 1.0);
-  float lx = (cx - (idx + 0.5) * cellW) / (cellW * 0.5);     /* -1 .. 1 */
-
-  float cellSeed = hash21(vec2(idx + 1.0, 7.31));
-  float cellH = mix(0.74, 1.12, hash21(vec2(idx + 3.0, 2.17)));
-  if (count < 1.5) cellH = 1.0;
-  float cellT = cellSeed * 40.0;
-
-  vec2 p;
-  p.x = lx;
-  p.y = (uv.y - uBase) / max(0.10, uHeight * cellH);
 
   vec3 col = vec3(0.0);
   float alpha = 0.0;
 
   int N = int(uSheets + 0.5);
 
+  /* back to front: the sheet behind is the tallest and the deepest red, the
+     sheet in front the lowest and the palest, so the stack reads as bands */
   for (int i = 0; i < 7; i++){
     if (i >= N) break;
     float fi = float(i);
-    float k = fi / max(1.0, float(N - 1));          /* 0 back, 1 core */
+    float k = fi / max(1.0, float(N - 1));
 
-    /* 2.5D: the sheets in front travel further with the pointer and the page */
-    float amt = 0.055 + 0.110 * k;
-    vec2 q = p;
-    q.x -= uPointer.x * amt * 1.5;
-    q.y -= uPointer.y * amt * 0.35;
-    q.y -= uScroll * amt * 0.55;
+    /* 2.5D: the sheets in front slide further with the pointer and the page */
+    float amt = 0.018 + 0.060 * k;
+    float x  = uv.x - uPointer.x * amt * 0.75;
+    float yy = (uv.y - uBase) - uPointer.y * amt * 0.10 - uScroll * amt * 0.22;
 
-    /* and they part a little where the pointer is.  Smooth across the
-       middle: a sign() here puts a seam straight down the flame. */
-    vec2 pp = vec2(uPointer.x * 1.1, uPointer.y * -0.35 + 0.45);
-    vec2 dv = (q - pp) * vec2(1.0, 0.70);
-    float dd = dot(dv, dv);
-    q.x += clamp((q.x - pp.x) * 4.0, -1.0, 1.0) * 0.16 * exp(-dd * 1.8) * (0.30 + k);
+    /* the sheets share the licks and differ by how far down they sit */
+    float speed = mix(0.16, 0.34, k);
+    float off   = k * 0.62;
 
-    /* inner sheets are narrower AND shorter: that is the stack */
-    float scale = mix(1.00, 0.44, k);
-    q.y /= mix(1.00, 0.66, k);
+    /* the soft shadow this sheet throws on to the taller one behind it.
+       That band, just above this sheet's edge, is what sells thick paper. */
+    float drop = 0.050 + 0.028 * (1.0 - k);
+    float eSh  = uHeight * max(0.0, profileAt(x - drop * 0.42, speed, uTime, uLicks, uTaper) - off);
+    float above = yy - eSh;
+    float sh = (1.0 - smoothstep(0.0, drop, above)) * step(0.0, above);
+    col = mix(col, col * 0.40 + palette(0.0) * 0.20, sh * 0.96);
 
-    float speed = mix(0.26, 0.66, k);
-    float seed  = fi * 3.77 + 1.3 + cellSeed * 9.0;
-    float t     = uTime + cellT;
-    /* each sheet has its own cant, so the stack fans instead of nesting */
-    float lean  = (hash21(vec2(fi + 2.0, 5.5)) - 0.5) * 0.40 * spread;
+    float p = profileAt(x, speed, uTime, uLicks, uTaper);
+    float e = uHeight * max(0.0, p - off);
+    if (e <= 0.0005) continue;
 
-    float d = sheet(q, seed, scale, speed, t, spread, lean);
-
-    /* the shadow this sheet drops on the one behind it: thick paper */
-    vec2 so = vec2(0.042 + 0.022 * k, -0.046 - 0.022 * k);
-    float ds = sheet(q - so, seed, scale, speed, t, spread, lean);
-    float sh = smoothstep(-0.090, 0.030, ds);
-    /* a warm shadow, not a black one: paper in shadow is still paper */
-    col = mix(col, col * 0.50 + palette(0.0) * 0.20, sh * 0.92);
+    float aa = fwidth(yy) * 1.2 + 0.0012;
+    float m = smoothstep(aa, -aa, yy - e);            /* 1 inside the sheet */
 
     /* flat graded colour, foot to tip */
-    vec3 cA = palette(k * 0.92);
-    vec3 cB = palette(min(1.0, k * 0.92 + 0.19));
-    float g = clamp(q.y * 0.85 + 0.16, 0.0, 1.0);
+    vec3 cA = palette(k * 0.94);
+    vec3 cB = palette(min(1.0, k * 0.94 + 0.18));
+    float g = clamp(yy / max(0.03, e), 0.0, 1.0);
     vec3 c = mix(cA, cB, smoothstep(0.0, 1.0, g));
 
-    /* paper fibre, each sheet reading a different part of the sheet stock */
-    float grain = texture2D(uPaper, (uv + vec2(fi * 0.19, -uTime * speed * 0.010))
-                                    * vec2(uAspect, 1.0) * 2.6).r;
+    /* paper fibre, each sheet reading a different part of the stock */
+    float grain = texture2D(uPaper,
+      (vec2(x, yy) + vec2(fi * 0.23, -uTime * speed * 0.010)) * vec2(uAspect, 1.0) * 2.8).r;
     c *= 0.90 + 0.21 * grain;
 
-    /* the deckle: a pale line just inside the cut, catching the light */
-    float edge = 1.0 - smoothstep(0.0, 0.034 * scale * spread, d);
-    c = mix(c, min(vec3(1.0), c * 1.30 + 0.16), edge * 0.55);
-
-    float aa = fwidth(d) * 1.1 + 0.0009;
-    float m = smoothstep(-aa, aa, d);
+    /* the deckle catching the light just inside the cut */
+    float band = 1.0 - smoothstep(0.0, 0.024, e - yy);
+    c = mix(c, min(vec3(1.0), c * 1.32 + 0.16), clamp(band, 0.0, 1.0) * 0.55);
 
     col = mix(col, c, m);
     alpha = max(alpha, m);
   }
 
-  /* the low band of paper along the foot, when there is one */
-  if (uFloor > 0.001) {
-    float fb = floorBand(uv, uAspect, uFloor, uTime);
-    float fg = texture2D(uPaper, uv * vec2(uAspect, 1.0) * 3.2).r;
-    float fbAA = fwidth(fb) * 1.1 + 0.0009;
-    float fm = smoothstep(-fbAA, fbAA, fb);
-    vec3 fc = mix(palette(0.02), palette(0.30),
-                  smoothstep(0.0, 1.0, uv.y / max(0.0001, uFloor)));
-    fc *= 0.90 + 0.20 * fg;
-    float fe = 1.0 - smoothstep(0.0, 0.012, fb);
-    fc = mix(fc, min(vec3(1.0), fc * 1.35 + 0.14), fe * 0.5);
-    col = mix(col, fc, fm);
-    alpha = max(alpha, fm);
+  /* The sheets are mounted at different depths and all of them run down past
+     the foot, so without this the very bottom is a blocky mosaic of whichever
+     sheet happens to reach that far.  A dark lacquer foot hides the joins,
+     the way a trough hides the bottom of a real paper set. */
+  if (alpha > 0.0) {
+    float footG = texture2D(uPaper, uv * vec2(uAspect, 1.0) * 3.4).r;
+    float foot = smoothstep(uBase + 0.16, uBase - 0.01, uv.y);
+    col = mix(col, palette(0.04) * (0.72 + 0.26 * footG), foot * 0.94);
   }
 
-  /* paper embers: tiny cut flecks lifting off, turning as they go */
-  for (int e = 0; e < 8; e++){
-    float fe = float(e);
-    float sp = 0.13 + 0.10 * hash21(vec2(fe, 3.0));
+  /* paper embers: a few tiny cut flecks lifting off, turning as they go */
+  for (int e2 = 0; e2 < 5; e2++){
+    float fe = float(e2);
+    float sp = 0.12 + 0.09 * hash21(vec2(fe, 3.0));
     float ph = fract(uTime * sp + hash21(vec2(fe, 7.0)));
     vec2 ep;
-    ep.x = (floor(hash21(vec2(fe, 11.0)) * count) + 0.5) / count
-         + (hash21(vec2(fe, 17.0)) - 0.5) * 0.45 / count
-         + 0.10 * sin(ph * 6.2832 + fe) * ph / count;
-    ep.y = uBase + uHeight * (0.45 + ph * 0.85);
+    ep.x = 0.10 + 0.80 * hash21(vec2(fe, 11.0)) + 0.05 * sin(ph * 6.2832 + fe) * ph;
+    ep.y = uBase + uHeight * (0.55 + ph * 0.80);
     float ang = ph * 8.0 + fe;
     vec2 q2 = (uv - ep) * vec2(uAspect, 1.0) * 24.0;
     vec2 r2 = vec2(q2.x * cos(ang) - q2.y * sin(ang),
@@ -436,11 +388,10 @@ export function makeFireMaterial(THREE, opts) {
       uPointer: { value: new THREE.Vector2(0, 0) },
       uScroll: { value: 0 },
       uSheets: { value: Math.max(5, Math.min(7, opts.sheets || 6)) },
-      uSpread: { value: opts.spread != null ? opts.spread : 0.80 },
       uBase: { value: opts.base != null ? opts.base : 0.02 },
-      uHeight: { value: opts.height != null ? opts.height : 0.94 },
-      uCount: { value: opts.count != null ? opts.count : 1 },
-      uFloor: { value: opts.floor != null ? opts.floor : 0 },
+      uHeight: { value: opts.height != null ? opts.height : 0.80 },
+      uLicks: { value: opts.licks != null ? opts.licks : 4.0 },
+      uTaper: { value: opts.taper != null ? opts.taper : 0 },
       uNight: { value: opts.night != null ? opts.night : 0 },
       uIntensity: { value: opts.intensity != null ? opts.intensity : 1 },
       uEmbers: { value: opts.embers != null ? opts.embers : 1 },
