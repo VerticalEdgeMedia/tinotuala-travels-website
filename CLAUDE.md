@@ -13,8 +13,8 @@ folder paths, no contact details, no credentials, no client information.
 
 | | |
 |---|---|
-| Source | `public/index.html` (one long scrolling home page), `public/102b.html`, five room pages (`map-room`, `rooftop-bar`, `black-book`, `lantern-room`, `long-gallery`) and `public/credits.html`. Shared: `site.css` + `hotel.css`, `site.js` + `hotel.js`, and the ES modules `gl.js`, `fire.js`, `home.js`, `room102b.js`. |
-| Assets | `public/img/` — 37 JPEGs (19 place photographs, 2 supplied photographs of Tino, 8 public-domain or freely licensed artworks, 8 public-domain reward pictures), `public/audio/` — four animal calls as mp3 and ogg, `public/vendor/` — three.js and GSAP as plain files, plus `public/img/_credits.json`, the machine-readable credit list for both. |
+| Source | `public/index.html` (one long scrolling home page), six room pages (`102b`, `map-room`, `rooftop-bar`, `black-book`, `lantern-room`, `long-gallery`) and `public/credits.html`. Shared: `site.css` + `hotel.css`, `site.js` + `hotel.js`, and the ES modules `gl.js`, `fire.js`, `roomkit.js`, `home.js`, `room102b.js`, `room-map.js`, `room-bar.js`, `room-book.js`, `room-lantern.js`, `room-gallery.js`. |
+| Assets | `public/img/` — 54 JPEGs (19 place photographs, 2 supplied photographs of Tino, 8 public-domain or freely licensed artworks, 8 part A reward pictures, 12 pictures for the Long Gallery wall, 5 room rewards), `public/audio/` — four animal calls as mp3 and ogg, `public/vendor/` — three.js and GSAP as plain files, plus `public/img/_credits.json`, the machine-readable credit list for both. |
 | Fonts | Google Fonts: **Cormorant Garamond** (display), **Cinzel** (letterspaced capitals) and **Jost** (text), loaded by `<link>`. |
 | Deploy | Cloudflare Workers static assets, `wrangler.jsonc`, serving `./public`. |
 | Build step | **None.** No bundler, no framework, no npm, no `package.json`, no `node_modules`. three.js and GSAP are vendored as plain files. |
@@ -263,7 +263,8 @@ Hotel.say(text, {for: ms, sticky: bool})   // the concierge card
 Hotel.announce(text)                        // the aria-live region
 Hotel.openPassport() / closePassport()
 
-Hotel.sound.play(name)          // 'ding' 'jingle' 'clunk' 'creak' 'thump' 'rustle' 'crackle'
+Hotel.sound.play(name)          // 'ding' 'jingle' 'clunk' 'creak' 'thump' 'rustle'
+                                // 'crackle' 'tick' 'hum'
 Hotel.sound.callNow(id)         // force an animal call: 'monkey' 'elephant' 'bigcat' 'bird'
 Hotel.sound.isOn() / set(on) / gain()
 Hotel.stage()                   // Promise -> the gl.js stage, or null
@@ -271,6 +272,7 @@ Hotel.fire(el, opts)            // Promise -> a fire handle, or a CSS/SVG stand-
 Hotel.burn(opts)                // Promise -> resolves when the paper has gone
 Hotel.setNight(0..1)
 Hotel.gateRoom(doorId, opts)    // the whole of a room page's front door
+Hotel.finale()                  // the passport shuts itself; fires once, on 'passport-full'
 ```
 
 **Events:** `ready`, `check-in`, `key`, `door-open`, `door-refused`, `stamp`, `found`,
@@ -320,7 +322,9 @@ and the scroll: that is the 2.5D.
 **It is never a row of separate cones, never a glow blob, never a particle spark, never
 realistic fire.** It is a paper theatre set of a fire.
 
-Lighter version: the same sculpture as six stacked SVG paths with a CSS `drop-shadow`, swaying.
+Lighter version: the same sculpture as a run of stacked SVG teardrops with a CSS `drop-shadow`,
+swaying, with a trough lip across the foot. `cssFire` works out how many tongues to cut from
+`licks` when no `count` is given.
 
 ### The burn-away
 
@@ -485,6 +489,49 @@ every key, every door and every reward still reachable.
 
 ---
 
+## The six rooms
+
+All six are built.  Each is a full-bleed scene under the header with the brass plate, the
+one-line hint, the card of whatever you are holding, the draft note and the way out floating
+on top of it, and each one also exists as a flat SVG drawing plus the same buttons, driven by
+the same logic, for the lighter version, a browser with no WebGL and a screen reader.
+
+Every room's scene is drawn in code: three.js primitives for the geometry, Canvas 2D for every
+texture, the paper-fire shader wherever there is a flame.  `roomkit.js` holds what they share.
+Each one ships a small read-only `window.Room*` object so a harness can play it and then measure
+where everything landed; none of them writes storage.
+
+| Room | Files | How it plays | Wrong move | Reward |
+|---|---|---|---|---|
+| **102B** Lost property | `102b.html`, `room102b.js` | twelve things on a shelf; pick one up, turn it over, read its tag | (none) | the postcard, the poster, key 214, the tiny hat |
+| **118** The Map Room | `map-room.html`, `room-map.js` | a globe on a brass tripod: drag it and it spins with weight, ticking a brass detent every 15 degrees.  Six pins at their real coordinates; press one and the globe turns it to the front and a card unfolds with the site's own line about that place and its photographs.  Gold great-circle arcs join the places in the order you went | shove it and the stand wobbles, the pins rattle, the concierge has a view | all six: a public-domain Admiralty chart of the Atlantic steamship routes |
+| **214** Tino's Black Book | `black-book.html`, `room-book.js` | drag the corner of the right-hand page and it bows over to the other side; arrow keys and the two page controls at the page edges do the same.  Nine pages, every one a heading, a ruled blank, a DRAFT: TINO TO WRITE stamp and one line asking for the entry | flick it instead of turning it and the page tears; it comes back taped | three things tucked between the pages: a public-domain luggage label, a drawn pressed flower, a drawn half-ticket |
+| **311** The Lantern Room | `lantern-room.html`, `room-lantern.js` | nine paper lanterns on cords; the taper follows your hand and a lantern near it takes the flame, throwing that lantern's photograph up in a gold arch on the wall | swing the taper about and the draught puts it out; relight it at the brazier | all nine: the room comes up, and a CC0 Torii Kiyonaga lantern-float print |
+| **402** The Long Gallery | `long-gallery.html`, `room-gallery.js` | walk along the wall by dragging sideways or with arrow keys; take a frame's brass corner and lift or drop it while a spirit level lies on top of it.  Level and it hums and the card on the wall flips round with title, maker, year and licence | too far and it swings back the other way; a long way too far and it comes off its nail | all eighteen: the lights come up, and a luggage label off the back of the last frame |
+| **901** The Rooftop Bar | `rooftop-bar.html`, `room-bar.js` | night, a cut-paper skyline in three parallax layers, a counter with paper-fire table lanterns.  Order one of six invented drinks and the bartender sends it down the bar: press it, press Catch it, or hit the space bar | miss and it goes off the end, breaks, and the broom comes out with a sigh | all six: an 1891 bar-tender's plate |
+
+**The finale.**  The sixth stamp can land in any room, so `hotel.js` owns the shared half and
+runs it wherever you are standing: the passport shuts itself, a SIX OF SIX stamp thumps on to
+the cover, and the hotel points you at the front desk.  It fires exactly once.  The home page
+does the rest in `home.js`: the paper over the far end of the corridor burns away to show the
+postcard out of 102B with a short line, and the enquiry section gains "You have seen the whole
+hotel" with an arrow nodding at the form and a **Reset my stay** button.  The form itself is
+untouched - it still posts nowhere and still says so.
+
+### Test hooks the rooms add
+
+`?lit=all|n` and `?taper=out` (311) · `?pin=<place>`, `?seen=all|n`, `?spin=hard` (118) ·
+`?caught=all|n`, `?slide=<drink>`, `?smash=1` (901) · `?level=all|n`, `?fallen=n`, `?walk=n`
+(402) · `?page=n`, `?turn=0.5`, `?torn=n` (214).  None of them writes storage.
+
+### Copy in the rooms is legal, not stylistic
+
+Room flavour is plainly fiction in the hotel's voice.  The Rooftop Bar's six descriptions and
+every page of the Black Book are **marked drafts for Tino to correct**, built only out of the
+site's own lines about each place; no name, address, price, bar or recommendation has been
+invented to fill anything in.  The Map Room quotes the home page's vignettes word for word.
+The Long Gallery's caption cards say **only what Commons states** about each picture.
+
 ## For part B - how to build a room page
 
 Five rooms are scaffolded and wired: `map-room.html` (118), `rooftop-bar.html` (901),
@@ -567,8 +614,9 @@ can assert that every button really does sit over its object.
 3. **The passport stamps itself.** Do not call `Hotel.stamp` again.
 4. **3D:** `const stage = await Hotel.stage();` gives the one renderer, or `null`. Register a
    view with `stage.addView({el, scene, camera, onFrame, resize})` where `el` is the box in the
-   page you want drawn into. `room102b.js` is the worked example, including how the accessible
-   buttons are moved over the 3D objects each frame.
+   page you want drawn into. `roomkit.js`'s `Screen` moves each object's
+   accessible button on to it every frame and hides it when the object is off screen or behind
+   something; `room102b.js` and `room-lantern.js` are the worked examples.
    If you need shadows, set `stage.renderer.shadowMap.enabled = true` yourself.
 5. **Fire:** `Hotel.fire(el, {sheets, spread, base, height, count, floor, embers})`, or
    `makeFireMaterial(THREE, opts)` from `fire.js` for a plane inside your own scene.
@@ -595,7 +643,13 @@ can assert that every button really does sit over its object.
     page and will happily pass while things are broken. `stage.step(dt)` and `gsap.ticker.tick()`
     exist so a harness can advance both clocks by hand; drive them, let the interaction finish,
     then assert that every moving part landed where it belongs and nothing is left over.
-13. **Copy rules are legal, not stylistic.** Room flavour and tag stories are plainly fiction in
+13. **Nothing fixed may cover the control the visitor needs next.**  The bottom-left corner
+    belongs to the tray and the concierge, the bottom-right to the versions dock, the way out
+    sits above the dock and the held card above that.  A room's own furniture - a menu, a
+    caption card, a Catch it button - goes somewhere else again.  Check it at short viewport
+    heights, around 700px, not only on a tall screenshot: that is how the key tray ended up
+    sitting on top of the reception bell.
+14. **Copy rules are legal, not stylistic.** Room flavour and tag stories are plainly fiction in
     the hotel's voice. Nothing invented is ever presented as Tino's, as a real guest, or as a
     fact about the business. Black Book and Rooftop Bar content are marked drafts for Tino to
     correct. Australian spelling, no em-dashes, no travel cliches.

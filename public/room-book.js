@@ -116,6 +116,12 @@ function flatMode() {
   bookFlat.hidden = false;
   paintFlat();
   refresh();
+  window.RoomBook = {
+    ids: EPHEMERA.map((e) => e.id), bounds: () => null,
+    state: () => ({ page, turning: null, torn: Object.keys(torn).map(Number),
+      taken: Object.keys(taken), finished }),
+    turn: (d) => startTurn(d, true), take: (id) => takeIt(id)
+  };
 }
 
 function pageHTML(i) {

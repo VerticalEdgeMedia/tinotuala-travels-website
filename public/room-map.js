@@ -172,6 +172,14 @@ function flatMode() {
   if (PIN_HOOK && BY_ID[PIN_HOOK]) visit(PIN_HOOK);
   else if (order.length) visit(order[order.length - 1]);
   refresh();
+  /* the same read-only handle the 3D path exposes, so a harness can play the
+     flat room too */
+  window.RoomMap = {
+    ids: PLACES.map((p) => p.id), bounds: () => null,
+    state: () => ({ seen: Object.keys(seen), spin: 0, spinV: 0, current, finished,
+      arcs: 0, wobble: 0 }),
+    visit: (id) => visit(id), spinBy: () => {}
+  };
 }
 
 /* ============================================================== the scene */

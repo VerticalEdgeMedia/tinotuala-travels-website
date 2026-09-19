@@ -121,6 +121,13 @@ function flatMode() {
   if (ids.length) showCard(BY_ID[ids[ids.length - 1]]);
   if (ids.length >= DRINKS.length && !finished) finish();
   refresh();
+  window.RoomBar = {
+    ids: DRINKS.map((d) => d.id), bounds: () => null,
+    state: () => ({ caught: Object.keys(caught), sliding: flatOrder && flatOrder.id,
+      x: null, broomOut, finished, shardsVisible: false }),
+    order: (id) => order(id), katch: () => katch(),
+    miss: () => { if (flatOrder) smash(flatOrder); }
+  };
 }
 
 /* The same rule without a scene: the drink is on its way for as long as it

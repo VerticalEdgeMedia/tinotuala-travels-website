@@ -114,6 +114,14 @@ function flatMode() {
   if (hintEl) hintEl.textContent = 'Use the arrow keys on a frame, or press it, to level it.';
   if (countLevel() >= PICS.length && !finished) finish();
   refresh();
+  window.RoomGallery = {
+    ids: PICS.map((p, i) => 'p' + i), bounds: () => null,
+    state: () => ({ level: countLevel(), fallen: st.filter((s) => s.fallen).length,
+      angles: st.map((s) => +s.a.toFixed(3)), panX: 0, finished }),
+    nudge: (i, d) => nudge(i, d),
+    setAngle: (i, a) => { st[i].a = a; settle(i); },
+    walkTo: () => {}
+  };
 }
 
 function countLevel() { return st.filter((s) => s.level).length; }

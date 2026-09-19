@@ -138,6 +138,15 @@ function flatMode() {
   if (ids.length >= LANTERNS.length && !finished) finish();
   syncFlat();
   refresh();
+  /* the same read-only handle the 3D path exposes, so a harness can play the
+     flat room too */
+  window.RoomLantern = {
+    ids: LANTERNS.map((l) => l.id).concat(['brazier']),
+    bounds: () => null,
+    state: () => ({ lit: Object.keys(lit), taperLit, shown: shown && shown.id, finished }),
+    light: (id) => tryLight(id, true),
+    blowOut: () => blowOut()
+  };
 }
 
 function syncFlat() {
