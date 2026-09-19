@@ -949,6 +949,7 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   padding: .72rem .85rem;
   width: 100%;
   transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+  overflow-x: hidden;
 }
 .field input::placeholder, .field textarea::placeholder { color: #736950; opacity: 1; }
 .field input:focus, .field textarea:focus {
@@ -1317,8 +1318,8 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 .torch {
   position: absolute;
   bottom: 2%;
-  width: clamp(54px, 7vw, 104px);
-  height: clamp(150px, 20vw, 290px);
+  width: clamp(68px, 9vw, 132px);
+  height: clamp(186px, 25vw, 352px);
   pointer-events: none;
   z-index: 2;
 }
@@ -1332,8 +1333,8 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   background: linear-gradient(180deg, #C79E3C, #7A5C19 60%, #493609);
   box-shadow: inset 0 1px 0 rgba(255,244,205,.6), 0 6px 14px rgba(0,0,0,.5);
 }
-.torch-l { left: -2%; }
-.torch-r { right: -2%; }
+.torch-l { left: -6%; }
+.torch-r { right: -6%; }
 @media (max-width: 860px) { .torch { display: none; } }
 
 /* --- the fire pit --------------------------------------------------------- */
@@ -1382,25 +1383,24 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   max-width: var(--maxw);
   margin-inline: auto;
   padding-inline: var(--gutter);
-  aspect-ratio: 16 / 7.4;
-  min-height: 300px;
 }
+/* only the 3D corridor needs a fixed box to be drawn into */
+.corridor-3d .corridor-stage { aspect-ratio: 16 / 7.4; min-height: 300px; }
 
 /* The six doors.  In the full version the three.js corridor is drawn behind
    these and each anchor is moved over its door every frame; the anchors are
    always the real thing underneath. */
 .doors {
-  position: absolute;
-  inset: 0 var(--gutter);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(12px, 1.6vw, 26px);
+  gap: clamp(14px, 2vw, 34px);
   margin: 0;
   padding: 0;
   list-style: none;
   align-content: center;
 }
 .doors li { margin: 0; }
+.doors .door-face { max-width: 216px; margin-inline: auto; }
 
 .door {
   position: relative;
@@ -1520,10 +1520,7 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 }
 
 .corridor-hint {
-  position: absolute;
-  left: var(--gutter);
-  bottom: -6px;
-  margin: 0;
+  margin: 1.2rem 0 0;
   font: 500 .56rem/1.4 var(--f-caps);
   letter-spacing: .18em;
   text-transform: uppercase;
@@ -1532,9 +1529,12 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 
 /* the 3D corridor takes over: the anchors stay, and move with their doors */
 .corridor-3d .doors {
-  display: block;
+  position: absolute;
   inset: 0 var(--gutter);
+  display: block;
 }
+.corridor-3d .doors .door-face { max-width: none; margin-inline: 0; }
+.corridor-3d .corridor-hint { position: absolute; left: var(--gutter); bottom: -22px; margin: 0; }
 .corridor-3d .doors li {
   position: absolute;
   left: var(--dx, 50%);
@@ -1642,9 +1642,8 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 }
 
 @media (max-width: 860px) {
-  .corridor-stage { aspect-ratio: auto; min-height: 0; }
-  .doors { position: static; grid-template-columns: repeat(2, 1fr); }
-  .corridor-hint { position: static; margin-top: 14px; }
+  .corridor-3d .corridor-stage { aspect-ratio: 4 / 5; min-height: 380px; }
+  .doors { grid-template-columns: repeat(3, 1fr); }
   .reception { margin-top: 20px; }
 }
 @media (max-width: 640px) {
@@ -1717,3 +1716,8 @@ h3 { font-family: var(--f-display); font-weight: 600; }
 
 .credit-audio { padding-left: 0; }
 .credit-audio .credit-body { grid-column: 1 / -1; }
+
+/* The night veil sits at z-index 1 over the grounds. Everything that carries
+   reading has to sit ABOVE it, or the parchment goes to slate and the labels
+   on the enquiry form lose their contrast at the bottom of the page. */
+.hero-grid, .mural-copy, .enquire-grid { position: relative; z-index: 2; }

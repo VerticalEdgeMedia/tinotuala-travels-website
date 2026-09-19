@@ -559,7 +559,7 @@ function liteMode() {
 let scene, camera, view, objects = {}, held = null, heldTag = null;
 let yaw = 0, pitch = 0, yawT = 0, pitchT = 0, dragYaw = 0;
 let holdSpin = 0, holdSpinT = 0, holdTilt = 0, holdTiltT = 0;
-let bulb, bulbMesh;
+let bulb, bulbMesh, narrow = 0;
 
 function buildScene(stage) {
   const R = stage.renderer;
@@ -792,9 +792,12 @@ function buildScene(stage) {
     scene,
     camera,
     resize(w, h) {
-      camera.aspect = w / Math.max(1, h);
-      /* a small room on a narrow screen needs a wider lens or you see nothing */
-      camera.fov = w / h < 1.1 ? 68 : 54;
+      const a = w / Math.max(1, h);
+      camera.aspect = a;
+      /* A small room in a portrait box needs a much wider lens, or the
+         shelves fall straight off the side of the frame. */
+      camera.fov = a < 0.95 ? 88 : (a < 1.25 ? 72 : 54);
+      narrow = a < 0.95 ? 1 : (a < 1.25 ? 0.5 : 0);
       camera.updateProjectionMatrix();
     },
     onFrame(dt) {
@@ -803,8 +806,10 @@ function buildScene(stage) {
       pitch += (pitchT - pitch) * k;
       camera.rotation.set(0, 0, 0);
       /* You never leave the threshold: a little sway, and the look clamps. */
-      camera.position.set(Math.sin(yaw) * 0.18, 1.34 + pitch * 0.10, 3.25);
-      camera.lookAt(Math.sin(yaw) * 2.8, 1.02 + pitch * 1.25, -0.9);
+      /* a wide lens in a portrait box takes in a lot of lintel, so the
+         camera drops and aims a little lower */
+      camera.position.set(Math.sin(yaw) * 0.18, 1.34 - narrow * 0.18 + pitch * 0.10, 3.25 - narrow * 0.25);
+      camera.lookAt(Math.sin(yaw) * 2.8, 1.02 - narrow * 0.24 + pitch * 1.25, -0.9);
 
       if (held) {
         holdSpin += (holdSpinT - holdSpin) * k;

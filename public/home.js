@@ -59,18 +59,21 @@ function stir(el, ms) {
 /* ================================================================ the fire */
 
 async function lightTheFires() {
+  /* ?ft=<seconds> shifts the frozen frame the fire is caught on, so a
+     screenshot can show three different moments of it. Shot hook only. */
+  const ft = parseFloat(new URLSearchParams(location.search).get('ft')) || 0;
   const torches = $$('[data-fire="torch"]');
   for (const t of torches) {
     await Hotel.fire(t, {
       sheets: 6, spread: 0.86, base: 0.02, height: 0.88, count: 1,
-      embers: 0.9, shotTime: 17 + torches.indexOf(t) * 9
+      embers: 0.9, shotTime: 17 + torches.indexOf(t) * 9 + ft
     });
   }
   const pit = $('[data-fire="pit"]');
   if (pit) {
     await Hotel.fire(pit, {
       sheets: 7, spread: 0.98, base: 0.08, height: 0.80, count: 6,
-      floor: 0.13, embers: 1, shotTime: 31
+      floor: 0.13, embers: 1, shotTime: 31 + ft
     });
   }
 }
@@ -235,20 +238,42 @@ function setUpNight() {
 
   if (gsap && window.ScrollTrigger && !Hotel.stillFrame) {
     gsap.registerPlugin(window.ScrollTrigger);
-    window.ScrollTrigger.create({
-      trigger: document.body,
+    const ST = window.ScrollTrigger;
+    ST.create({
+      trigger: document.documentElement,
       start: 'top top',
       end: 'bottom bottom',
       onUpdate: (self) => apply(self.progress)
     });
-  } else {
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      apply(max > 0 ? window.scrollY / max : 0);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    /* The page is mostly photographs.  Its height at boot is not its height
+       once they have loaded, so the trigger has to be measured again. */
+    const again = () => { ST.refresh(); };
+    window.addEventListener('load', again);
+    window.setTimeout(again, 900);
+    window.setTimeout(again, 2600);
+    apply(0);
   }
+
+  /* apply() is idempotent, so this runs alongside ScrollTrigger rather than
+     instead of it.  ScrollTrigger measures the page once and this page is
+     mostly photographs: if it measures short, the grade would stick at
+     afternoon.  A plain rAF-throttled listener cannot. */
+  /* The page height is measured on a timer rather than on every scroll, so
+     the handler itself never forces a layout, and the handler runs straight
+     away rather than inside a rAF: a background tab or an off-screen frame
+     throttles rAF and the grade would stick. */
+  let maxScroll = 0;
+  const measure = () => {
+    maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    onScroll();
+  };
+  const onScroll = () => { apply(maxScroll > 0 ? window.scrollY / maxScroll : 0); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', measure, { passive: true });
+  window.addEventListener('load', measure);
+  window.setTimeout(measure, 700);
+  window.setTimeout(measure, 2400);
+  measure();
 
   if (Hotel.hooks.night) { Hotel.setNight(1); if (leaves) leaves.hidden = false; }
   if (Hotel.hooks.shot && leaves) leaves.hidden = false;
@@ -691,7 +716,13 @@ async function buildCorridor3d(stageEl, doorEls) {
     el: stageEl,
     scene,
     camera,
-    resize(w, h) { camera.aspect = w / Math.max(1, h); camera.updateProjectionMatrix(); },
+    resize(w, h) {
+      camera.aspect = w / Math.max(1, h);
+      /* a portrait box needs a much wider lens or the near doors fall off
+         either side of the frame */
+      camera.fov = camera.aspect < 1.25 ? 78 : 56;
+      camera.updateProjectionMatrix();
+    },
     onFrame(dt, t) {
       const k = Hotel.stillFrame ? 1 : 1 - Math.pow(0.002, Math.max(0.001, dt));
       cx += (px * 0.30 - cx) * k;

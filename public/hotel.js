@@ -626,9 +626,10 @@
       case 'lost':
         body = '<rect x="9" y="16" width="122" height="84" rx="3"/>' +
           '<rect x="16" y="23" width="108" height="70" rx="2" stroke-dasharray="14 3"/>' +
-          '<path d="M46 74 c0-10 6-13 9-18 2-4 1-9 5-9 4 0 4 5 3 9 l-2 7 h5 l10-3 c4-1 6 2 4 5 l-3 4 c3 0 4 3 2 5 l-4 3 c2 2 1 5-2 6 l-19 4 c-5 1-8-1-8-6z"/>';
-        label = '<text x="70" y="45" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="19" font-weight="600" fill="' + ink + '" opacity=".9" letter-spacing="2">102B</text>' +
-          '<text x="70" y="90" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="9" fill="' + ink + '" opacity=".85" letter-spacing="3">LOST PROPERTY</text>';
+          '<g transform="translate(96 36) scale(.52)">' +
+          '<path d="M46 74 c0-10 6-13 9-18 2-4 1-9 5-9 4 0 4 5 3 9 l-2 7 h5 l10-3 c4-1 6 2 4 5 l-3 4 c3 0 4 3 2 5 l-4 3 c2 2 1 5-2 6 l-19 4 c-5 1-8-1-8-6z"/></g>';
+        label = '<text x="60" y="58" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="22" font-weight="600" fill="' + ink + '" opacity=".9" letter-spacing="2">102B</text>' +
+          '<text x="70" y="85" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="9" fill="' + ink + '" opacity=".85" letter-spacing="3">LOST PROPERTY</text>';
         break;
       case 'map':
         body = '<circle cx="70" cy="58" r="44"/><circle cx="70" cy="58" r="36" stroke-dasharray="12 3"/>' +
@@ -637,9 +638,9 @@
         label = '<text x="70" y="26" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="9" fill="' + ink + '" opacity=".9" letter-spacing="3">118</text>';
         break;
       case 'book':
-        body = '<rect x="20" y="18" width="100" height="80" rx="4"/>' +
-          '<path d="M70 18 v80"/><path d="M30 34 h30 M30 46 h30 M30 58 h26 M80 34 h30 M80 46 h26"/>';
-        label = '<text x="70" y="112" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="9" fill="' + ink + '" opacity=".9" letter-spacing="3">214</text>';
+        body = '<rect x="20" y="12" width="100" height="74" rx="4"/>' +
+          '<path d="M70 12 v74"/><path d="M30 28 h30 M30 40 h30 M30 52 h26 M80 28 h30 M80 40 h26"/>';
+        label = '<text x="70" y="106" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="9" fill="' + ink + '" opacity=".9" letter-spacing="3">214</text>';
         break;
       case 'lantern':
         body = '<path d="M70 12 v10 M52 22 h36 M56 22 c-6 16-6 36 0 52 h28 c6-16 6-36 0-52" />' +
