@@ -1294,3 +1294,124 @@ html:not(.js) .roomfull .lost-list { position: static; width: auto; height: auto
 @media (max-width: 860px) {
   .room-flatmode .map-card { left: 10px; right: 10px; width: auto; bottom: 74px; }
 }
+
+/* --- the Rooftop Bar ------------------------------------------------------ */
+
+/* Catch it: big, central, and never over the tray or the dock */
+.bar-catch {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(286px, 37vh, 356px);   /* at the bar line, clear of the card */
+  transform: translateX(-50%);
+  z-index: 8;
+  margin: 0;
+}
+.bar-catch[hidden] { display: none !important; }
+.btn-catch {
+  padding: .9em 2.1em;
+  font-size: clamp(.68rem, 1vw, .8rem);
+  letter-spacing: .22em;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #E4C87E, #B08A2E 55%, #7A5C19);
+  color: #1A1206;
+  box-shadow: inset 0 1px 0 rgba(255,246,214,.9), 0 12px 30px rgba(0,0,0,.6);
+}
+.btn-catch.is-live { animation: catchPulse .7s ease-in-out infinite alternate; }
+@keyframes catchPulse {
+  from { box-shadow: inset 0 1px 0 rgba(255,246,214,.9), 0 12px 30px rgba(0,0,0,.6); }
+  to   { box-shadow: inset 0 1px 0 rgba(255,246,214,.9), 0 0 34px rgba(233,206,122,.75); }
+}
+.room-flatmode .bar-catch { position: static; transform: none; margin: 14px 0 0; }
+/* on a phone the menu is a sheet across the bottom, so Catch it goes up top */
+@media (max-width: 860px) {
+  .bar-catch { top: clamp(64px, 9vh, 96px); bottom: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .btn-catch.is-live { animation: none; } }
+
+/* The menu: a card standing on the bar.  It lives top right, because the
+   bottom left belongs to the tray and the concierge, the bottom centre to
+   the card of whatever you are holding, and the bottom right to the way
+   out.  Nothing fixed may cover the control you need next. */
+.bar-menu {
+  position: absolute;
+  right: clamp(14px, 2.6vw, 40px);
+  top: clamp(58px, 8vh, 84px);
+  z-index: 7;
+  width: min(330px, 30vw);
+  max-height: calc(100% - 210px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: clamp(14px, 1.4vw, 22px) clamp(14px, 1.4vw, 20px);
+  border-radius: 2px;
+  background:
+    linear-gradient(170deg, rgba(255,255,255,.42), rgba(255,255,255,0) 36%),
+    linear-gradient(160deg, var(--ivory, #F3ECDC), var(--ivory-2, #E7DCC4));
+  color: var(--ink, #1A1611);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.5), 0 22px 50px rgba(0,0,0,.6);
+}
+.bar-menu ul { margin: 0; padding: 0; list-style: none; }
+.bm-kick {
+  margin: 0 0 .2rem;
+  font: 500 .5rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .28em; text-transform: uppercase; color: #8A6A24;
+}
+.bm-head {
+  margin: 0 0 .7rem;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid rgba(122,96,42,.4);
+  font: 500 clamp(1.1rem, 1.5vw, 1.35rem)/1.1 var(--f-display, Georgia, serif);
+}
+.bm-btn {
+  display: block; width: 100%;
+  padding: .45rem .5rem;
+  margin: 0 0 .1rem;
+  border: 0; border-radius: 2px;
+  background: none; text-align: left; cursor: pointer;
+  transition: background .2s ease;
+}
+.bm-btn:hover, .bm-btn:focus-visible { background: rgba(201,162,39,.18); }
+.bm-btn:focus-visible { outline: 3px solid #8A6A24; outline-offset: 1px; }
+.bm-btn[aria-pressed="true"] { background: rgba(201,162,39,.30); }
+.bm-name {
+  display: block;
+  font: 500 clamp(.95rem, 1.15vw, 1.06rem)/1.2 var(--f-display, Georgia, serif);
+  color: var(--ink, #1A1611);
+}
+.bm-place {
+  display: block; margin-top: .12rem;
+  font: 500 .5rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .22em; text-transform: uppercase; color: #8A6A24;
+}
+.bm-note {
+  display: block; margin-top: .18rem;
+  font: italic 400 .8rem/1.35 var(--f-display, Georgia, serif);
+  color: #5C5240;
+}
+.bm-btn.is-done .bm-name::after { content: ' \2713'; color: #8A6A24; }
+.bm-btn.is-done { opacity: .72; }
+.bm-foot {
+  margin: .7rem 0 0;
+  padding-top: .55rem;
+  border-top: 1px solid rgba(122,96,42,.4);
+  font: 500 .5rem/1.5 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em; text-transform: uppercase; color: #7A6B4C;
+}
+@media (max-width: 860px) {
+  .bar-menu {
+    left: 10px; right: 10px; top: auto; bottom: 150px;
+    width: auto; max-height: 40svh;
+  }
+  .bm-note { display: none; }
+}
+@media (max-width: 640px) { .bar-menu { bottom: 196px; max-height: 34svh; } }
+/* on a narrow screen the menu and the card are alternatives, not neighbours */
+@media (max-width: 860px) { .roomfull.is-carded .bar-menu { display: none; } }
+.room-flatmode .bar-menu { position: absolute; }
+
+/* --- rooms on short and narrow screens ------------------------------------
+   The card of whatever you are holding sits ABOVE the way out, which sits
+   above the tray.  Part A stacked the card on top of the way out below
+   860px; this is the fix, and it applies to 102B as well. */
+@media (max-width: 860px) { .roomfull .held { bottom: 132px; } }
+@media (max-width: 640px) { .roomfull .held { bottom: 196px; } }
