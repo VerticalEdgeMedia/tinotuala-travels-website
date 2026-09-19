@@ -1,6 +1,6 @@
 {
- "note": "Every image published on the Tino Tuala Travels mock-up. Photographs and artworks come from Wikimedia Commons under a licence that permits reuse; the two photographs of Tino were supplied by him.",
- "count": 29,
+ "note": "Every picture and every sound published on the Tino Tuala Travels mock-up. Photographs, artworks, reward pictures and animal recordings come from Wikimedia Commons under a licence that permits reuse; the two photographs of Tino were supplied by him. The animal recordings are trimmed and re-encoded; the echoes you hear are added live in the browser and are not part of the original files.",
+ "count": 37,
  "images": [
   {
    "file": "bangkok-street-food-wok.jpg",
@@ -307,6 +307,185 @@
    "licence_url": null,
    "source": "Supplied by Tino Tuala",
    "used_in": "About, the inset frame"
+  },
+  {
+   "file": "reward-poster-01.jpg",
+   "kind": "reward picture",
+   "title": "1930s Japan Travel Poster - 02 (Towards Matsushima, Sendai Rail Bureau)",
+   "creator": "Japanese Government Railways",
+   "year": "1930s",
+   "collection": "Heritage Auctions",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:1930s_Japan_Travel_Poster_-_02.jpg",
+   "used_in": "Room 102B, the poster in the tube, and the passport",
+   "width": 998,
+   "height": 1400,
+   "alt": "Art deco Japanese railway poster of Matsushima bay, with a dark silhouetted tree and a green bird framing pine-topped islands, sailing boats and a pale yellow sky"
+  },
+  {
+   "file": "reward-poster-02.jpg",
+   "kind": "reward picture",
+   "title": "Italian Lakes, travel poster for ENIT, ca. 1930",
+   "creator": "Unknown",
+   "year": "1930",
+   "collection": "Library of Congress, Prints and Photographs Division",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:Italian_Lakes,_travel_poster_for_ENIT,_ca._1930.jpg",
+   "used_in": "Hung along the corridor",
+   "width": 862,
+   "height": 1400,
+   "alt": "Italian tourism poster of a lakeside village with red-tiled roofs and a white bell tower, a tall dark cypress beside it and blue water running back to mountains, under the words Italian Lakes"
+  },
+  {
+   "file": "reward-poster-03.jpg",
+   "kind": "reward picture",
+   "title": "Beauty and grandeur, the Yangtze gorges, travel poster, ca. 1930",
+   "creator": "Unknown",
+   "year": "1930",
+   "collection": "Library of Congress, Prints and Photographs Division",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:Beauty_and_grandeur,_the_Yangtze_gorges,_travel_poster,_ca._1930.jpg",
+   "used_in": "Hung along the corridor",
+   "width": 872,
+   "height": 1400,
+   "alt": "Shipping line poster for the Yangtze gorges showing two steamers on a green river between purple cliffs, with a blue-roofed temple on a headland and the words Butterfield and Swire along the foot"
+  },
+  {
+   "file": "reward-poster-04.jpg",
+   "kind": "reward picture",
+   "title": "Cie de Navigation Mixte, Touache",
+   "creator": "F. Hugo d'Alesi",
+   "year": "1899",
+   "collection": "Bibliotheque nationale de France (Gallica)",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:Cie_de_Navigation_mixte_Touache._NM._affiche,_F._Hugo_d%27Al%C3%A9si_Affiches_simili-aquarelle_Ateliers_F._Hugo_d%27Al%C3%A9si,_5_Place_Pigalle,_Paris.jpg",
+   "used_in": "Hung along the corridor",
+   "width": 1090,
+   "height": 1400,
+   "alt": "French shipping line poster of a lateen-rigged boat from Tangier on blue water, a mast of signal flags above it, a white North African town on the far shore and an inset oval of a steamer at sunset"
+  },
+  {
+   "file": "reward-poster-05.jpg",
+   "kind": "reward picture",
+   "title": "Cie Gle. Transatlantique, French Line, Paris, Havre, New York",
+   "creator": "Albert Sebille",
+   "year": "1914",
+   "collection": "Bibliotheque nationale de France (Gallica)",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:Cie_Gle._Transatlantique,_French_line,_Paris,_H%C3%A2vre,_New_York_affiche,_Albert_Sebille.jpg",
+   "used_in": "Hung along the corridor",
+   "width": 1400,
+   "height": 1084,
+   "alt": "Ocean liner poster of the steamship France leaving harbour under a smoky amber sky, tugs and gulls around her bow, lettered French Line and Paris Havre New York"
+  },
+  {
+   "file": "reward-label-01.jpg",
+   "kind": "reward picture",
+   "title": "Shepheard's Hotel, Cairo, Hotel luggage label",
+   "creator": "Unknown",
+   "year": "1900-1920",
+   "collection": "Deutsches Historisches Museum",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:Shepheard%27s_Hotel,_Cairo,_Hotel_luggage_label.jpg",
+   "used_in": "The passport, the label found in the painted leaves",
+   "width": 1042,
+   "height": 1400,
+   "alt": "Gummed hotel luggage label in black and red reading Cairo Egypt and Shepheard's Hotel, with a silhouetted rider on a camel before the Sphinx, a pyramid and palm trees"
+  },
+  {
+   "file": "reward-label-02.jpg",
+   "kind": "reward picture",
+   "title": "Kofferaufkleber Hotel Weinzinger Linz",
+   "creator": "Unknown",
+   "year": "1920",
+   "collection": "",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:Kofferaufkleber_Hotel_Weinzinger_Linz.jpg",
+   "used_in": "Hung along the corridor",
+   "width": 1400,
+   "height": 1068,
+   "alt": "Gummed hotel luggage label with a red border reading Hotel Weinzinger, Linz a. D. Austria, showing the tall cream hotel beside a tree-lined riverside promenade with people and a motor car"
+  },
+  {
+   "file": "reward-postcard-01.jpg",
+   "kind": "reward picture",
+   "title": "Collyer Quay, Singapore postcard",
+   "creator": "Unknown",
+   "year": "1910",
+   "collection": "",
+   "licence": "Public domain",
+   "licence_url": "https://commons.wikimedia.org/wiki/Commons:Licensing#Public_domain",
+   "source": "https://commons.wikimedia.org/wiki/File:Collyer_Quay,_Singapore_postcard.jpg",
+   "used_in": "Room 102B, the postcard on the shelf, and the passport",
+   "width": 1400,
+   "height": 902,
+   "alt": "Hand-tinted picture postcard of Collyer Quay in Singapore, with the domed Alkaff Arcade and its long arcaded verandah running down the waterfront past a street lamp and horse carriages"
   }
- ]
+ ],
+ "audio": [
+  {
+   "files": [
+    "animal-monkey.mp3",
+    "animal-monkey.ogg"
+   ],
+   "what": "Mantled howler monkey (Alouatta palliata) calls, Santa Rosa National Park, Costa Rica",
+   "creator": "Richard Ranft (sound recordist); The British Library Board",
+   "licence": "CC BY 4.0",
+   "licence_url": "https://creativecommons.org/licenses/by/4.0",
+   "source": "https://commons.wikimedia.org/wiki/File:Mantled_Howler_Monkey_(Alouatta_palliata)_(W_ALOUATTA_PALLIATA_R1_C2).ogg",
+   "seconds": 3.5,
+   "used_in": "Ambience, the monkey call",
+   "note": "Trimmed, normalised and converted to mono mp3 and ogg. cut from 00:01.0 to 00:04.5 of the original"
+  },
+  {
+   "files": [
+    "animal-elephant.mp3",
+    "animal-elephant.ogg"
+   ],
+   "what": "Elephant trumpeting",
+   "creator": "தகவலுழவன (Thagavaluzhavan)",
+   "licence": "CC0",
+   "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "source": "https://commons.wikimedia.org/wiki/File:Elephant_voice_-_trumpeting.ogg",
+   "seconds": 1.3,
+   "used_in": "Ambience, the elephant call",
+   "note": "Trimmed, normalised and converted to mono mp3 and ogg. cut from 00:00.08 to 00:01.38 of the original (the whole trumpet; the source is only 1.44 s long)"
+  },
+  {
+   "files": [
+    "animal-bigcat.mp3",
+    "animal-bigcat.ogg"
+   ],
+   "what": "Tiger growling and snarling (recorded in a cage, natural reverb)",
+   "creator": "schots",
+   "licence": "CC0",
+   "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "source": "https://commons.wikimedia.org/wiki/File:439280_schots_angry-tiger.wav",
+   "seconds": 3.2,
+   "used_in": "Ambience, the big cat call",
+   "note": "Trimmed, normalised and converted to mono mp3 and ogg. cut from 00:22.0 to 00:25.2 of the original"
+  },
+  {
+   "files": [
+    "animal-bird.mp3",
+    "animal-bird.ogg"
+   ],
+   "what": "Laughing kookaburra (Dacelo novaeguineae) call",
+   "creator": "Powys, V. — Australian National Wildlife Collection (ANWC X00520)",
+   "licence": "CC BY 3.0",
+   "licence_url": "https://creativecommons.org/licenses/by/3.0",
+   "source": "https://commons.wikimedia.org/wiki/File:Dacelo_novaeguineae_ANWC_X00520.opus",
+   "seconds": 3.4,
+   "used_in": "Ambience, the bird call",
+   "note": "Trimmed, normalised and converted to mono mp3 and ogg. cut from 00:01.48 to 00:04.88 of the original"
+  }
+ ],
+ "audio_count": 4
 }

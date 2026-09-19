@@ -1,0 +1,54 @@
+[
+  {
+    "id": "monkey",
+    "files": ["animal-monkey.mp3", "animal-monkey.ogg"],
+    "bytes": {"animal-monkey.mp3": 42675, "animal-monkey.ogg": 34210},
+    "seconds": 3.5,
+    "what": "Mantled howler monkey (Alouatta palliata) calls, Santa Rosa National Park, Costa Rica",
+    "creator": "Richard Ranft (sound recordist); The British Library Board",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mantled_Howler_Monkey_(Alouatta_palliata)_(W_ALOUATTA_PALLIATA_R1_C2).ogg",
+    "source_file": "Mantled Howler Monkey (Alouatta palliata) (W ALOUATTA PALLIATA R1 C2).ogg",
+    "trim": "cut from 00:01.0 to 00:04.5 of the original"
+  },
+  {
+    "id": "elephant",
+    "files": ["animal-elephant.mp3", "animal-elephant.ogg"],
+    "bytes": {"animal-elephant.mp3": 16344, "animal-elephant.ogg": 13557},
+    "seconds": 1.3,
+    "what": "Elephant trumpeting",
+    "creator": "தகவலுழவன (Thagavaluzhavan)",
+    "licence": "CC0",
+    "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Elephant_voice_-_trumpeting.ogg",
+    "source_file": "Elephant voice - trumpeting.ogg",
+    "trim": "cut from 00:00.08 to 00:01.38 of the original (the whole trumpet; the source is only 1.44 s long)"
+  },
+  {
+    "id": "bigcat",
+    "files": ["animal-bigcat.mp3", "animal-bigcat.ogg"],
+    "bytes": {"animal-bigcat.mp3": 39227, "animal-bigcat.ogg": 30246},
+    "seconds": 3.2,
+    "what": "Tiger growling and snarling (recorded in a cage, natural reverb)",
+    "creator": "schots",
+    "licence": "CC0",
+    "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:439280_schots_angry-tiger.wav",
+    "source_file": "439280 schots angry-tiger.wav",
+    "trim": "cut from 00:22.0 to 00:25.2 of the original"
+  },
+  {
+    "id": "bird",
+    "files": ["animal-bird.mp3", "animal-bird.ogg"],
+    "bytes": {"animal-bird.mp3": 41735, "animal-bird.ogg": 24855},
+    "seconds": 3.4,
+    "what": "Laughing kookaburra (Dacelo novaeguineae) call",
+    "creator": "Powys, V. — Australian National Wildlife Collection (ANWC X00520)",
+    "licence": "CC BY 3.0",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Dacelo_novaeguineae_ANWC_X00520.opus",
+    "source_file": "Dacelo novaeguineae ANWC X00520.opus",
+    "trim": "cut from 00:01.48 to 00:04.88 of the original"
+  }
+]
