@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Room 102B | Tino Tuala Travels</title>
+<meta name="description" content="Preview mock-up. The lost property room: a small triangular room with a mattress on its side and a wall of things people left behind.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23081410'/%3E%3Cpath d='M16 5c3 5 3.4 10 0 21-3.4-11-3-16 0-21z' fill='%23C9A227'/%3E%3Cpath d='M9.6 10.5c3.6 3.6 5 7.6 6.4 15.5-5.6-7-7-11-6.4-15.5z' fill='%23A8842E'/%3E%3Cpath d='M22.4 10.5c-3.6 3.6-5 7.6-6.4 15.5 5.6-7 7-11 6.4-15.5z' fill='%23A8842E'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="hotel.css">
+<script>document.documentElement.classList.add('js');if(/[?&]shot=1\b/.test(location.search))document.documentElement.classList.add('shot');</script>
+</head>
+<body class="page-102b">
+
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <linearGradient id="foil" x1="0" y1="0" x2="1" y2="0.9">
+      <stop offset="0"   stop-color="#8A6A24"/>
+      <stop offset=".17" stop-color="#C9A227"/>
+      <stop offset=".33" stop-color="#F6E7B0"/>
+      <stop offset=".49" stop-color="#C9A227"/>
+      <stop offset=".65" stop-color="#96752A"/>
+      <stop offset=".82" stop-color="#EBD28A"/>
+      <stop offset="1"   stop-color="#A8842E"/>
+    </linearGradient>
+  </defs>
+  <symbol id="orn-lotus" viewBox="0 0 120 88">
+    <g fill="url(#foil)" stroke="rgba(0,0,0,.22)" stroke-width=".7">
+      <path transform="rotate(-62 60 82)" d="M60 40c12 8 15 20 0 42-15-22-12-34 0-42z"/>
+      <path transform="rotate(62 60 82)"  d="M60 40c12 8 15 20 0 42-15-22-12-34 0-42z"/>
+      <path transform="rotate(-32 60 82)" d="M60 26c14 12 17 28 0 56-17-28-14-44 0-56z"/>
+      <path transform="rotate(32 60 82)"  d="M60 26c14 12 17 28 0 56-17-28-14-44 0-56z"/>
+      <path d="M60 6c15 20 18 40 0 76-18-36-15-56 0-76z"/>
+    </g>
+    <g fill="none" stroke="url(#foil)" stroke-linecap="round">
+      <path d="M18 74c12 10 26 14 42 14s30-4 42-14" stroke-width="2.6"/>
+      <path d="M32 84c8 4 18 6 28 6s20-2 28-6" stroke-width="1.4"/>
+    </g>
+  </symbol>
+  <symbol id="orn-corner" viewBox="0 0 130 130">
+    <g fill="none" stroke="url(#foil)" stroke-width="2" stroke-linecap="round">
+      <path d="M3 70C3 28 28 3 70 3"/>
+      <path d="M3 90C3 18 18 3 90 3"/>
+      <path d="M12 62c14-2 22-10 22-22 0-8-7-13-12-8s-1 13 7 12"/>
+      <path d="M62 12c-2 14-10 22-22 22"/>
+    </g>
+    <path d="M70 3c10 2 17 9 19 19-11-1-18-8-19-19z" fill="url(#foil)"/>
+    <circle cx="44" cy="44" r="2.6" fill="url(#foil)"/>
+  </symbol>
+</svg>
+
+<span class="grain" aria-hidden="true"></span>
+
+<div class="preview-bar">
+  <span class="chip chip-alert">Preview</span>
+  <span>Mock-up site. Draft copy, placeholder contact details, stand-in photography.</span>
+</div>
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg>
+    <span class="brand-name">Tino Tuala <em>Travels</em></span>
+  </a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="index.html#corridor">The corridor</a>
+    <a class="btn btn-small" href="index.html">Back to the site</a>
+  </nav>
+</header>
+
+<main id="roomMain">
+  <section class="r102b above-gl">
+    <div class="wrap r102b-head">
+      <p class="room-no">102B</p>
+      <h1 class="display gold-text">Lost property.</h1>
+      <p class="r102b-lede">Somebody put two walls in a corner and called it a room. It holds a mattress
+      on its side and everything guests have walked off without since the hotel opened its doors.</p>
+    </div>
+
+    <!-- The room.  In the full version a three.js scene is drawn into this
+         box and the buttons below sit invisibly over the objects.  In the
+         lighter version, and with no JavaScript at all, the drawing and the
+         list below are the room. -->
+    <div class="wrap">
+      <div class="roomstage" id="roomStage">
+
+        <div class="room-flat" id="roomFlat">
+          <svg viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" role="img"
+               aria-label="A small triangular room. Two walls run back from the doorway and meet at a corner. A mattress leans on the left wall; shelves of lost property line the right wall; a bare bulb hangs from the ceiling.">
+            <defs>
+              <linearGradient id="wallL" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#2A2117"/><stop offset="1" stop-color="#5A4630"/>
+              </linearGradient>
+              <linearGradient id="wallR" x1="1" y1="0" x2="0" y2="0">
+                <stop offset="0" stop-color="#241C13"/><stop offset="1" stop-color="#53402B"/>
+              </linearGradient>
+              <linearGradient id="flr" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#3A2E20"/><stop offset="1" stop-color="#1A140E"/>
+              </linearGradient>
+              <linearGradient id="tick" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#D6CDB4"/><stop offset="1" stop-color="#A89C7C"/>
+              </linearGradient>
+              <radialGradient id="glow" cx=".5" cy=".18" r=".7">
+                <stop offset="0" stop-color="#FFD79A" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#FFD79A" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="1000" height="620" fill="#100C08"/>
+            <polygon points="0,0 500,180 1000,0" fill="#1B1611"/>
+            <polygon points="0,30 500,180 500,480 0,600" fill="url(#wallL)"/>
+            <polygon points="1000,30 500,180 500,480 1000,600" fill="url(#wallR)"/>
+            <polygon points="0,600 500,480 1000,600 1000,620 0,620" fill="url(#flr)"/>
+            <rect x="0" y="592" width="1000" height="28" fill="#4A1A17" opacity=".55"/>
+            <polygon points="0,30 500,180 1000,30" fill="url(#glow)"/>
+
+            <!-- the bare bulb -->
+            <line x1="500" y1="0" x2="500" y2="150" stroke="#6A5A40" stroke-width="3"/>
+            <circle cx="500" cy="164" r="15" fill="#FFE6B4"/>
+            <circle cx="500" cy="164" r="34" fill="#FFD79A" opacity=".25"/>
+
+            <!-- the mattress, on its side against the left wall -->
+            <g>
+              <polygon points="96,556 452,462 452,214 96,214" fill="#120D08" opacity=".5"
+                       transform="translate(16,-8)"/>
+              <polygon points="88,560 448,466 448,206 88,196" fill="url(#tick)"/>
+              <g stroke="#7E8FA0" stroke-width="7" opacity=".55">
+                <line x1="130" y1="200" x2="130" y2="551"/>
+                <line x1="188" y1="202" x2="188" y2="536"/>
+                <line x1="246" y1="203" x2="246" y2="521"/>
+                <line x1="304" y1="204" x2="304" y2="506"/>
+                <line x1="362" y1="205" x2="362" y2="491"/>
+                <line x1="420" y1="206" x2="420" y2="476"/>
+              </g>
+              <polygon points="88,560 448,466 448,206 88,196" fill="none" stroke="#6E6045" stroke-width="7"/>
+              <rect x="352" y="410" width="58" height="34" rx="3" fill="#EDE6D2" opacity=".85"/>
+              <ellipse cx="220" cy="360" rx="52" ry="38" fill="#8A7B54" opacity=".45"/>
+            </g>
+
+            <!-- the shelves, on the right wall -->
+            <g>
+              <polygon points="552,238 950,182 950,206 552,258" fill="#6B5334"/>
+              <polygon points="552,336 950,300 950,324 552,356" fill="#6B5334"/>
+              <polygon points="552,434 950,418 950,442 552,454" fill="#6B5334"/>
+              <polygon points="552,196 566,196 566,470 552,462" fill="#4E3B25"/>
+              <polygon points="936,150 950,150 950,450 936,446" fill="#4E3B25"/>
+            </g>
+          </svg>
+          <div class="flat-veil" aria-hidden="true"></div>
+        </div>
+
+        <!-- Every object in the room.  These buttons are the room's keyboard
+             and screen-reader route in both versions.  In the full version
+             they are placed over the 3D objects and drawn by the scene. -->
+        <ul class="lost-list" id="lostList" aria-label="Things left behind, on the shelves">
+          <li style="--x:60%;--y:28%"><button type="button" class="lost-btn" data-obj="flipflop">
+            <span class="lost-name">A single flip-flop, left foot</span>
+            <span class="tag-line">Its twin went out with the tide at about four. This one has waited ever since.</span>
+          </button></li>
+          <li style="--x:71%;--y:26%"><button type="button" class="lost-btn" data-obj="snorkel">
+            <span class="lost-name">A snorkel, bitten through</span>
+            <span class="tag-line">Chewed clean through by a man who had been promised there were no jellyfish.</span>
+          </button></li>
+          <li style="--x:82%;--y:24%"><button type="button" class="lost-btn" data-obj="strawhat">
+            <span class="lost-name">A straw hat, ribbon faded</span>
+            <span class="tag-line">Left a moped at speed. Came back three days later on somebody else's head.</span>
+          </button></li>
+          <li style="--x:92%;--y:22%"><button type="button" class="lost-btn" data-obj="paperback">
+            <span class="lost-name">A paperback, swollen with seawater</span>
+            <span class="tag-line">Read as far as page 212 in the bath. Nobody here knows how it ends.</span>
+          </button></li>
+
+          <li style="--x:60%;--y:46%"><button type="button" class="lost-btn" data-obj="ukulele">
+            <span class="lost-name">A ukulele, three strings</span>
+            <span class="tag-line">Three strings, one song, and a whole floor of people who learnt it whether they wanted to or not.</span>
+          </button></li>
+          <li style="--x:71%;--y:44%"><button type="button" class="lost-btn" data-obj="polaroid">
+            <span class="lost-name">A Polaroid camera, taped shut</span>
+            <span class="tag-line">The tape says DO NOT OPEN in four languages. Nobody here has opened it.</span>
+          </button></li>
+          <li style="--x:82%;--y:42%"><button type="button" class="lost-btn" data-obj="flamingo">
+            <span class="lost-name">An inflatable flamingo, going down</span>
+            <span class="tag-line">Found at the far end of the pool at six in the morning, facing the wrong way.</span>
+          </button></li>
+          <li style="--x:92%;--y:40%"><button type="button" class="lost-btn" data-obj="bucket">
+            <span class="lost-name">A child's bucket, one handle</span>
+            <span class="tag-line">Still has sand in it, from a beach nobody at this desk can name.</span>
+          </button></li>
+
+          <li style="--x:60%;--y:63%"><button type="button" class="lost-btn" data-obj="jar" data-does="shake">
+            <span class="lost-name">A jar of sand, a date on the lid</span>
+            <span class="tag-line">Sand, a shell, and something that rattles. Give it a shake.</span>
+          </button></li>
+          <li style="--x:71%;--y:61%"><button type="button" class="lost-btn" data-obj="hat" data-does="take">
+            <span class="lost-name">A tiny straw hat</span>
+            <span class="tag-line">Far too small for a person. Somebody on the ground floor is missing it.</span>
+          </button></li>
+          <li style="--x:82%;--y:59%"><button type="button" class="lost-btn" data-obj="postcard" data-does="keep">
+            <span class="lost-name">A postcard, never posted</span>
+            <span class="tag-line">Written, addressed, stamped and never posted. It says: we are staying another week.</span>
+          </button></li>
+          <li style="--x:92%;--y:57%"><button type="button" class="lost-btn" data-obj="poster" data-does="keep">
+            <span class="lost-name">A poster, rolled in a tube</span>
+            <span class="tag-line">Rolled up and left in a wardrobe. Older than anyone who works here.</span>
+          </button></li>
+        </ul>
+
+        <!-- what you are holding -->
+        <div class="held" id="held" hidden>
+          <p class="held-kick">Luggage tag</p>
+          <p class="held-name" id="heldName"></p>
+          <p class="held-tag" id="heldTag"></p>
+          <p class="held-acts">
+            <button type="button" class="btn btn-small" id="heldAct" hidden></button>
+            <button type="button" class="btn btn-small btn-ghost" id="heldBack">Put it back</button>
+          </p>
+          <p class="held-turn" id="heldTurn">Drag it to turn it over.</p>
+        </div>
+
+        <p class="room-hint" id="roomHint">Move the pointer to look around. Pick something up.</p>
+      </div>
+    </div>
+
+    <div class="wrap r102b-foot">
+      <p class="r102b-note"><span class="chip">Draft</span> The things on these shelves and the stories on
+      their tags are invented for this mock-up. Nobody real lost any of them.</p>
+      <p><a class="btn" href="index.html#corridor" id="leaveRoom">Back to the corridor</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p class="footer-brand"><svg class="brand-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg> Tino Tuala <em>Travels</em></p>
+      <p class="footer-line">Krabi. Phuket. Bangkok. Tokyo. Mykonos. Barcelona. And wherever you were actually thinking of.</p>
+    </div>
+    <div class="footer-meta">
+      <p><a href="credits.html">Picture credits and licences</a></p>
+      <p class="footer-small">Preview mock-up built for review. The postcard and the poster on these shelves
+      are public-domain pictures from Wikimedia Commons, credited in full.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="hotel.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="room102b.js" type="module"></script>
+<!-- TEMP:versions — test-site only, delete before the real domain goes live. Self-contained: style, markup, script. -->
+<style>
+.vdock{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;font:700 13px/1 'DM Sans',system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em}
+.vdock .versions-tag{background:#C9A227;color:#0B0B0B;padding:12px 16px;border-radius:999px;text-decoration:none;box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .3s,box-shadow .3s;flex:none}
+.vdock .versions-tag:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.4)}
+.vdock .vstrip{display:flex;gap:6px;max-width:calc(4 * 54px + 3 * 6px);overflow-x:auto;scrollbar-width:none;padding:4px 0}
+.vdock .vstrip::-webkit-scrollbar{display:none}
+.vdock .vstrip a{flex:none;width:54px;text-align:center;padding:12px 0;border-radius:999px;text-decoration:none;color:#fff;background:rgba(20,20,20,.78);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.22);transition:background .2s,color .2s,transform .3s}
+.vdock .vstrip a:hover{background:#fff;color:#0B0B0B;transform:translateY(-2px)}
+.vdock .vstrip a[aria-current]{background:#fff;color:#0B0B0B;box-shadow:inset 0 0 0 1.5px #fff}
+.vdock a:focus-visible{outline:3px solid #fff;outline-offset:2px}
+@media (max-width:600px){.vdock .vstrip{max-width:calc(3 * 54px + 2 * 6px)}}
+@media (prefers-reduced-motion:reduce){.vdock *{transition:none!important}}
+</style>
+<div class="vdock">
+  <div class="vstrip" aria-label="Jump to a version"><a href="/versions/2026-09-18-v1-editorial/">v1</a><a href="/versions/2026-09-19-v2-green-room/">v2</a><a href="/" aria-current="true">v3</a></div>
+  <a class="versions-tag" href="/versions/">Versions</a>
+</div>
+<script>
+(function(){var s=document.querySelector('.vdock .vstrip');if(!s)return;
+ var STEP=60,target=s.scrollLeft,acc=0,last=0,raf=0;
+ function max(){return s.scrollWidth-s.clientWidth}
+ function go(){var from=s.scrollLeft,to=Math.max(0,Math.min(max(),target)),t0=performance.now(),D=520;target=to;
+   cancelAnimationFrame(raf);(function f(now){var k=Math.min(1,(now-t0)/D);s.scrollLeft=from+(to-from)*(1-Math.pow(1-k,4));if(k<1)raf=requestAnimationFrame(f);})(t0);}
+ s.addEventListener('wheel',function(e){if(max()<=0)return;e.preventDefault();var d=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;acc+=d;
+   var now=performance.now();if(Math.abs(acc)<24||now-last<110)return;target=Math.round(target/STEP)*STEP+(acc>0?STEP:-STEP);acc=0;last=now;go();},{passive:false});
+ var c=s.querySelector('[aria-current]');if(c){s.scrollLeft=Math.max(0,c.offsetLeft-s.clientWidth+c.offsetWidth+6);target=s.scrollLeft;}
+})();
+</script>
+<!-- /TEMP:versions -->
+</body>
+</html>
