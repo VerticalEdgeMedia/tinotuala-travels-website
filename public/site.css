@@ -305,9 +305,16 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  clip-path: url(#dome);
+  transform: scale(1.02);
+  transition: transform .9s var(--ease);
+  will-change: transform;
 }
-.niche-ogee .niche-art img { clip-path: url(#ogee); }
+.niche-art { clip-path: url(#dome); --rx: 0deg; --ry: 0deg; --tx: 0%; --ty: 0%; }
+.niche-ogee .niche-art { clip-path: url(#ogee); }
+.niche-art:hover img, .niche-art.is-tilting img {
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translate(var(--tx), var(--ty)) scale(1.2);
+}
+.niche-art.is-tilting img { transition: transform .25s ease-out; }
 .niche-line {
   position: absolute;
   inset: 0;
@@ -605,6 +612,8 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   margin: 0;
   background: #060F0C;
   border-radius: 2px;
+  overflow: hidden;                    /* the frame does the clipping, so a zoom can never pass the gold line */
+  --rx: 0deg; --ry: 0deg; --tx: 0%; --ty: 0%;
 }
 .frame img {
   display: block;
@@ -612,7 +621,9 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
-  transition: transform 1.2s var(--ease);
+  transform: scale(1.02);              /* a hair over, so no sub-pixel gap ever shows at rest */
+  transition: transform .9s var(--ease);
+  will-change: transform;
 }
 .frame::after {
   content: '';
@@ -625,7 +636,12 @@ h3 { font-family: var(--f-display); font-weight: 600; }
     inset 0 0 0 6px var(--forest-800),
     inset 0 0 0 7px rgba(201,162,39,.45);
 }
-.frame:hover img { transform: scale(1.03); }
+.frame:hover img, .frame.is-tilting img {
+  /* zoom IN, then lean toward the pointer's corner. 1.2 is more than a 5 degree lean plus the
+     small slide can ever uncover, so all four edges stay covered the whole time. */
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translate(var(--tx), var(--ty)) scale(1.2);
+}
+.frame.is-tilting img { transition: transform .25s ease-out; }
 .frame-wide { aspect-ratio: 16 / 10; }
 .frame-tall { aspect-ratio: 4 / 5; }
 .frame-portrait { aspect-ratio: 3 / 4; }
@@ -1186,7 +1202,7 @@ h3 { font-family: var(--f-display); font-weight: 600; }
   .filmstrip { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; padding-inline: var(--gutter); -webkit-mask-image: none; mask-image: none; }
   .filmstrip-track { animation: none; }
   .filmstrip-track[aria-hidden="true"] { display: none; }
-  .frame:hover img { transform: none; }
+  .frame img, .frame:hover img, .niche-art img, .niche-art:hover img { transform: none; }
 }
 
 /* --- film strip: driven by script so it can be scrolled and dragged both ways --- */

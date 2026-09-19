@@ -192,6 +192,17 @@ Do not wire it to an endpoint without being asked.
 - Check `git status --short` before committing: nothing from `RESEARCH/` or
   `Temporary Screenshots/` belongs in a commit.
 
+### Photographs zoom inside their frames and lean toward the pointer
+
+The **holder clips, the picture moves.** `.frame` has `overflow: hidden`; on the arched niches the
+`clip-path` sits on `.niche-art`, never on the `<img>` (a clip on the image grows with the image,
+which is how v2's first pass let photos spill past the gold line). On hover the picture zooms IN to
+`scale(1.2)` and `setupTilt()` in `site.js` tips it up to 5 degrees toward whichever corner the
+pointer is in, with a 1.4% slide. 1.2 is deliberately more than that lean can uncover: measured at
+the most extreme corner, every photo still overhangs its frame by 17px or more on all four sides.
+If the tilt angle or slide ever grows, re-measure before shipping. Mouse only; off under reduced
+motion and `?shot=1`.
+
 ## Versions — test-site scaffolding
 
 While the site lives on its workers.dev address, earlier builds stay browsable so they can be

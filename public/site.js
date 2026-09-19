@@ -174,6 +174,34 @@
 
   /* --- the year ----------------------------------------------------------- */
 
+  /* --- photographs lean toward the pointer ---------------------------------
+     The frame clips; the picture inside zooms in and tips toward whichever corner
+     the pointer is in. Mouse only: a finger has no hover. */
+
+  function setupTilt() {
+    if (reduce || shot) return;
+    var holders = document.querySelectorAll('.frame, .niche-art');
+    Array.prototype.forEach.call(holders, function (el) {
+      el.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        var r = el.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        var nx = ((e.clientX - r.left) / r.width) * 2 - 1;      /* -1 left edge, +1 right edge */
+        var ny = ((e.clientY - r.top) / r.height) * 2 - 1;
+        nx = Math.max(-1, Math.min(1, nx)); ny = Math.max(-1, Math.min(1, ny));
+        el.style.setProperty('--ry', (nx * 5).toFixed(2) + 'deg');
+        el.style.setProperty('--rx', (-ny * 4).toFixed(2) + 'deg');
+        el.style.setProperty('--tx', (-nx * 1.4).toFixed(2) + '%');
+        el.style.setProperty('--ty', (-ny * 1.4).toFixed(2) + '%');
+        el.classList.add('is-tilting');
+      });
+      el.addEventListener('pointerleave', function () {
+        el.classList.remove('is-tilting');
+        ['--rx', '--ry', '--tx', '--ty'].forEach(function (k) { el.style.removeProperty(k); });
+      });
+    });
+  }
+
   function setupYear() {
     var el = document.getElementById('year');
     if (el) el.textContent = String(new Date().getFullYear());
@@ -184,6 +212,7 @@
     setupParallax();
     setupForm();
     setupStrip();
+    setupTilt();
     setupYear();
   }
 
