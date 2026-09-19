@@ -1,0 +1,817 @@
+/* ==========================================================================
+   hotel.css - everything the hotel adds to every page.  v3.
+
+   Loaded after site.css on index.html, credits.html, 102b.html and every
+   room page.  It holds only what is SHARED:
+
+     the WebGL canvas          .gl-stage
+     the key tray and passport .tray, .passport
+     the concierge card        .concierge
+     speech bubbles            .bubble
+     the announcer             .hotel-live
+     room-page chrome          .room, .room-locked
+     the lighter version's     .paper-fire  (layered SVG, no WebGL)
+     paper fire and burn       .burn-sheet
+
+   Anything that exists only on the home page (the bell, the corridor, the
+   keys hidden in the artwork) lives in site.css.
+
+   The day-to-night grade is one custom property, --night, set on <html> by
+   site.js as you scroll.  Anything that has to darken reads it.
+   ========================================================================== */
+
+:root {
+  --night: 0;                      /* 0 afternoon, 1 night */
+  --brass-deep: #6E5418;
+  --brass:      #B08A2E;
+  --brass-lite: #E9D49A;
+  --brass-dark: #3A2C0D;
+  --tray-felt:  #2A1A12;
+  --ink-stamp:  #7A2340;
+}
+
+/* --- the one WebGL canvas ------------------------------------------------- */
+
+.gl-stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;                      /* over the murals, under the reading copy */
+  pointer-events: none;
+}
+.gl-stage.is-over { z-index: 80; } /* only while a burn is running */
+
+/* Sections that must sit in front of the canvas. */
+.above-gl { position: relative; z-index: 4; }
+
+/* --- the announcer -------------------------------------------------------- */
+
+.hotel-live {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.vh {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- the key tray --------------------------------------------------------- */
+
+.tray {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 62;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px 9px 10px;
+  border-radius: 6px 6px 9px 9px;
+  background:
+    linear-gradient(180deg, rgba(255,240,196,.30), rgba(0,0,0,0) 38%),
+    linear-gradient(175deg, #C79E3C 0%, #9A7726 34%, #7A5C19 72%, #55400F 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,244,205,.65),
+    inset 0 -2px 0 rgba(0,0,0,.45),
+    inset 0 0 0 1px rgba(60,44,12,.85),
+    0 10px 26px rgba(0,0,0,.5);
+  max-width: min(58vw, 460px);
+  transition: transform .5s var(--spring, cubic-bezier(.16,1,.3,1)), opacity .4s ease;
+}
+.tray[hidden] { display: none !important; }
+.tray.is-hidden { transform: translateY(140%); opacity: 0; pointer-events: none; }
+.tray.is-catching { animation: trayCatch .5s cubic-bezier(.22,1.3,.3,1); }
+@keyframes trayCatch {
+  0% { transform: translateY(0) }
+  35% { transform: translateY(5px) rotate(-1.2deg) }
+  100% { transform: translateY(0) }
+}
+
+/* the felt the keys lie on */
+.tray-keys {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 5px 8px;
+  min-width: 96px;
+  min-height: 46px;
+  list-style: none;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #24150E, #352115);
+  box-shadow: inset 0 2px 7px rgba(0,0,0,.75), inset 0 0 0 1px rgba(0,0,0,.5);
+  overflow-x: auto;
+  overflow-y: hidden;              /* a sideways scroller never eats the page */
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.tray-keys::-webkit-scrollbar { display: none; }
+.tray-empty {
+  margin: 0;
+  padding: 0 4px;
+  color: #C9B48A;
+  font: 500 .58rem/1.5 var(--f-caps, Georgia, serif);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  opacity: .8;
+  white-space: nowrap;
+}
+
+/* one brass key with its room-number tag */
+.keyitem { flex: none; margin: 0; }
+.keybtn {
+  display: block;
+  padding: 2px;
+  border: 0;
+  background: none;
+  cursor: grab;
+  touch-action: none;              /* this IS the drag handle */
+  border-radius: 4px;
+}
+.keybtn:active { cursor: grabbing; }
+.keybtn svg { display: block; width: 58px; height: 34px; }
+.keybtn.is-picked { outline: 2px solid var(--brass-lite); outline-offset: 1px; }
+.keybtn.is-dragging { opacity: .35; }
+.keyitem.is-arriving { animation: keyDrop .55s cubic-bezier(.22,1.25,.3,1) both; }
+@keyframes keyDrop {
+  from { transform: translateY(-26px) rotate(-14deg); opacity: 0 }
+  to   { transform: none; opacity: 1 }
+}
+
+/* the key that flies from wherever you found it into the tray */
+.key-flight {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  width: 62px;
+  height: 36px;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.55));
+}
+
+.tray-btns { display: flex; flex-direction: column; gap: 5px; }
+.tray-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #2E1D10, #1C1109);
+  color: var(--brass-lite);
+  font: 500 .56rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(176,138,46,.6), 0 1px 0 rgba(255,235,180,.22);
+}
+.tray-btn:hover { background: linear-gradient(180deg, #3C2616, #24160C); color: #FFF0C8; }
+.tray-btn svg { width: 15px; height: 15px; flex: none; fill: currentColor; }
+.tray-btn .count {
+  font-variant-numeric: tabular-nums;
+  opacity: .85;
+}
+.tray-sound[aria-pressed="false"] { color: #9B8A66; }
+.tray-sound[aria-pressed="false"] .on { display: none; }
+.tray-sound[aria-pressed="true"] .off { display: none; }
+
+.tray:focus-visible, .tray *:focus-visible {
+  outline: 3px solid #FFF0C8;
+  outline-offset: 2px;
+}
+
+/* --- the concierge -------------------------------------------------------- */
+
+.concierge {
+  position: fixed;
+  left: 16px;
+  bottom: 96px;
+  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  z-index: 61;
+  max-width: min(78vw, 340px);
+  padding: 13px 34px 13px 15px;
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.14)),
+    #14301F;
+  color: var(--gold-lite, #E9CE7A);
+  font: italic 400 clamp(.92rem, 1.15vw, 1.02rem)/1.45 var(--f-display, Georgia, serif);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.55), 0 14px 34px rgba(0,0,0,.55);
+}
+.concierge::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(201,162,39,.30);
+  pointer-events: none;
+}
+.concierge[hidden] { display: none !important; }
+.concierge.is-in { animation: cardIn .5s cubic-bezier(.16,1,.3,1) both; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px) rotate(-1deg) }
+  to   { opacity: 1; transform: none }
+}
+.concierge-close {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 26px; height: 26px;
+  border: 0; border-radius: 2px;
+  background: none;
+  color: var(--gold-lite, #E9CE7A);
+  font: 400 16px/1 var(--f-text, sans-serif);
+  cursor: pointer;
+  opacity: .7;
+}
+.concierge-close:hover { opacity: 1; }
+.concierge-who {
+  display: block;
+  margin: 0 0 3px;
+  font: 500 .54rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--gold, #C9A227);
+}
+
+/* --- speech bubbles, for doors and animals -------------------------------- */
+
+.bubble {
+  position: absolute;
+  z-index: 30;
+  max-width: 220px;
+  padding: 9px 13px;
+  border-radius: 3px;
+  background: #F3ECDC;
+  color: #1A1611;
+  font: 400 .92rem/1.35 var(--f-display, Georgia, serif);
+  font-style: italic;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  pointer-events: none;
+}
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 22px; bottom: -7px;
+  border: 7px solid transparent;
+  border-top-color: #F3ECDC;
+  border-bottom: 0;
+}
+.bubble.is-in { animation: bubbleIn .34s cubic-bezier(.22,1.3,.3,1) both; }
+.bubble.is-out { animation: bubbleOut .3s ease both; }
+@keyframes bubbleIn { from { opacity: 0; transform: translateY(8px) scale(.9) } to { opacity: 1; transform: none } }
+@keyframes bubbleOut { to { opacity: 0; transform: translateY(-6px) } }
+
+/* --- the passport --------------------------------------------------------- */
+
+.passport {
+  width: min(680px, 94vw);
+  max-height: 88vh;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  overflow: visible;
+  color: var(--ink, #1A1611);
+}
+.passport::backdrop { background: rgba(4,14,10,.78); }
+.passport-inner {
+  display: block;
+  max-height: 88vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(20px, 3.4vw, 34px);
+  border-radius: 3px;
+  background:
+    radial-gradient(120% 90% at 30% 0%, rgba(255,255,255,.5), rgba(0,0,0,0) 60%),
+    linear-gradient(170deg, #17402C 0%, #0D2B1D 55%, #0A2016 100%);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.5), inset 0 0 0 7px rgba(6,22,15,.65),
+              0 30px 80px rgba(0,0,0,.6);
+  color: var(--ivory, #F3ECDC);
+}
+.passport-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 4px; }
+.passport-head .brand-mark { width: 44px; height: 33px; flex: none; }
+.passport h2 {
+  margin: 0;
+  font: 500 clamp(1.5rem, 3.2vw, 2.1rem)/1.1 var(--f-display, Georgia, serif);
+  color: var(--gold-lite, #E9CE7A);
+}
+.passport-kick {
+  margin: 0 0 2px;
+  font: 500 .58rem/1.5 var(--f-caps, Georgia, serif);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold, #C9A227);
+}
+.passport-sub { margin: .5rem 0 1.4rem; color: #CFC6AE; font-size: .93rem; max-width: 46ch; }
+.passport-close {
+  margin-left: auto;
+  width: 38px; height: 38px;
+  flex: none;
+  border: 0; border-radius: 2px;
+  background: rgba(0,0,0,.3);
+  color: var(--gold-lite, #E9CE7A);
+  font: 400 20px/1 var(--f-text, sans-serif);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.4);
+}
+.passport-close:hover { background: rgba(0,0,0,.5); color: #FFF3D0; }
+
+/* the page of stamp slots */
+.stamps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0 0 1.6rem;
+  padding: 14px;
+  list-style: none;
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 22px, rgba(0,0,0,0) 22px 23px),
+    linear-gradient(160deg, #F1E8D2, #E2D6B8);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.4), inset 0 2px 12px rgba(90,70,30,.25);
+}
+.stampslot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / .82;
+  border: 1px dashed rgba(90,72,34,.45);
+  border-radius: 2px;
+  text-align: center;
+}
+.stampslot .no {
+  font: 500 .56rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(70,56,28,.55);
+}
+.stampslot svg { width: 86%; height: 86%; }
+.stampslot.is-stamped { border-color: transparent; }
+.stampslot.is-stamped .no { display: none; }
+.stampslot.is-new svg { animation: thump .5s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes thump {
+  0%   { transform: scale(2.1) rotate(-14deg); opacity: 0 }
+  55%  { transform: scale(.93) rotate(var(--tilt, -4deg)); opacity: 1 }
+  100% { transform: scale(1) rotate(var(--tilt, -4deg)); opacity: 1 }
+}
+
+.passport-full {
+  margin: 0 0 1.4rem;
+  padding: 14px 16px;
+  border-radius: 2px;
+  background: rgba(201,162,39,.14);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.5);
+  color: var(--gold-lite, #E9CE7A);
+  font: italic 400 1.02rem/1.45 var(--f-display, Georgia, serif);
+}
+
+/* the things you are carrying */
+.passport h3 {
+  margin: 0 0 .7rem;
+  font: 500 .6rem/1.5 var(--f-caps, Georgia, serif);
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--gold, #C9A227);
+}
+.finds {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 12px;
+  margin: 0 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+.find {
+  margin: 0;
+  border-radius: 2px;
+  background: rgba(0,0,0,.25);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.32);
+  overflow: hidden;
+}
+.find img { display: block; width: 100%; height: auto; }
+.find figcaption {
+  padding: 7px 9px;
+  font-size: .74rem;
+  line-height: 1.35;
+  color: #CFC6AE;
+}
+.finds-empty { margin: 0 0 1.6rem; color: #A99E84; font-size: .9rem; }
+
+/* the switches at the foot of the book */
+.passport-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(201,162,39,.3);
+}
+.switch {
+  display: inline-flex;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.5);
+}
+.switch button {
+  padding: .58em 1em;
+  border: 0;
+  background: transparent;
+  color: #CFC6AE;
+  font: 500 .58rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.switch button[aria-pressed="true"] { background: var(--gold, #C9A227); color: #16120B; }
+.switch-label {
+  font: 500 .56rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #A99E84;
+  width: 100%;
+}
+.passport-reset {
+  margin-left: auto;
+  padding: .58em 1.1em;
+  border: 0; border-radius: 2px;
+  background: transparent;
+  color: #D8A0B4;
+  font: 500 .58rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(216,160,180,.45);
+}
+.passport-reset:hover { background: rgba(216,160,180,.14); color: #F3D3DE; }
+.passport-note { margin: 1rem 0 0; color: #A99E84; font-size: .78rem; }
+
+/* --- the lighter version's paper fire ------------------------------------- */
+/* Same sculpture, made of stacked SVG paths instead of a shader.  No WebGL,
+   and it holds still under prefers-reduced-motion. */
+
+.paper-fire {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.paper-fire svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.paper-fire .pf-sheet {
+  transform-origin: 50% 100%;
+  filter: drop-shadow(2px -3px 2px rgba(50,8,10,.55));
+  animation: pfSway 5.5s ease-in-out infinite alternate;
+}
+.paper-fire .pf-sheet:nth-child(2) { animation-duration: 4.6s; animation-delay: -.7s }
+.paper-fire .pf-sheet:nth-child(3) { animation-duration: 3.9s; animation-delay: -1.5s }
+.paper-fire .pf-sheet:nth-child(4) { animation-duration: 3.3s; animation-delay: -2.2s }
+.paper-fire .pf-sheet:nth-child(5) { animation-duration: 2.9s; animation-delay: -.4s }
+.paper-fire .pf-sheet:nth-child(6) { animation-duration: 2.5s; animation-delay: -1.9s }
+@keyframes pfSway {
+  from { transform: translateX(-2.2%) scaleY(.965) skewX(1.6deg) }
+  to   { transform: translateX(2.2%) scaleY(1.03) skewX(-1.6deg) }
+}
+
+/* --- the burn-away, lighter version --------------------------------------- */
+/* A real sheet of paper with a charred edge, wiped off by a mask. */
+
+.burn-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at var(--bx, 50%) var(--by, 50%),
+      rgba(0,0,0,0) calc(var(--bp, 0) * 130%),
+      #2A1508 calc(var(--bp, 0) * 130% + 4px),
+      #7A2B08 calc(var(--bp, 0) * 130% + 10px),
+      #E2661A calc(var(--bp, 0) * 130% + 14px),
+      #EFE6D2 calc(var(--bp, 0) * 130% + 24px)),
+    #EFE6D2;
+  -webkit-mask-image: radial-gradient(circle at var(--bx, 50%) var(--by, 50%),
+      transparent calc(var(--bp, 0) * 130% + 2px), #000 calc(var(--bp, 0) * 130% + 12px));
+  mask-image: radial-gradient(circle at var(--bx, 50%) var(--by, 50%),
+      transparent calc(var(--bp, 0) * 130% + 2px), #000 calc(var(--bp, 0) * 130% + 12px));
+}
+
+/* --- room pages ----------------------------------------------------------- */
+
+.room {
+  position: relative;
+  z-index: 4;
+  min-height: 62vh;
+  padding: clamp(28px, 6vw, 84px) 0 clamp(40px, 8vw, 110px);
+}
+.room-card {
+  max-width: 62ch;
+  padding: clamp(22px, 3.6vw, 40px);
+  border-radius: 2px;
+  background:
+    linear-gradient(170deg, rgba(255,255,255,.55), rgba(255,255,255,0) 40%),
+    linear-gradient(160deg, var(--ivory, #F3ECDC), var(--ivory-2, #E7DCC4));
+  color: var(--ink, #1A1611);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.45), 0 24px 60px rgba(0,0,0,.42);
+}
+.room-card .display { color: var(--ink, #1A1611); }
+.room-no {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: .45em .9em;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #C79E3C, #7A5C19);
+  color: #1A1206;
+  font: 600 .74rem/1.3 var(--f-caps, Georgia, serif);
+  letter-spacing: .26em;
+  box-shadow: inset 0 1px 0 rgba(255,244,205,.7), 0 2px 0 rgba(0,0,0,.35);
+}
+.room-back { margin-top: 1.6rem; }
+
+/* the door you meet when you have not got the key */
+.room-locked {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 48px);
+  align-items: center;
+  max-width: 900px;
+}
+.locked-door {
+  position: relative;
+  aspect-ratio: 5 / 11;
+  border-radius: 3px 3px 0 0;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,0) 16%, rgba(0,0,0,0) 84%, rgba(0,0,0,.3)),
+    linear-gradient(180deg, #4A2A19, #33190E);
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.5), 0 18px 46px rgba(0,0,0,.55);
+}
+.locked-door::before {
+  content: '';
+  position: absolute;
+  inset: 9% 11%;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.4), inset 0 0 0 3px rgba(255,220,160,.07);
+}
+.locked-plate {
+  position: absolute;
+  left: 50%; top: 15%;
+  transform: translateX(-50%);
+  padding: .4em .8em;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #D8B252, #8A6A24);
+  color: #1A1206;
+  font: 600 .72rem/1.3 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em;
+  box-shadow: inset 0 1px 0 rgba(255,246,214,.8), 0 1px 3px rgba(0,0,0,.5);
+}
+.locked-handle {
+  position: absolute;
+  right: 12%; top: 52%;
+  width: 20%; height: 4.2%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #E6CE8A, #8A6A24);
+  box-shadow: 0 2px 4px rgba(0,0,0,.6);
+  transform-origin: right center;
+}
+.locked-door.is-rattling .locked-handle { animation: rattle .5s ease-in-out; }
+@keyframes rattle {
+  0%,100% { transform: rotate(0) }
+  15% { transform: rotate(-9deg) } 30% { transform: rotate(7deg) }
+  45% { transform: rotate(-6deg) } 60% { transform: rotate(4deg) }
+  75% { transform: rotate(-2deg) }
+}
+.locked-keyhole {
+  position: absolute;
+  right: 13.5%; top: 58%;
+  width: 14px; height: 20px;
+  border-radius: 50% 50% 34% 34%;
+  background: #100905;
+  box-shadow: 0 0 0 2px rgba(201,162,39,.45);
+}
+
+@media (max-width: 720px) {
+  .room-locked { grid-template-columns: 1fr; }
+  .locked-door { max-width: 190px; }
+}
+
+/* --- phones ---------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .tray {
+    left: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100vw - 20px);
+    padding: 7px 9px 7px 8px;
+    gap: 8px;
+  }
+  .tray-keys { min-width: 72px; min-height: 42px; padding: 4px 6px; }
+  .keybtn svg { width: 50px; height: 30px; }
+  .tray-btn { padding: 8px; font-size: .54rem; }
+  .tray-btn .label { display: none; }
+  .concierge {
+    left: 10px; right: 10px;
+    max-width: none;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+  .stamps { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* the dock lives in the bottom-right corner: never put anything under it */
+@media (max-width: 420px) {
+  .tray { max-width: calc(100vw - 20px); }
+}
+
+/* --- reduced motion and screenshots ---------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tray, .tray *, .concierge, .bubble, .stampslot svg, .paper-fire .pf-sheet,
+  .keyitem, .locked-door .locked-handle {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.shot .tray, .shot .tray *, .shot .concierge, .shot .bubble,
+.shot .stampslot svg, .shot .paper-fire .pf-sheet, .shot .keyitem {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ==========================================================================
+   ROOM 102B, and the pattern every other room page can copy.
+
+   The stage is one box.  In the full version the three.js scene is drawn
+   into it by the shared canvas and the object buttons are moved over the
+   objects each frame.  In the lighter version, and with JavaScript off, the
+   flat drawing and the same buttons ARE the room.  The tag line for every
+   object is in the HTML, so the page reads even with nothing running.
+   ========================================================================== */
+
+.r102b { position: relative; padding: clamp(26px, 5vw, 64px) 0 clamp(40px, 7vw, 90px); }
+.r102b-head { max-width: 760px; margin-bottom: clamp(20px, 3vw, 34px); }
+.r102b-head .display { margin-bottom: .8rem; }
+.r102b-lede { color: #CFC6AE; max-width: 58ch; font-size: clamp(1rem, 1.25vw, 1.12rem); }
+.r102b-foot { margin-top: clamp(20px, 3vw, 32px); }
+.r102b-note { color: #A99E84; font-size: .84rem; max-width: 62ch; margin-bottom: 1.2rem; }
+
+.roomstage {
+  position: relative;
+  z-index: 5;
+  aspect-ratio: 16 / 9;
+  min-height: 320px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #0B0906;
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.45), 0 30px 70px rgba(0,0,0,.6);
+  touch-action: pan-y;               /* a vertical swipe always scrolls the page */
+  cursor: default;
+}
+.room-3d .roomstage { background: transparent; cursor: grab; }
+.room-3d .roomstage.is-holding { cursor: grabbing; }
+.roomstage:focus-visible { outline: 3px solid var(--gold-lite, #E9CE7A); outline-offset: 3px; }
+
+/* the flat drawing */
+.room-flat { position: absolute; inset: 0; }
+.room-flat svg { width: 100%; height: 100%; display: block; }
+.flat-veil {
+  position: absolute; inset: 0;
+  background: radial-gradient(70% 52% at 50% 24%, rgba(255,214,150,.16), rgba(0,0,0,0) 70%),
+              linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.44));
+  pointer-events: none;
+}
+.room-3d .room-flat { display: none; }
+
+/* the objects */
+.lost-list { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+.lost-list li {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  transform: translate(-50%, -50%);
+  max-width: 46%;
+}
+.lost-btn {
+  display: block;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 2px;
+  background: rgba(14,10,6,.78);
+  color: var(--ivory, #F3ECDC);
+  font: 400 .78rem/1.3 var(--f-display, Georgia, serif);
+  font-style: italic;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.5);
+  transition: background .25s, box-shadow .25s, transform .3s var(--spring, ease);
+}
+.lost-btn:hover, .lost-btn:focus-visible {
+  background: rgba(30,22,12,.94);
+  box-shadow: inset 0 0 0 1px var(--gold-lite, #E9CE7A);
+  transform: translateY(-1px);
+}
+.lost-btn[aria-pressed="true"] {
+  background: var(--gold, #C9A227);
+  color: #16120B;
+  box-shadow: inset 0 0 0 1px #FFF0C8;
+}
+.lost-btn .tag-line { display: none; }
+html:not(.js) .lost-btn .tag-line {
+  display: block;
+  margin-top: .3rem;
+  font-style: normal;
+  font-size: .76rem;
+  color: #CFC6AE;
+}
+html:not(.js) .lost-list { position: static; }
+html:not(.js) .lost-list li { position: static; transform: none; max-width: none; margin-bottom: 10px; }
+
+/* over the 3D objects the label shrinks to a brass pip until you go near it */
+.room-3d .lost-list li { max-width: 220px; }
+.room-3d .lost-btn {
+  width: 26px; height: 26px;
+  padding: 0;
+  overflow: hidden;
+  color: transparent;
+  background: radial-gradient(circle at 34% 30%, #F2DCA2, #A8822C 62%, #5E4712);
+  box-shadow: 0 2px 7px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,240,200,.5);
+  border-radius: 50%;
+}
+.room-3d .lost-btn:hover, .room-3d .lost-btn:focus-visible,
+.room-3d .lost-btn[aria-pressed="true"] {
+  width: auto; height: auto;
+  padding: 7px 11px;
+  border-radius: 2px;
+  color: var(--ivory, #F3ECDC);
+  background: rgba(16,11,6,.93);
+  box-shadow: inset 0 0 0 1px var(--gold-lite, #E9CE7A), 0 8px 20px rgba(0,0,0,.55);
+}
+.room-3d .lost-btn[aria-pressed="true"] { color: #16120B; background: var(--gold, #C9A227); }
+
+/* what you are holding */
+.held {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 6;
+  max-width: min(360px, 62%);
+  padding: 14px 16px;
+  border-radius: 2px;
+  background: linear-gradient(165deg, #F1E8D2, #DFD2B2);
+  color: var(--ink, #1A1611);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.5), 0 18px 40px rgba(0,0,0,.55);
+}
+.held[hidden] { display: none !important; }
+.held-kick {
+  margin: 0 0 .3rem;
+  font: 500 .52rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .26em; text-transform: uppercase; color: #8A6A24;
+}
+.held-name { margin: 0 0 .35rem; font: 600 1.06rem/1.25 var(--f-display, Georgia, serif); }
+.held-tag { margin: 0 0 .85rem; font: italic 400 .92rem/1.4 var(--f-display, Georgia, serif); color: #4A3E28; }
+.held-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.held .btn-ghost { color: #6B5420; box-shadow: inset 0 0 0 1px rgba(107,84,32,.5); }
+.held .btn-ghost:hover { background: rgba(107,84,32,.12); }
+.held-turn { margin: .7rem 0 0; font-size: .72rem; color: #7A6B4C; }
+.room-flatmode .held-turn { display: none; }
+
+.room-hint {
+  position: absolute;
+  right: 14px; top: 12px;
+  z-index: 6;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 2px;
+  background: rgba(10,8,5,.6);
+  color: #CFC6AE;
+  font: 500 .56rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  .roomstage { aspect-ratio: 4 / 3; }
+}
+@media (max-width: 640px) {
+  .roomstage { aspect-ratio: 3 / 4; min-height: 420px; }
+  .held { left: 10px; right: 10px; bottom: 10px; max-width: none; padding: 12px 13px; }
+  .room-hint { left: 10px; right: auto; font-size: .5rem; }
+  .room-3d .lost-list li { max-width: 62%; }
+}
+
+/* while you are holding something the other pips get out of the way */
+.roomstage.is-holding .lost-btn[aria-pressed="false"] { opacity: .22; }
+.roomstage.is-holding .lost-btn[aria-pressed="false"]:hover,
+.roomstage.is-holding .lost-btn[aria-pressed="false"]:focus-visible { opacity: 1; }
+
+/* the placeholder rooms part B will replace */
+.room-lede { font-size: clamp(1.02rem, 1.3vw, 1.18rem); color: var(--ink-2, #3B3427); max-width: 48ch; }
+.room-small { margin-top: 1.2rem; font-size: .82rem; color: var(--ink-soft, #5C5240); }
+.room-card .corner { opacity: .5; }
+.page-room .room { min-height: 58vh; }
