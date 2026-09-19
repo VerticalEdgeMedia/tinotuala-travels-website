@@ -162,6 +162,18 @@ class Stage {
     this.draw(0, this.time);
   }
 
+  /**
+   * Advance the loop by hand.  Headless Chrome under a virtual-time budget
+   * produces almost no animation frames, so a test harness has to drive the
+   * clock itself; this is the only way to play an interaction and then
+   * measure where everything landed.  Nothing in the site calls it.
+   */
+  step(dt) {
+    const d = typeof dt === 'number' ? dt : 1 / 60;
+    this.time += d;
+    this.draw(d, this.time);
+  }
+
   /** Freeze on a single frame for screenshots. */
   freeze(t) {
     this.stop();

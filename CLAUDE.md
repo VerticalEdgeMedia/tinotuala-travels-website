@@ -296,22 +296,29 @@ plane inside somebody else's 3D scene, which is how the corridor sconces are lit
 
 | Uniform | Option | What it does |
 |---|---|---|
-| `uSheets` | `sheets` | 5 to 7 stacked cut sheets |
-| `uSpread` | `spread` | 0 to 1, how wide each flame stands in its cell |
-| `uBase` | `base` | 0 to 1, where the foot of the flame sits in the box |
-| `uHeight` | `height` | 0 to 1, how far up the box the tips reach |
-| `uCount` | `count` | flames across: 1 for a torch, 6 for a fire pit |
-| `uFloor` | `floor` | 0, or a band of paper along the foot that ties a row together |
-| `uEmbers` | `embers` | 0 to 1, the little cut-paper flecks |
+| `uSheets` | `sheets` | 5 to 7 stacked sheets |
+| `uHeight` | `height` | how tall the back sheet stands, as a fraction of the box |
+| `uBase` | `base` | 0 to 1, where the foot of the sheets sits |
+| `uLicks` | `licks` | how many licks run across the width: about 1.5 for a torch, 4 to 5 for a pit |
+| `uTaper` | `taper` | 0 a wide band edge to edge, 1 a torch that tapers away at the sides |
+| `uEmbers` | `embers` | 0 to 1, the little cut-paper flecks. Keep it sparse |
 | `uNight` | `night` | 0 afternoon, 1 night: richer and warmer |
 | `uIntensity`, `uOpacity` | | master |
 
-Each sheet is a flat graded band from deep lacquer red through vermilion, orange and saffron to a
-pale cream core, cut into a flame with a torn edge, leaning on its own cant, moving at its own
-speed, and dropping a **soft warm shadow on the sheet behind it**. That shadow is the thing that
-makes the paper read as thick, so do not take it out. The sheets slide by different amounts with
-the pointer and the scroll, and part where the pointer is. The fibre is a Canvas 2D texture.
-**Never a glow blob, never a particle spark, never realistic fire.**
+**Every sheet is one continuous piece of paper running the full width of the box.**
+What varies is its top edge: a long undulating run of licks, tall tongues and low dips with
+the odd leaning curl, finished with a fine torn deckle. All the sheets are cut from the SAME
+lick field, so the stack nests - a deep lacquer red tongue with a vermilion one inside it and
+a pale cream heart inside that - and each sheet then sits lower than the one behind it by a
+fixed amount, which is what turns the nesting into visible bands of graded colour. Each drifts
+sideways at its own speed and breathes in height, and each drops a **soft warm shadow on to the
+sheet behind it**: that shadow is the thing that makes the paper read as thick, so do not take
+it out. A dark lacquer foot hides the bottom, the way a trough hides the bottom of a real paper
+set. The fibre is a Canvas 2D texture. The sheets slide by different amounts with the pointer
+and the scroll: that is the 2.5D.
+
+**It is never a row of separate cones, never a glow blob, never a particle spark, never
+realistic fire.** It is a paper theatre set of a fire.
 
 Lighter version: the same sculpture as six stacked SVG paths with a CSS `drop-shadow`, swaying.
 
@@ -386,15 +393,41 @@ because a number baked into a door at a corridor's angle is never legible.
 
 Do not change the architecture and do not add furniture.
 
-- A **small** room with a **triangular floor plan**: the doorway is one side, two walls run back
-  from either edge of it and meet at a corner directly opposite. You look into a corner.
-- **One wall: a mattress tilted up on its side, leaning against it.** Ticking stripes, piping, a
-  sag, a stain, a label.
-- **The other wall: the lost property**, on shelves.
-- A bare bulb. A worn floor. Corridor carpet behind you through the door. **No windows.**
+- A **small** room with a **triangular floor plan**. As a plan, with the doorway at the bottom
+  nearest you:
 
-The triangle is deliberately wide and shallow: any deeper and both walls go nearly edge-on from
-the doorway and neither of them reads.
+```
+       the doorway, the BASE of the triangle, nearest you
+       (-DOOR_HALF, DOOR_Z) *------ doorway wall ------* (+DOOR_HALF, DOOR_Z)
+                             \                         /
+                    left wall  \                     /  right wall
+                   (the mattress) \                /  (the shelves)
+                                    \            /
+                                      *--------*
+                              the far corner, dead ahead, about 2.9 m away
+```
+
+  You stand just inside the doorway and look **INTO** a concave corner: the left wall fills the
+  left of the view and recedes toward the middle, the right wall fills the right and recedes
+  toward the middle, and they meet on a vertical line in the middle distance. Their top edges
+  slope down toward it and their bottom edges slope up toward it. The floor is a triangle
+  widening toward you. Floor, ceiling, both walls and the doorway wall behind you close the room
+  completely: **there is no void anywhere.**
+
+  Getting the two wall rotations the wrong way round produces the opposite and it is not subtle:
+  a convex corner jutting at the camera like the spine of an open book, with the page showing
+  through either side. **Check it with `?plan=1`**, which draws the room from above with the
+  camera marked and its view cone: it must read as a triangle with the camera at the base
+  looking at the apex.
+
+  The triangle is deliberately wide and shallow. Deeper than this and both walls go nearly
+  edge-on from the doorway and neither of them reads.
+- **The LEFT wall: a mattress tilted up on its side, leaning against it**, its top edge resting
+  on the wall and its foot standing out on the floor, so you see its face at an angle. Ticking
+  stripes, piping, a sag, a stain, a label, and its shadow on the wall.
+- **The RIGHT wall: the lost property**, on shelving that runs ALONG that wall and follows its
+  diagonal. It is not a free-standing unit facing the camera.
+- A bare bulb. A worn floor. Corridor carpet behind you through the door. **No windows.**
 
 The twelve things on the shelves, each modelled in code, each with a luggage tag that swings
 round with one line on it:
@@ -425,7 +458,9 @@ Shipped, harmless, and **none of them writes storage**.
 `?shot=1` reveal everything, freeze, render one frame · `?lite=1` / `?full=1` ·
 `?checkin=1` · `?keys=all` or `?keys=102b,118` · `?open=102b` · `?burn=0.5` ·
 `?night=1` · `?passport=1` · `?mute=1`.
-Room 102B also takes `?look=left|right` and `?pick=<object id>` for screenshots.
+Room 102B also takes `?look=left|right`, `?pick=<object id>` and **`?plan=1`** (the floor plan
+from above, with the camera marked). The home page takes `?ft=<seconds>` to shift the frozen
+frame the fire is caught on.
 
 ### The lighter version
 
@@ -457,21 +492,67 @@ Five rooms are scaffolded and wired: `map-room.html` (118), `rooftop-bar.html` (
 has its key placed on the home page and its door in the corridor, so the way in works today.
 Replace the contents of `<main id="roomMain">` and leave everything else alone.
 
+### A room you have entered IS the page
+
+Not a heading, then a paragraph, then a picture in a bordered rectangle. A room is
+**full bleed**: the scene fills the viewport under the header and everything else floats on
+top of it.
+
+| Part | Where |
+|---|---|
+| the scene | `section.roomfull`, `height: calc(100svh - var(--header-h))`, transparent so the shared canvas shows through |
+| the room's name | `h1.room-plate` top left: a brass plate, the number large and the name small under it. **This is the page's only `<h1>`.** |
+| the one-line instruction | `p.room-hint` top centre, which fades itself out after a few seconds |
+| whatever you are holding | `.held` floating at the bottom centre |
+| the draft note | `p.room-draft` bottom centre, clear of the tray on the left and the versions dock on the right |
+| the way out | `a.room-out`, a brass control, raised well clear of the dock |
+
+The lighter version and the no-JavaScript version use the same full-bleed composition, with the
+illustrated corner behind and the list of things down the right-hand side (a bottom sheet on
+phones). **Every room page part B builds uses this**; the five placeholders already do.
+
+### Things on a shelf, and the buttons over them
+
+Each object's accessible button is moved on to its object every frame and hidden when the object
+is off screen or behind something. **At rest the button shows nothing at all**: the thing on the
+shelf is the affordance. The name appears on hover and on keyboard focus, and `:focus-visible`
+draws a ring so the keyboard route is never invisible. There are no floating pips.
+
+Two things that bite:
+
+- Project with **this frame's** matrices. The renderer updates them inside `render()`, which has
+  not run yet when your `onFrame` is called, so call `camera.updateMatrixWorld(true)` and
+  rebuild `matrixWorldInverse` yourself first. Without it the first frame projects against an
+  identity camera and every button lands in the middle of the picture.
+- Be careful what counts as an occluder. A 45 mm shelf upright seen at a glancing angle will
+  hide a whole shelf's worth of things you can plainly see. Walls, floor, ceiling, boards and
+  the mattress are occluders; the uprights are deliberately not.
+
+`window.Room102B.bounds(id)` returns an object's projected screen box. It exists so a harness
+can assert that every button really does sit over its object.
+
 **The skeleton.** Copy `map-room.html`. It is:
 
 ```html
-<link rel="stylesheet" href="site.css">
-<link rel="stylesheet" href="hotel.css">
-<script>document.documentElement.classList.add('js');
-  if(/[?&]shot=1\b/.test(location.search))document.documentElement.classList.add('shot');</script>
+<body class="page-room page-roomfull">
 …
 <main id="roomMain">
-  <section class="room above-gl"> … your room … </section>
+  <section class="roomfull" id="roomStage">
+    <h1 class="room-plate">
+      <span class="rp-no">118</span><span class="rp-name">The Map Room</span>
+    </h1>
+    <p class="room-hint">one short line, and only one</p>
+    … your scene, your objects' buttons, your .held card …
+    <p class="room-draft"><span class="chip">Draft</span> …</p>
+    <a class="room-out" href="index.html#corridor">
+      <span class="ro-arrow" aria-hidden="true"></span><span>Back to the corridor</span>
+    </a>
+  </section>
 </main>
 …
 <script src="hotel.js"></script>
 <script src="vendor/gsap.min.js"></script>
-<script>Hotel.ready(function () { Hotel.gateRoom('map-room'); });</script>
+<script>Hotel.ready(function () { if (!Hotel.gateRoom('map-room')) return; });</script>
 <!-- TEMP:versions … -->
 ```
 
@@ -503,7 +584,18 @@ Replace the contents of `<main id="roomMain">` and leave everything else alone.
     own fixed UI clear of the bottom-right corner (the dock) and the bottom-left (the tray), give
     every interactive thing a real name, work at 390px, and work in lite mode with everything
     still completable.
-11. **Copy rules are legal, not stylistic.** Room flavour and tag stories are plainly fiction in
+11. **Animate a child or a pivot, never the placement.** A tween that writes to the same
+    property you positioned something with will quietly overwrite it. In 102B the held object's
+    `position` is the placement and only its `rotation` is animated while you turn it over.
+    Never hard-code a world z for something that has to sit in front of the camera: work it out
+    from `camera.getWorldDirection()`. Doing it the other way put the held object behind the
+    camera and nothing but a played test found it.
+12. **Play it, then measure.** Headless Chrome under `--virtual-time-budget` hands out roughly
+    one animation frame per second, so a test that clicks and then waits is measuring a frozen
+    page and will happily pass while things are broken. `stage.step(dt)` and `gsap.ticker.tick()`
+    exist so a harness can advance both clocks by hand; drive them, let the interaction finish,
+    then assert that every moving part landed where it belongs and nothing is left over.
+13. **Copy rules are legal, not stylistic.** Room flavour and tag stories are plainly fiction in
     the hotel's voice. Nothing invented is ever presented as Tino's, as a real guest, or as a
     fact about the business. Black Book and Rooftop Bar content are marked drafts for Tino to
     correct. Australian spelling, no em-dashes, no travel cliches.
