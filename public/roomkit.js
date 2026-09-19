@@ -34,7 +34,9 @@ export { THREE };
 export function cnv(w, h) {
   const c = document.createElement('canvas');
   c.width = w; c.height = h;
-  return [c, c.getContext('2d')];
+  /* every texture here ends with a grain pass, which is a getImageData
+     readback: without this the browser logs a warning for each one */
+  return [c, c.getContext('2d', { willReadFrequently: true })];
 }
 
 /** Fine tooth over a whole canvas: nothing in this hotel is a flat fill. */

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>The Long Gallery | Tino Tuala Travels</title>
-<meta name="description" content="Preview mock-up. More pictures, hung further apart, and a lot more wall between them.">
+<meta name="description" content="Preview mock-up. A long wall of travel posters, hotel labels and photographs, every one of them crooked.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23081410'/%3E%3Cpath d='M16 5c3 5 3.4 10 0 21-3.4-11-3-16 0-21z' fill='%23C9A227'/%3E%3Cpath d='M9.6 10.5c3.6 3.6 5 7.6 6.4 15.5-5.6-7-7-11-6.4-15.5z' fill='%23A8842E'/%3E%3Cpath d='M22.4 10.5c-3.6 3.6-5 7.6-6.4 15.5 5.6-7 7-11 6.4-15.5z' fill='%23A8842E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,24 +70,133 @@
 </header>
 
 <main id="roomMain">
-  <!-- THE ROOM-PAGE SKELETON.  The room is the page: a full-bleed section
-       under the header with everything floating on it.  Part B replaces the
-       contents of .roomfull with its own scene and leaves the rest alone.
-       See the "For part B" section of CLAUDE.md. -->
-  <section class="roomfull room-waiting" id="roomStage">
-    <span class="waiting-ground" aria-hidden="true"></span>
+  <section class="roomfull" id="roomStage">
+
+    <div class="room-flat" id="roomFlat">
+      <svg viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" role="img"
+           aria-label="A long gallery wall under picture lights, hung with framed travel posters, hotel luggage labels and photographs, every one of them crooked.">
+        <defs>
+          <linearGradient id="lgWall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#16342A"/><stop offset=".62" stop-color="#0D2419"/>
+            <stop offset="1" stop-color="#07170F"/>
+          </linearGradient>
+        </defs>
+        <rect width="1000" height="620" fill="url(#lgWall)"/>
+        <rect y="470" width="1000" height="16" fill="#8A6A24" opacity=".5"/>
+        <rect y="486" width="1000" height="134" fill="#0A1710"/>
+        <g fill="none" stroke="rgba(201,162,39,.30)" stroke-width="2">
+          <path d="M0 96 H1000"/><path d="M0 104 H1000"/>
+        </g>
+        <g>
+          <g transform="rotate(-4 150 280)"><rect x="70" y="180" width="160" height="200" fill="#C9B68C" stroke="#8A6A24" stroke-width="9"/></g>
+          <g transform="rotate(5 380 280)"><rect x="310" y="170" width="140" height="220" fill="#B7A784" stroke="#8A6A24" stroke-width="9"/></g>
+          <g transform="rotate(-6 620 290)"><rect x="545" y="205" width="150" height="170" fill="#CBB98F" stroke="#8A6A24" stroke-width="9"/></g>
+          <g transform="rotate(3 860 275)"><rect x="790" y="180" width="140" height="190" fill="#BCAA86" stroke="#8A6A24" stroke-width="9"/></g>
+        </g>
+        <g fill="#8A6A24" opacity=".8">
+          <rect x="130" y="80" width="40" height="14" rx="6"/><rect x="360" y="80" width="40" height="14" rx="6"/>
+          <rect x="600" y="80" width="40" height="14" rx="6"/><rect x="840" y="80" width="40" height="14" rx="6"/>
+        </g>
+      </svg>
+      <div class="flat-veil" aria-hidden="true"></div>
+    </div>
 
     <h1 class="room-plate">
       <span class="rp-no">402</span>
       <span class="rp-name">The Long Gallery</span>
     </h1>
 
-    <div class="waiting-card">
-      <p class="room-lede">More pictures, hung further apart, and a lot more wall between them.</p>
-      <p class="rule"><svg class="rule-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg></p>
-      <p><span class="chip">Being prepared</span> Somebody is still measuring. Come back when they have stopped.</p>
-      <p class="room-small">Your passport has been stamped for 402. The door stays open from here on.</p>
+    <p class="room-hint" id="roomHint">Drag sideways to walk. Drag a frame's corner until it hangs true.</p>
+    <p class="gallery-count room-count"><span id="gcNum">0</span> of 18 level</p>
+
+    <ul class="lost-list" id="frameList" aria-label="The pictures, and the corner of each frame">
+      <li style="--x:10%;--y:30%"><button type="button" class="lost-btn gal-btn" data-obj="p0">
+        <span class="lost-name">Touraine, Loches</span>
+        <span class="tag-line">Poilpot, Théophile (1848-1915), 1906, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:25%;--y:30%"><button type="button" class="lost-btn gal-btn" data-obj="p1">
+        <span class="lost-name">Kyoto Hotel</span>
+        <span class="tag-line">Hannes Grobe, 2020, CC BY-SA 4.0. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:40%;--y:30%"><button type="button" class="lost-btn gal-btn" data-obj="p2">
+        <span class="lost-name">Paris-Plage, Le Touquet</span>
+        <span class="tag-line">Tauzin, Louis (1842-1915), 1904, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:55%;--y:30%"><button type="button" class="lost-btn gal-btn" data-obj="p3">
+        <span class="lost-name">Italian Lakes</span>
+        <span class="tag-line">Unknown, 1930, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:70%;--y:30%"><button type="button" class="lost-btn gal-btn" data-obj="p4">
+        <span class="lost-name">Ault-Onival Plages</span>
+        <span class="tag-line">Pal (1855-1942), 1894, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:85%;--y:30%"><button type="button" class="lost-btn gal-btn" data-obj="p5">
+        <span class="lost-name">Grand Hotel, Rome</span>
+        <span class="tag-line">Hannes Grobe, 2020, CC BY-SA 4.0. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:10%;--y:46%"><button type="button" class="lost-btn gal-btn" data-obj="p6">
+        <span class="lost-name">La Lorraine and La Savoie</span>
+        <span class="tag-line">Argence, Eugène d' (1853-1920), 1900, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:25%;--y:46%"><button type="button" class="lost-btn gal-btn" data-obj="p7">
+        <span class="lost-name">Pyrenees, Cirque de Gavarnie</span>
+        <span class="tag-line">Poilpot, Théophile (1848-1915), 1902, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:40%;--y:46%"><button type="button" class="lost-btn gal-btn" data-obj="p8">
+        <span class="lost-name">French Line, Paris Havre New York</span>
+        <span class="tag-line">Albert Sebille, 1914, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:55%;--y:46%"><button type="button" class="lost-btn gal-btn" data-obj="p9">
+        <span class="lost-name">Hotel Continental, Naples</span>
+        <span class="tag-line">Hannes Grobe, 2020, CC BY-SA 4.0. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:70%;--y:46%"><button type="button" class="lost-btn gal-btn" data-obj="p10">
+        <span class="lost-name">Berck-Plage</span>
+        <span class="tag-line">Tauzin, Louis (1842-1915), 1905, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:85%;--y:46%"><button type="button" class="lost-btn gal-btn" data-obj="p11">
+        <span class="lost-name">Barcelona, after dark</span>
+        <span class="tag-line">Davidlohr Bueso, , CC BY 2.0. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:10%;--y:62%"><button type="button" class="lost-btn gal-btn" data-obj="p12">
+        <span class="lost-name">Banlieue de Paris, Athis-Mons</span>
+        <span class="tag-line">Loir, Luigi (1845-1916), 1904, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:25%;--y:62%"><button type="button" class="lost-btn gal-btn" data-obj="p13">
+        <span class="lost-name">Norfolk Hotel, Nairobi</span>
+        <span class="tag-line">Hannes Grobe, 2020, CC BY-SA 4.0. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:40%;--y:62%"><button type="button" class="lost-btn gal-btn" data-obj="p14">
+        <span class="lost-name">The Yangtze gorges</span>
+        <span class="tag-line">Unknown, 1930, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:55%;--y:62%"><button type="button" class="lost-btn gal-btn" data-obj="p15">
+        <span class="lost-name">Dougga, Visitez la Tunisie</span>
+        <span class="tag-line">La Nézière, Joseph de (1873-1944), 1929, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:70%;--y:62%"><button type="button" class="lost-btn gal-btn" data-obj="p16">
+        <span class="lost-name">Kabukicho, Shinjuku</span>
+        <span class="tag-line">Alessandro Baffa, , CC BY-SA 4.0. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+      <li style="--x:85%;--y:62%"><button type="button" class="lost-btn gal-btn" data-obj="p17">
+        <span class="lost-name">Cie de Navigation Mixte</span>
+        <span class="tag-line">F. Hugo d'Alesi, 1899, Public domain. Drag this corner, or use the arrow keys, until it hangs true.</span>
+      </button></li>
+    </ul>
+
+    <div class="held" id="held" hidden>
+      <p class="held-kick" id="heldKick">Level</p>
+      <p class="held-name" id="heldName"></p>
+      <p class="held-tag" id="heldTag"></p>
+      <p class="held-acts">
+        <button type="button" class="btn btn-small" id="heldAct" hidden>Hang it back up</button>
+        <button type="button" class="btn btn-small btn-ghost" id="heldBack">Put the card down</button>
+      </p>
     </div>
+
+    <p class="room-draft"><span class="chip">Draft</span> Every picture on this wall is public
+    domain or freely licensed, from Wikimedia Commons, and the card under each one says only what
+    Commons says. The two photographs are stand-ins for places.</p>
 
     <a class="room-out" href="index.html#corridor">
       <span class="ro-arrow" aria-hidden="true"></span>
@@ -111,13 +220,7 @@
 
 <script src="hotel.js"></script>
 <script src="vendor/gsap.min.js"></script>
-<script>
-/* Every room page is the same one line: gate on the key, and the shared code
-   opens the door, stamps the passport and burns the paper off the doorway. */
-Hotel.ready(function () {
-  if (!Hotel.gateRoom('long-gallery')) return;
-});
-</script>
+<script src="room-gallery.js" type="module"></script>
 <!-- TEMP:versions — test-site only, delete before the real domain goes live. Self-contained: style, markup, script. -->
 <style>
 .vdock{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;font:700 13px/1 'DM Sans',system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em}
