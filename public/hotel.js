@@ -461,6 +461,29 @@
           n3.start(t); n3.stop(t + 0.46);
           break;
         }
+        case 'tick': {
+          /* a brass detent: the globe passing a meridian, a frame going level */
+          var ot = ctx.createOscillator(), gt = ctx.createGain(),
+              bt = ctx.createBiquadFilter();
+          ot.type = 'square';
+          ot.frequency.setValueAtTime(2600 + Math.random() * 500, t);
+          ot.frequency.exponentialRampToValueAtTime(1400, t + 0.016);
+          bt.type = 'bandpass'; bt.frequency.value = 2800; bt.Q.value = 3;
+          env(gt, t, 0.001, 0.022, 0.055);
+          ot.connect(bt); bt.connect(gt); gt.connect(uiBus);
+          ot.start(t); ot.stop(t + 0.05);
+          break;
+        }
+        case 'hum': {
+          /* the note a thing makes when it is finally true */
+          [392, 588].forEach(function (f, i) {
+            var oh = ctx.createOscillator(), gh = ctx.createGain();
+            oh.type = 'sine'; oh.frequency.setValueAtTime(f, t);
+            env(gh, t, 0.06, 0.9 - i * 0.3, 0.12 - i * 0.05);
+            oh.connect(gh); gh.connect(uiBus); oh.start(t); oh.stop(t + 1.1);
+          });
+          break;
+        }
         case 'crackle': {
           for (var c = 0; c < 5; c++) {
             var ns = ctx.createBufferSource(); ns.buffer = noiseBuffer(0.02);
