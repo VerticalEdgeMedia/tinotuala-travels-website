@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="hotel.css">
 <script>document.documentElement.classList.add('js');if(/[?&]shot=1\b/.test(location.search))document.documentElement.classList.add('shot');</script>
 </head>
-<body class="page-102b">
+<body class="page-102b page-roomfull">
 
 <svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
   <defs>
@@ -72,22 +72,13 @@
 </header>
 
 <main id="roomMain">
-  <section class="r102b above-gl">
-    <div class="wrap r102b-head">
-      <p class="room-no">102B</p>
-      <h1 class="display gold-text">Lost property.</h1>
-      <p class="r102b-lede">Somebody put two walls in a corner and called it a room. It holds a mattress
-      on its side and everything guests have walked off without since the hotel opened its doors.</p>
-    </div>
+  <!-- The room IS the page.  The three.js scene fills the viewport under the
+       header; everything else floats on it: the brass plate, the hint, the
+       tag of whatever you are holding, the draft note and the way out.
+       No boxed panel, no heading-then-picture. -->
+  <section class="roomfull" id="roomStage">
 
-    <!-- The room.  In the full version a three.js scene is drawn into this
-         box and the buttons below sit invisibly over the objects.  In the
-         lighter version, and with no JavaScript at all, the drawing and the
-         list below are the room. -->
-    <div class="wrap">
-      <div class="roomstage" id="roomStage">
-
-        <div class="room-flat" id="roomFlat">
+<div class="room-flat" id="roomFlat">
           <svg viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" role="img"
                aria-label="A small triangular room. Two walls run back from the doorway and meet at a corner. A mattress leans on the left wall; shelves of lost property line the right wall; a bare bulb hangs from the ceiling.">
             <defs>
@@ -151,10 +142,14 @@
           <div class="flat-veil" aria-hidden="true"></div>
         </div>
 
-        <!-- Every object in the room.  These buttons are the room's keyboard
-             and screen-reader route in both versions.  In the full version
-             they are placed over the 3D objects and drawn by the scene. -->
-        <ul class="lost-list" id="lostList" aria-label="Things left behind, on the shelves">
+    <h1 class="room-plate">
+      <span class="rp-no">102B</span>
+      <span class="rp-name">Lost property</span>
+    </h1>
+
+    <p class="room-hint" id="roomHint">Move the pointer to look around. Pick something up.</p>
+
+<ul class="lost-list" id="lostList" aria-label="Things left behind, on the shelves">
           <li style="--x:60%;--y:28%"><button type="button" class="lost-btn" data-obj="flipflop">
             <span class="lost-name">A single flip-flop, left foot</span>
             <span class="tag-line">Its twin went out with the tide at about four. This one has waited ever since.</span>
@@ -207,27 +202,24 @@
           </button></li>
         </ul>
 
-        <!-- what you are holding -->
-        <div class="held" id="held" hidden>
-          <p class="held-kick">Luggage tag</p>
-          <p class="held-name" id="heldName"></p>
-          <p class="held-tag" id="heldTag"></p>
-          <p class="held-acts">
-            <button type="button" class="btn btn-small" id="heldAct" hidden>Keep it</button>
-            <button type="button" class="btn btn-small btn-ghost" id="heldBack">Put it back</button>
-          </p>
-          <p class="held-turn" id="heldTurn">Drag it to turn it over.</p>
-        </div>
-
-        <p class="room-hint" id="roomHint">Move the pointer to look around. Pick something up.</p>
-      </div>
+    <div class="held" id="held" hidden>
+      <p class="held-kick">Luggage tag</p>
+      <p class="held-name" id="heldName"></p>
+      <p class="held-tag" id="heldTag"></p>
+      <p class="held-acts">
+        <button type="button" class="btn btn-small" id="heldAct" hidden>Keep it</button>
+        <button type="button" class="btn btn-small btn-ghost" id="heldBack">Put it back</button>
+      </p>
+      <p class="held-turn" id="heldTurn">Drag it sideways to turn it over.</p>
     </div>
 
-    <div class="wrap r102b-foot">
-      <p class="r102b-note"><span class="chip">Draft</span> The things on these shelves and the stories on
-      their tags are invented for this mock-up. Nobody real lost any of them.</p>
-      <p><a class="btn" href="index.html#corridor" id="leaveRoom">Back to the corridor</a></p>
-    </div>
+    <p class="room-draft"><span class="chip">Draft</span> The things on these shelves and the
+    stories on their tags are invented for this mock-up. Nobody real lost any of them.</p>
+
+    <a class="room-out" href="index.html#corridor" id="leaveRoom">
+      <span class="ro-arrow" aria-hidden="true"></span>
+      <span>Back to the corridor</span>
+    </a>
   </section>
 </main>
 

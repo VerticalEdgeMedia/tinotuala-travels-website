@@ -733,16 +733,19 @@ html:not(.js) .lost-btn .tag-line {
 html:not(.js) .lost-list { position: static; }
 html:not(.js) .lost-list li { position: static; transform: none; max-width: none; margin-bottom: 10px; }
 
-/* over the 3D objects the label shrinks to a brass pip until you go near it */
-.room-3d .lost-list li { max-width: 220px; }
+/* Over the 3D objects the button shows NOTHING at rest: the thing on the
+   shelf is the affordance.  The name appears on hover and on keyboard focus,
+   and :focus-visible draws a ring so the keyboard route is never invisible. */
+.room-3d .lost-list li { max-width: 240px; }
 .room-3d .lost-btn {
-  width: 26px; height: 26px;
+  width: 52px; height: 52px;
   padding: 0;
   overflow: hidden;
   color: transparent;
-  background: radial-gradient(circle at 34% 30%, #F2DCA2, #A8822C 62%, #5E4712);
-  box-shadow: 0 2px 7px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,240,200,.5);
+  background: none;
   border-radius: 50%;
+  box-shadow: none;
+  transition: box-shadow .25s ease;
 }
 .room-3d .lost-btn:hover, .room-3d .lost-btn:focus-visible,
 .room-3d .lost-btn[aria-pressed="true"] {
@@ -753,6 +756,7 @@ html:not(.js) .lost-list li { position: static; transform: none; max-width: none
   background: rgba(16,11,6,.93);
   box-shadow: inset 0 0 0 1px var(--gold-lite, #E9CE7A), 0 8px 20px rgba(0,0,0,.55);
 }
+.room-3d .lost-btn:focus-visible { outline: 3px solid var(--gold-lite, #E9CE7A); outline-offset: 3px; }
 .room-3d .lost-btn[aria-pressed="true"] { color: #16120B; background: var(--gold, #C9A227); }
 
 /* what you are holding */
@@ -781,6 +785,9 @@ html:not(.js) .lost-list li { position: static; transform: none; max-width: none
 .held .btn-ghost:hover { background: rgba(107,84,32,.12); }
 .held-turn { margin: .7rem 0 0; font-size: .72rem; color: #7A6B4C; }
 .room-flatmode .held-turn { display: none; }
+/* the tag card and the draft note both want the bottom middle */
+.roomfull.is-holding .room-draft { opacity: 0; pointer-events: none; }
+.room-draft { transition: opacity .3s ease; }
 
 .room-hint {
   position: absolute;
@@ -860,4 +867,212 @@ html:not(.js) .lost-btn { width: 100%; }
 .room-flatmode .room-hint { position: static; display: inline-block; margin: 14px 0 0; }
 @media (max-width: 640px) {
   .room-flatmode .room-flat, html:not(.js) .room-flat { aspect-ratio: 4 / 3; }
+}
+
+/* ==========================================================================
+   THE ROOM-PAGE PATTERN.  A room you have walked into is the page, not a
+   framed panel sitting on one.  The scene fills the viewport under the
+   header and everything else floats on top of it: the brass plate, the
+   hint, the tag of what you are holding, the draft note, and the way out.
+   Every room page part B builds uses this.
+   ========================================================================== */
+
+.page-roomfull { --header-h: 116px; }
+@media (max-width: 860px) { .page-roomfull { --header-h: 136px; } }
+
+.roomfull {
+  position: relative;
+  z-index: 4;
+  height: calc(100svh - var(--header-h));
+  min-height: 420px;
+  overflow: hidden;
+  background: #0B0906;
+  box-shadow: inset 0 0 90px rgba(0,0,0,.8);
+  touch-action: pan-y;              /* a vertical swipe always scrolls the page */
+}
+.room-3d .roomfull { background: transparent; cursor: grab; }
+.room-3d .roomfull.is-holding { cursor: grabbing; }
+.roomfull:focus-visible { outline: 3px solid var(--gold-lite, #E9CE7A); outline-offset: -4px; }
+
+/* the brass plate, top left */
+.room-plate {
+  position: absolute;
+  left: clamp(14px, 2.4vw, 34px);
+  top: clamp(14px, 2.4vw, 30px);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 10px 14px 11px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #D8B252 0%, #A8822C 46%, #6E5418 100%);
+  box-shadow: inset 0 1px 0 rgba(255,246,214,.85), inset 0 -2px 0 rgba(0,0,0,.35),
+              0 8px 22px rgba(0,0,0,.6);
+}
+.room-plate .rp-no {
+  font: 600 clamp(1.05rem, 1.9vw, 1.5rem)/1 var(--f-caps, Georgia, serif);
+  letter-spacing: .22em;
+  color: #201603;
+}
+.room-plate .rp-name {
+  font: 500 clamp(.5rem, .8vw, .62rem)/1.3 var(--f-caps, Georgia, serif);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: #3A2A08;
+}
+
+.roomfull .room-hint {
+  position: absolute;
+  left: 50%;
+  top: clamp(14px, 2.4vw, 30px);
+  transform: translateX(-50%);
+  z-index: 6;
+  margin: 0;
+  padding: 7px 13px;
+  border-radius: 2px;
+  background: rgba(10,8,5,.5);
+  color: #CFC6AE;
+  font: 500 .56rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  animation: hintFade 9s ease-in 4s both;
+}
+@keyframes hintFade { to { opacity: 0; visibility: hidden; } }
+.roomfull:hover .room-hint, .roomfull:focus-within .room-hint { animation-play-state: paused; }
+
+/* the draft note: bottom centre, clear of the tray on the left and the
+   versions dock on the right */
+.room-draft {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(18px, 3vh, 30px);
+  z-index: 6;
+  max-width: min(52ch, 56vw);
+  text-align: center;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 2px;
+  background: rgba(10,8,5,.62);
+  color: #B7AE96;
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+/* the way out: the doorway, as a brass control bottom right of the scene */
+.room-out {
+  position: absolute;
+  right: clamp(14px, 2.4vw, 34px);
+  bottom: clamp(122px, 15vh, 168px);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: .74em 1.3em;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #D8B252, #8A6A24);
+  color: #1A1206;
+  font: 500 .66rem/1.3 var(--f-caps, Georgia, serif);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: inset 0 1px 0 rgba(255,246,214,.8), 0 8px 22px rgba(0,0,0,.55);
+  transition: transform .4s var(--spring, ease), box-shadow .3s ease;
+}
+.room-out:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,246,214,.9), 0 14px 30px rgba(0,0,0,.6); }
+.ro-arrow {
+  width: 18px; height: 10px; flex: none;
+  background: currentColor;
+  clip-path: polygon(0 50%, 42% 0, 42% 34%, 100% 34%, 100% 66%, 42% 66%, 42% 100%);
+}
+
+/* the tag of whatever you are holding floats beside it */
+.roomfull .held {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(88px, 11vh, 124px);
+  transform: translateX(-50%);
+  z-index: 7;
+  width: min(420px, calc(100% - 28px));
+}
+
+@media (max-width: 860px) {
+  .room-draft { display: none; }
+  .roomfull .held { left: 12px; right: 12px; transform: none; width: auto; bottom: 86px; }
+  .room-out { right: 12px; bottom: 86px; padding: .7em 1em; font-size: .58rem; }
+  .roomfull .room-hint { font-size: .5rem; letter-spacing: .12em; }
+}
+@media (max-width: 640px) {
+  .room-out { left: 12px; right: auto; bottom: 150px; }
+  .roomfull .held { bottom: 96px; }
+}
+
+/* the flat room keeps the same full-bleed composition */
+.room-flatmode .roomfull .room-flat,
+html:not(.js) .roomfull .room-flat { position: absolute; inset: 0; aspect-ratio: auto;
+  border-radius: 0; box-shadow: none; }
+.room-flatmode .roomfull .lost-list,
+html:not(.js) .roomfull .lost-list {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: min(330px, 46vw);
+  display: block;
+  margin: 0;
+  padding: clamp(60px, 9vh, 96px) 14px 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  background: linear-gradient(90deg, rgba(8,14,10,0), rgba(8,14,10,.82) 22%);
+}
+.room-flatmode .roomfull .lost-list li,
+html:not(.js) .roomfull .lost-list li { position: static; transform: none; max-width: none; margin-bottom: 8px; }
+@media (max-width: 860px) {
+  .room-flatmode .roomfull .lost-list,
+  html:not(.js) .roomfull .lost-list {
+    left: 0; right: 0; top: auto;
+    width: auto;
+    height: 46svh;
+    padding: 14px 14px 20px;
+    background: linear-gradient(180deg, rgba(8,14,10,0), rgba(8,14,10,.88) 14%);
+  }
+}
+html:not(.js) .roomfull { height: auto; min-height: 0; overflow: visible; }
+html:not(.js) .roomfull .room-flat { position: relative; aspect-ratio: 16/9; }
+html:not(.js) .roomfull .lost-list { position: static; width: auto; height: auto; background: none; padding: 14px 0 0; }
+
+/* a room part B has not built yet: the same full-bleed shell, waiting */
+.room-waiting { display: grid; place-items: center; }
+.waiting-ground {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 60% at 50% 34%, rgba(201,162,39,.10), rgba(0,0,0,0) 70%),
+    linear-gradient(180deg, #0D2218, #071410);
+}
+.waiting-card {
+  position: relative;
+  z-index: 5;
+  max-width: 56ch;
+  margin: 0 18px;
+  padding: clamp(22px, 3.4vw, 40px);
+  border-radius: 2px;
+  background:
+    linear-gradient(170deg, rgba(255,255,255,.5), rgba(255,255,255,0) 40%),
+    linear-gradient(160deg, var(--ivory, #F3ECDC), var(--ivory-2, #E7DCC4));
+  color: var(--ink, #1A1611);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.45), 0 24px 60px rgba(0,0,0,.45);
+}
+.waiting-card .room-lede { color: var(--ink-2, #3B3427); }
+.waiting-card .rule { margin: 1.2rem 0 1.4rem; }
+
+/* on a phone the plate owns the top left, so the hint drops under it */
+@media (max-width: 700px) {
+  .roomfull .room-hint {
+    left: 12px; right: 12px;
+    top: auto;
+    bottom: calc(100% - 132px);
+    transform: none;
+    text-align: center;
+  }
 }

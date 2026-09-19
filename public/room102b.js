@@ -27,6 +27,7 @@ import { getStage } from './gl.js';
 const HOOKS = new URLSearchParams(location.search);
 const LOOK = HOOKS.get('look');          /* left | right | centre, for screenshots */
 const PICK = HOOKS.get('pick');          /* an object id, for screenshots */
+const PLAN = HOOKS.get('plan') === '1';  /* the floor plan, seen from above */
 
 /* ------------------------------------------------------------ the objects */
 
@@ -556,203 +557,223 @@ function liteMode() {
 
 /* --------------------------------------------------------- the 3D room */
 
-let scene, camera, view, objects = {}, held = null, heldTag = null;
+let scene, camera, planCam, view, objects = {}, held = null, heldTag = null;
 let yaw = 0, pitch = 0, yawT = 0, pitchT = 0, dragYaw = 0;
 let holdSpin = 0, holdSpinT = 0, holdTilt = 0, holdTiltT = 0;
 let bulb, bulbMesh, narrow = 0;
+let occluders = [];
+
+/* ---------------------------------------------------------------------------
+   THE FLOOR PLAN.  This is the whole room, and getting it right is the point.
+
+       z = DOOR_Z  .. the doorway, the BASE of the triangle, nearest you
+                      |<------------- 2 * DOOR_HALF ------------->|
+            (-DH, DZ) *------------ the doorway wall -------------* (+DH, DZ)
+                       \                                         /
+                        \  left wall                right wall  /
+                         \      (the mattress)   (the shelves)  /
+                          \                                    /
+                           \                                  /
+       z = CORNER_Z          *------------------------------*
+                                      the far corner, dead ahead
+
+   You stand just inside the doorway and look INTO the corner: the left wall
+   fills the left of the view and recedes toward the middle, the right wall
+   fills the right and recedes toward the middle, and they meet on a vertical
+   line in the middle distance.  Floor, ceiling, both walls and the doorway
+   wall behind you close the room completely: there is no void anywhere.
+
+   Getting this backwards gives a convex corner jutting at the camera like the
+   spine of an open book, with the page showing through either side.  Use
+   ?plan=1 to check: it draws the room from above with the camera marked, and
+   it must be a triangle with the camera at the base looking at the apex.
+   --------------------------------------------------------------------------- */
+
+const DOOR_HALF = 1.50;
+const DOOR_Z    = 2.00;
+const CORNER_Z  = -0.90;      /* 2.9 m from the doorway: a small room */
+const CEIL      = 2.45;
+const WALL_A    = Math.atan2(DOOR_Z - CORNER_Z, DOOR_HALF);   /* the wall's cant */
+const WALL_LEN  = Math.hypot(DOOR_HALF, DOOR_Z - CORNER_Z);
+const EYE       = { x: 0, y: 1.52, z: 1.86 };                 /* in the doorway */
 
 function buildScene(stage) {
   const R = stage.renderer;
   R.shadowMap.enabled = true;
   R.shadowMap.type = THREE.PCFSoftShadowMap;
+  /* One bare bulb in a small room blows out to white without this.  Tone
+     mapping is what gives the warm falloff and keeps the far corner gloomy.
+     It does not touch the paper fire: that shader does its own clamp and
+     gamma and never includes three's tonemapping chunk. */
+  R.toneMapping = THREE.ACESFilmicToneMapping;
+  R.toneMappingExposure = 1.05;
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(54, 1.6, 0.05, 40);
-  camera.position.set(0, 1.34, 3.25);
+  camera = new THREE.PerspectiveCamera(70, 1.6, 0.05, 40);
+  camera.position.set(EYE.x, EYE.y, EYE.z);
 
-  /* --- the shell.  A triangle: the doorway, and two walls meeting at a
-     corner directly opposite it. ----------------------------------------- */
-  /* A wide, shallow triangle.  Deeper than this and both walls go nearly
-     edge-on from the doorway and you cannot read either of them. */
-  const DOOR_HALF = 1.42, DOOR_Z = 1.70, CORNER_Z = -1.62, CEIL = 2.30;
-  const dx = DOOR_HALF, dz = DOOR_Z - CORNER_Z;              /* 1.05, 4.10 */
-  const wallLen = Math.hypot(dx, dz) + 0.06;
-  const A = Math.atan2(dz, dx);                              /* the wall's cant */
+  const midZ = (DOOR_Z + CORNER_Z) / 2;
 
-  /* An outer shell.  The canvas is transparent, so any gap at the edge of
-     the frame would show the page through it.  This box guarantees there
-     is none, at any width. */
-  const outside = new THREE.Mesh(new THREE.BoxGeometry(16, 9, 16),
-    new THREE.MeshBasicMaterial({ color: 0x0A0806, side: THREE.BackSide }));
-  outside.position.set(0, 2.2, 0);
-  scene.add(outside);
-
+  /* --- the two walls -----------------------------------------------------
+     The wall on the -x side runs from (-DOOR_HALF, DOOR_Z) to (0, CORNER_Z),
+     so its rotation is +WALL_A and its inward normal points +x.  The wall on
+     the +x side is its mirror: -WALL_A, normal -x.  Swapping these two signs
+     is what turns the room inside out. */
   const wallTex = texWall();
-  wallTex.repeat.set(2.1, 1.25);
+  wallTex.repeat.set(1.9, 1.3);
   const wallMat = new THREE.MeshStandardMaterial({ map: wallTex, roughness: 0.97 });
 
-  function wall(sign) {
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(wallLen, CEIL), wallMat);
-    m.position.set(sign * dx / 2, CEIL / 2, (DOOR_Z + CORNER_Z) / 2);
-    m.rotation.y = sign * A;
+  function wall(side) {                       /* side: -1 left, +1 right */
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(WALL_LEN + 0.08, CEIL), wallMat);
+    m.position.set(side * DOOR_HALF / 2, CEIL / 2, midZ);
+    m.rotation.y = -side * WALL_A;
     m.receiveShadow = true;
     return m;
   }
-  const wallL = wall(1);            /* the mattress goes on this one */
-  const wallR = wall(-1);           /* the lost property goes on this one */
-  scene.add(wallL, wallR);
+  const wallLeft  = wall(-1);   /* the mattress leans on this one */
+  const wallRight = wall(1);    /* the lost property lines this one */
+  scene.add(wallLeft, wallRight);
 
-  const floorTex = texFloor(); floorTex.repeat.set(1.6, 2.4);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(4.0, 4.0),
+  /* --- floor, ceiling ---------------------------------------------------- */
+  const floorTex = texFloor(); floorTex.repeat.set(1.5, 1.5);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 3.8),
     new THREE.MeshStandardMaterial({ map: floorTex, roughness: 0.94 }));
   floor.rotation.x = -Math.PI / 2;
-  floor.position.set(0, 0, CORNER_Z + 1.7);
+  floor.position.set(0, 0, midZ);
   floor.receiveShadow = true;
   scene.add(floor);
 
-  /* the corridor, behind you, through the door */
-  const carpetTex = texCarpet(); carpetTex.repeat.set(2.2, 2.2);
-  const carpet = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 2.4),
-    new THREE.MeshStandardMaterial({ map: carpetTex, roughness: 0.99 }));
-  carpet.rotation.x = -Math.PI / 2;
-  carpet.position.set(0, 0.003, DOOR_Z + 1.2);
-  scene.add(carpet);
-
-  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(4.0, 4.0),
-    new THREE.MeshStandardMaterial({ color: 0x2A2118, roughness: 1 }));
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 3.8),
+    new THREE.MeshStandardMaterial({ color: 0x2E2418, roughness: 1 }));
   ceil.rotation.x = Math.PI / 2;
-  ceil.position.set(0, CEIL, CORNER_Z + 1.7);
+  ceil.position.set(0, CEIL, midZ);
   scene.add(ceil);
 
-  /* The corridor side.  You stand at the threshold and look through the
-     opening, so the wall around the door is what frames the room.  It is
-     built as three boxes: left of the opening, right of it, and the header. */
-  const OPEN_TOP = 2.04;
-  const corridorMat = new THREE.MeshStandardMaterial({ color: 0x2A1D12, roughness: 0.95 });
-  const sideW = 3.0;
-  const wLeft = new THREE.Mesh(new THREE.BoxGeometry(sideW, 3.2, 0.24), corridorMat);
-  wLeft.position.set(-DOOR_HALF - sideW / 2 - 0.06, 1.6, DOOR_Z);
-  const wRight = wLeft.clone();
-  wRight.position.x = DOOR_HALF + sideW / 2 + 0.06;
-  const header = new THREE.Mesh(new THREE.BoxGeometry(DOOR_HALF * 2 + 0.24, 3.2 - OPEN_TOP + 0.4, 0.24), corridorMat);
-  header.position.set(0, OPEN_TOP + (3.2 - OPEN_TOP + 0.4) / 2 - 0.2, DOOR_Z);
-  wLeft.receiveShadow = wRight.receiveShadow = header.receiveShadow = true;
-  scene.add(wLeft, wRight, header);
+  /* --- the doorway wall, behind you -------------------------------------- */
+  const OPEN_HALF = 0.52, OPEN_TOP = 2.06;
+  const doorMat = new THREE.MeshStandardMaterial({ color: 0x53422C, roughness: 0.95 });
+  const sideW = DOOR_HALF - OPEN_HALF;
+  [-1, 1].forEach((s) => {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(sideW, CEIL, 0.16), doorMat);
+    b.position.set(s * (OPEN_HALF + sideW / 2), CEIL / 2, DOOR_Z);
+    b.receiveShadow = true;
+    scene.add(b);
+  });
+  const header = new THREE.Mesh(
+    new THREE.BoxGeometry(OPEN_HALF * 2, CEIL - OPEN_TOP, 0.16), doorMat);
+  header.position.set(0, OPEN_TOP + (CEIL - OPEN_TOP) / 2, DOOR_Z);
+  scene.add(header);
 
-  /* the architrave, a lighter frame around the opening */
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x4A3420, roughness: 0.75 });
-  const jambL = new THREE.Mesh(new THREE.BoxGeometry(0.11, OPEN_TOP + 0.11, 0.09), frameMat);
-  jambL.position.set(-DOOR_HALF - 0.055, (OPEN_TOP + 0.11) / 2, DOOR_Z + 0.16);
-  const jambR = jambL.clone(); jambR.position.x = DOOR_HALF + 0.055;
-  const lintel = new THREE.Mesh(new THREE.BoxGeometry(DOOR_HALF * 2 + 0.22, 0.11, 0.09), frameMat);
-  lintel.position.set(0, OPEN_TOP + 0.055, DOOR_Z + 0.16);
-  scene.add(jambL, jambR, lintel);
+  /* the corridor beyond it, so a glance back lands on carpet */
+  const carpetTex = texCarpet(); carpetTex.repeat.set(1.6, 1.6);
+  const carpet = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.8),
+    new THREE.MeshStandardMaterial({ map: carpetTex, roughness: 0.99 }));
+  carpet.rotation.x = -Math.PI / 2;
+  carpet.position.set(0, 0.004, DOOR_Z + 0.9);
+  scene.add(carpet);
+  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(3.0, CEIL),
+    new THREE.MeshStandardMaterial({ color: 0x14100A, roughness: 1 }));
+  backWall.position.set(0, CEIL / 2, DOOR_Z + 1.8);
+  backWall.rotation.y = Math.PI;
+  scene.add(backWall);
 
-  /* the door itself, standing open into the corridor so it blocks nothing */
-  const leaf = new THREE.Mesh(new THREE.BoxGeometry(DOOR_HALF * 2 - 0.04, OPEN_TOP - 0.05, 0.048),
+  /* the door itself, open against the corridor side, with its small brass 102B */
+  const leaf = new THREE.Mesh(new THREE.BoxGeometry(OPEN_HALF * 2 - 0.04, OPEN_TOP - 0.04, 0.045),
     new THREE.MeshStandardMaterial({ color: 0x4A2A18, roughness: 0.62 }));
-  leaf.geometry.translate((DOOR_HALF * 2 - 0.04) / 2, 0, 0);
-  leaf.position.set(-DOOR_HALF - 0.02, (OPEN_TOP - 0.05) / 2, DOOR_Z + 0.26);
-  leaf.rotation.y = -2.02;                          /* pulled back into the corridor */
-  leaf.castShadow = true;
+  leaf.geometry.translate((OPEN_HALF * 2 - 0.04) / 2, 0, 0);
+  leaf.position.set(-OPEN_HALF, (OPEN_TOP - 0.04) / 2, DOOR_Z + 0.12);
+  leaf.rotation.y = -1.95;
   scene.add(leaf);
-
-  /* the small brass 102B, the only thing on the door */
-  const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.19, 0.085),
+  const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.076),
     new THREE.MeshStandardMaterial({ map: plateTex(), roughness: 0.32, metalness: 0.65 }));
-  plate.position.set(1.62, 1.58, 0.026);
+  plate.position.set(0.52, 1.56, 0.024);
   leaf.add(plate);
 
-  /* --- the light: one bare bulb ---------------------------------------- */
-  const flex = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.42, 6),
+  /* --- the light: one bare bulb, roughly over the middle of the floor ----- */
+  const centreZ = (DOOR_Z + DOOR_Z + CORNER_Z) / 3;      /* the triangle's centroid */
+  const flex = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.40, 6),
     new THREE.MeshStandardMaterial({ color: 0x3A2E1E, roughness: 1 }));
-  flex.position.set(0, CEIL - 0.19, -0.18);
+  flex.position.set(0, CEIL - 0.20, centreZ);
   scene.add(flex);
   bulbMesh = new THREE.Mesh(new THREE.SphereGeometry(0.055, 18, 14),
-    new THREE.MeshStandardMaterial({ color: 0xFFE4B0, emissive: 0xFFD9A0, emissiveIntensity: 2.4, roughness: 0.4 }));
-  bulbMesh.position.set(0, CEIL - 0.40, -0.18);
+    new THREE.MeshStandardMaterial({
+      color: 0xFFE4B0, emissive: 0xFFD9A0, emissiveIntensity: 2.2, roughness: 0.4
+    }));
+  bulbMesh.position.set(0, CEIL - 0.42, centreZ);
   scene.add(bulbMesh);
 
-  bulb = new THREE.PointLight(0xFFCF92, 42, 12, 1.25);
+  bulb = new THREE.PointLight(0xFFCF92, 5.4, 9, 2.0);
   bulb.position.copy(bulbMesh.position);
   bulb.castShadow = true;
   bulb.shadow.mapSize.set(1024, 1024);
   bulb.shadow.bias = -0.0022;
-  bulb.shadow.camera.near = 0.08;
-  bulb.shadow.camera.far = 9;
+  bulb.shadow.camera.near = 0.06;
+  bulb.shadow.camera.far = 8;
   scene.add(bulb);
 
-  scene.add(new THREE.AmbientLight(0x6B5436, 1.7));
-  /* a little cold light coming in from the corridor behind you */
-  const spill = new THREE.PointLight(0xAFC2D4, 9, 8, 1.5);
-  spill.position.set(0.4, 2.0, DOOR_Z + 1.5);
+  scene.add(new THREE.AmbientLight(0x4A3A24, 0.22));
+  scene.add(new THREE.HemisphereLight(0xA88A62, 0x241A10, 0.26));
+  /* a cold spill through the doorway behind you */
+  const spill = new THREE.PointLight(0xA8BACC, 1.9, 5.0, 2.0);
+  spill.position.set(0, 1.9, DOOR_Z + 0.5);
   scene.add(spill);
 
-  /* a second, weaker bulb-bounce down in the corner: without it the far end
-     of the shelves is a black hole and you cannot see what is on them */
-  const corner = new THREE.PointLight(0xE8C089, 14, 5.5, 1.35);
-  corner.position.set(0.42, 1.35, -0.35);
-  scene.add(corner);
-  /* and one on the mattress, or that half of the room is a black wall */
-  const onMatt = new THREE.PointLight(0xEACB9B, 8, 4.4, 1.5);
-  onMatt.position.set(-0.60, 1.55, 0.75);
-  scene.add(onMatt);
-
-  /* the light the walls throw back at each other in a room this small */
-  const bounce = new THREE.HemisphereLight(0xD3B289, 0x3A2A18, 1.15);
-  scene.add(bounce);
-
-  /* --- the mattress, tilted up on its side, leaning on the left wall ----- */
+  /* --- the mattress, tilted up on its side against the LEFT wall ---------- */
   const tickTex = texTicking();
   const mattMat = new THREE.MeshStandardMaterial({ map: tickTex, roughness: 0.96 });
   const mattress = new THREE.Group();
-  mattress.position.set(-dx / 2, 0, (DOOR_Z + CORNER_Z) / 2);
-  mattress.rotation.y = A;
+  mattress.position.set(-DOOR_HALF / 2, 0, midZ);
+  mattress.rotation.y = WALL_A;                 /* local +x runs toward the corner */
   scene.add(mattress);
 
-  const MW = 1.88, MH = 1.40, MT = 0.24;
-  const slab = new THREE.BoxGeometry(MW, MH, MT, 18, 14, 2);
+  const MW = 1.74, MH = 1.38, MT = 0.22, LEAN = 0.20;
+  const slab = new THREE.BoxGeometry(MW, MH, MT, 16, 12, 2);
   saggy(slab, MW, MH, MT);
   const matt = new THREE.Mesh(slab, mattMat);
   matt.castShadow = true; matt.receiveShadow = true;
-  matt.position.set(-0.42, MH / 2 - 0.02, 0.26);
-  matt.rotation.x = 0.165;                          /* leaning back on the wall */
+  /* the top edge rests on the wall, the foot stands out on the floor */
+  matt.position.set(0.40, (MH / 2) * Math.cos(LEAN) + 0.01, 0.26);
+  matt.rotation.x = -LEAN;
   mattress.add(matt);
 
-  /* piping along the two long seams */
   const pipeMat = new THREE.MeshStandardMaterial({ color: 0x8A7A54, roughness: 0.9 });
-  [-1, 1].forEach((s) => {
-    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, MW, 9), pipeMat);
-    p.rotation.z = Math.PI / 2;
-    p.position.set(-0.42, MH / 2 - 0.02 + s * (MH / 2 - 0.01), 0.26 - s * 0.115);
-    p.rotation.x = 0.165;
-    mattress.add(p);
+  [-1, 1].forEach((sgn) => {
+    const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.021, 0.021, MW, 9), pipeMat);
+    pipe.rotation.z = Math.PI / 2;
+    pipe.rotation.x = -LEAN;
+    pipe.position.set(0.40,
+      matt.position.y + sgn * (MH / 2 - 0.01) * Math.cos(LEAN),
+      0.26 - sgn * (MH / 2 - 0.01) * Math.sin(LEAN) - sgn * 0.0 + sgn * 0.105 * 0);
+    pipe.position.z += sgn * 0.0;
+    mattress.add(pipe);
   });
-  const lbl = new THREE.Mesh(new THREE.PlaneGeometry(0.19, 0.095),
+  const lbl = new THREE.Mesh(new THREE.PlaneGeometry(0.20, 0.10),
     new THREE.MeshStandardMaterial({ map: texLabel(), roughness: 0.95, side: THREE.DoubleSide }));
-  lbl.position.set(0.20, 0.30, 0.395); lbl.rotation.set(0.165, 0, -0.14);
+  lbl.position.set(1.00, 0.33, 0.40);
+  lbl.rotation.set(-LEAN, 0, -0.12);
   mattress.add(lbl);
 
-  /* --- the shelves, and everything people left behind ------------------- */
+  /* --- the lost property, on shelving that follows the RIGHT wall --------- */
   const shelfTex = texShelf();
   const shelfMat = new THREE.MeshStandardMaterial({ map: shelfTex, roughness: 0.78 });
   const shelves = new THREE.Group();
-  shelves.position.set(dx / 2, 0, (DOOR_Z + CORNER_Z) / 2);
-  shelves.rotation.y = -A;
+  shelves.position.set(DOOR_HALF / 2, 0, midZ);
+  shelves.rotation.y = -WALL_A;                /* local +x runs toward the doorway */
   scene.add(shelves);
 
-  const SH_Y = [0.62, 1.20, 1.76];
-  const SH_W = 2.45, SH_D = 0.34;
+  const SH_Y = [0.44, 0.92, 1.40];
+  const SH_W = 2.20, SH_D = 0.32, SH_MID = -0.25;
   SH_Y.forEach((y) => {
     const b = new THREE.Mesh(new THREE.BoxGeometry(SH_W, 0.035, SH_D), shelfMat);
-    b.position.set(0.42, y, SH_D / 2 - 0.01);
+    b.position.set(SH_MID, y, SH_D / 2 - 0.01);
     b.castShadow = true; b.receiveShadow = true;
     shelves.add(b);
   });
-  [-0.74, 0.44, 1.60].forEach((x) => {
-    const u = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.98, SH_D), shelfMat);
-    u.position.set(x, 0.99, SH_D / 2 - 0.01);
+  [SH_MID - SH_W / 2, SH_MID + SH_W / 2].forEach((x) => {
+    const u = new THREE.Mesh(new THREE.BoxGeometry(0.045, 1.62, SH_D), shelfMat);
+    u.position.set(x, 0.80, SH_D / 2 - 0.01);
     u.castShadow = true; u.receiveShadow = true;
+    u.userData.thin = true;          /* never an occluder: see below */
     shelves.add(u);
   });
 
@@ -762,62 +783,87 @@ function buildScene(stage) {
     poster: loadTex('img/reward-poster-01.jpg')
   };
 
-  const SLOT_X = [-0.30, 0.16, 0.78, 1.28];
+  /* Where each thing stands along the wall.  The bottom shelf is the lowest
+     and the most glancing, so its four places are pulled into a narrower band
+     than the two above it: right at the ends nothing on it can be seen. */
+  const SLOT_X = [
+    [-1.02, -0.58, -0.14, 0.28],      /* bottom */
+    [-1.12, -0.56,  0.02, 0.56],      /* middle */
+    [-1.12, -0.56,  0.02, 0.56]       /* top */
+  ];
   OBJECTS.forEach((o) => {
     const g = build(o.id, tex);
     g.traverse((n) => { if (n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
     const k = SIZE[o.id] || 1;
     g.scale.setScalar(k);
-    const home = new THREE.Vector3(SLOT_X[o.slot],
-      SH_Y[o.shelf] + 0.018 + (LIFT[o.id] || 0) * k, 0.155);
+    const home = new THREE.Vector3(SLOT_X[o.shelf][o.slot],
+      SH_Y[o.shelf] + 0.018 + (LIFT[o.id] || 0) * k, 0.15);
     g.position.copy(home);
     const tip = TIP[o.id] || [0, 0, 0];
     g.rotation.set(tip[0], tip[1] + (-0.45 + (o.slot * 0.31 + o.shelf * 0.17) % 0.9), tip[2]);
     shelves.add(g);
+    const box = new THREE.Box3().setFromObject(g);
     objects[o.id] = {
-      def: o, group: g, home: home.clone(),
-      homeRot: g.rotation.clone(), homeScale: k, parent: shelves
+      def: o, group: g, home: home.clone(), homeRot: g.rotation.clone(),
+      homeScale: k, parent: shelves,
+      radius: Math.max(0.06, box.getSize(new THREE.Vector3()).length() * 0.5)
     };
   });
 
   /* the tag that swings round when you pick something up */
-  heldTag = new THREE.Mesh(new THREE.PlaneGeometry(0.54, 0.3375),
+  heldTag = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.2625),
     new THREE.MeshStandardMaterial({ roughness: 0.95, side: THREE.DoubleSide, transparent: true }));
   heldTag.visible = false;
   scene.add(heldTag);
+
+  /* What can genuinely stand between you and a thing on a shelf.  The
+     uprights are left out on purpose: they are 45 mm boards seen at a
+     glancing angle, and counting them hides a whole shelf's worth of things
+     that you can plainly see. */
+  occluders = [wallLeft, wallRight, floor, ceil, matt];
+  shelves.children.forEach((c) => {
+    if (c.isMesh && !c.userData.thin && !c.userData.__id) occluders.push(c);
+  });
+
+  /* --- the plan view, for checking the room is the right way round -------- */
+  if (PLAN) buildPlan();
 
   /* --- the view ---------------------------------------------------------- */
   view = stage.addView({
     el: stageEl,
     scene,
-    camera,
+    camera: PLAN ? planCam : camera,
     resize(w, h) {
       const a = w / Math.max(1, h);
       camera.aspect = a;
-      /* A small room in a portrait box needs a much wider lens, or the
-         shelves fall straight off the side of the frame. */
-      camera.fov = a < 0.95 ? 88 : (a < 1.25 ? 72 : 54);
+      camera.fov = a < 0.95 ? 90 : (a < 1.25 ? 80 : 70);
       narrow = a < 0.95 ? 1 : (a < 1.25 ? 0.5 : 0);
       camera.updateProjectionMatrix();
+      if (planCam) {
+        const s = 2.6;
+        planCam.left = -s * a; planCam.right = s * a;
+        planCam.top = s; planCam.bottom = -s;
+        planCam.updateProjectionMatrix();
+      }
     },
     onFrame(dt) {
       const k = Hotel.stillFrame ? 1 : 1 - Math.pow(0.0015, Math.max(0.001, dt));
       yaw += (yawT + dragYaw - yaw) * k;
       pitch += (pitchT - pitch) * k;
-      camera.rotation.set(0, 0, 0);
-      /* You never leave the threshold: a little sway, and the look clamps. */
-      /* a wide lens in a portrait box takes in a lot of lintel, so the
-         camera drops and aims a little lower */
-      camera.position.set(Math.sin(yaw) * 0.18, 1.34 - narrow * 0.18 + pitch * 0.10, 3.25 - narrow * 0.25);
-      camera.lookAt(Math.sin(yaw) * 2.8, 1.02 - narrow * 0.24 + pitch * 1.25, -0.9);
+
+      /* You never leave the doorway: a little sway, and the look is clamped. */
+      camera.position.set(EYE.x + Math.sin(yaw) * 0.14,
+        EYE.y - narrow * 0.10 + pitch * 0.08, EYE.z);
+      camera.lookAt(Math.sin(yaw) * 2.4, 1.16 - narrow * 0.10 + pitch * 1.1, CORNER_Z - 0.2);
 
       if (held) {
         holdSpin += (holdSpinT - holdSpin) * k;
         holdTilt += (holdTiltT - holdTilt) * k;
+        /* animate the GROUP's rotation only; its placement lives on .position,
+           so a tween can never clobber where the thing actually is */
         held.group.rotation.set(holdTilt, holdSpin, 0);
       }
       if (bulbMesh && !Hotel.stillFrame) {
-        /* the flex has not stopped moving since somebody shut the door */
         const t = performance.now() / 1000;
         bulbMesh.position.x = Math.sin(t * 0.7) * 0.012;
         bulb.position.x = bulbMesh.position.x;
@@ -827,33 +873,31 @@ function buildScene(stage) {
   });
 
   /* --- looking around ---------------------------------------------------- */
+  let dragging = false, lastX = 0, downX = 0, downY = 0, moved = false;
+
   stageEl.addEventListener('pointermove', (e) => {
     const r = stageEl.getBoundingClientRect();
     const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
     const ny = ((e.clientY - r.top) / r.height) * 2 - 1;
     if (dragging && held) {
-      /* turning the thing you are holding: sideways only, so a vertical
-         swipe still scrolls the page */
       holdSpinT += (e.clientX - lastX) * 0.012;
       lastX = e.clientX;
       return;
     }
     if (dragging) {
-      dragYaw = clamp(dragYaw + (lastX - e.clientX) * 0.0020, -0.26, 0.26);
+      dragYaw = clamp(dragYaw + (lastX - e.clientX) * 0.0018, -0.20, 0.20);
       lastX = e.clientX;
       return;
     }
-    yawT = clamp(-nx * 0.26, -0.30, 0.30);
+    yawT = clamp(-nx * 0.24, -0.26, 0.26);
     pitchT = clamp(-ny * 0.20, -0.26, 0.26);
   }, { passive: true });
 
   stageEl.addEventListener('pointerleave', () => { yawT = 0; pitchT = 0; });
-
-  let dragging = false, lastX = 0, downX = 0, downY = 0, moved = false;
   stageEl.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('.held')) return;
+    if (e.target.closest('.held') || e.target.closest('.room-out')) return;
     dragging = true; lastX = e.clientX; downX = e.clientX; downY = e.clientY; moved = false;
-    stageEl.setPointerCapture && stageEl.setPointerCapture(e.pointerId);
+    if (stageEl.setPointerCapture) { try { stageEl.setPointerCapture(e.pointerId); } catch (err) {} }
   });
   stageEl.addEventListener('pointermove', (e) => {
     if (dragging && (Math.abs(e.clientX - downX) > 6 || Math.abs(e.clientY - downY) > 6)) moved = true;
@@ -861,20 +905,95 @@ function buildScene(stage) {
   const release = (e) => {
     if (!dragging) return;
     dragging = false;
-    if (!moved && !e.target.closest('.lost-btn') && !e.target.closest('.held')) {
-      pick3d(e);
-    }
+    if (!moved && !e.target.closest('.lost-btn') && !e.target.closest('.held')) pick3d(e);
   };
   stageEl.addEventListener('pointerup', release);
   stageEl.addEventListener('pointercancel', () => { dragging = false; });
 
   /* --- screenshot hooks --------------------------------------------------- */
-  if (LOOK === 'left') { yawT = -0.30; dragYaw = -0.24; }    /* the mattress */
-  if (LOOK === 'right') { yawT = 0.30; dragYaw = 0.24; }     /* the shelves */
+  if (LOOK === 'left') { yawT = -0.26; dragYaw = -0.20; }    /* the mattress */
+  if (LOOK === 'right') { yawT = 0.26; dragYaw = 0.20; }     /* the shelves */
   if (PICK && objects[PICK]) window.setTimeout(() => takeUp(PICK), 60);
 
   document.documentElement.classList.add('room-3d');
   placeButtons();
+
+  /* A small read-only helper the harness uses to check that every accessible
+     button really does sit over its object.  Harmless in production. */
+  window.Room102B = {
+    ids: Object.keys(objects),
+    /* the object's projected screen box, in page pixels */
+    bounds(id) {
+      const o = objects[id];
+      if (!o || !camera) return null;
+      camera.updateMatrixWorld(true);
+      camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+      scene.updateMatrixWorld(true);
+      const box = new THREE.Box3().setFromObject(o.group);
+      const r = stageEl.getBoundingClientRect();
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, ok = false;
+      for (let i = 0; i < 8; i++) {
+        const v = new THREE.Vector3(
+          i & 1 ? box.max.x : box.min.x,
+          i & 2 ? box.max.y : box.min.y,
+          i & 4 ? box.max.z : box.min.z).project(camera);
+        if (v.z < 1) ok = true;
+        const px = r.left + (v.x * 0.5 + 0.5) * r.width;
+        const py = r.top + (-v.y * 0.5 + 0.5) * r.height;
+        x0 = Math.min(x0, px); x1 = Math.max(x1, px);
+        y0 = Math.min(y0, py); y1 = Math.max(y1, py);
+      }
+      return ok ? { x0, y0, x1, y1 } : null;
+    },
+    visible(id) {
+      const b = btnFor(id);
+      return !!(b && b.parentNode.style.opacity !== '0');
+    }
+  };
+}
+
+/* A top-down orthographic check of the floor plan.  ?plan=1 draws the room
+   from above with the camera marked and its view cone: it MUST read as a
+   triangle with the camera at the base, looking at the apex. */
+function buildPlan() {
+  planCam = new THREE.OrthographicCamera(-4, 4, 2.6, -2.6, 0.1, 30);
+  planCam.position.set(0, 9, (DOOR_Z + CORNER_Z) / 2 + 0.4);
+  planCam.up.set(0, 0, -1);
+  planCam.lookAt(0, 0, (DOOR_Z + CORNER_Z) / 2 + 0.4);
+
+  const mark = new THREE.Group();
+  mark.position.y = CEIL + 0.5;                /* above the ceiling, always seen */
+  scene.add(mark);
+
+  /* the camera, and the cone it can see */
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.30, 3),
+    new THREE.MeshBasicMaterial({ color: 0x33FF88 }));
+  cone.position.set(EYE.x, 0, EYE.z);
+  cone.rotation.x = Math.PI;                   /* point it down the room */
+  mark.add(cone);
+
+  const g = new THREE.BufferGeometry();
+  const far = 4.0, spread = 1.05;
+  g.setAttribute('position', new THREE.Float32BufferAttribute([
+    EYE.x, 0, EYE.z, EYE.x - spread * far, 0, EYE.z - far,
+    EYE.x, 0, EYE.z, EYE.x + spread * far, 0, EYE.z - far
+  ], 3));
+  mark.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x33FF88 })));
+
+  /* the triangle the room is supposed to be */
+  const t = new THREE.BufferGeometry();
+  t.setAttribute('position', new THREE.Float32BufferAttribute([
+    -DOOR_HALF, 0, DOOR_Z, 0, 0, CORNER_Z,
+    DOOR_HALF, 0, DOOR_Z, 0, 0, CORNER_Z,
+    -DOOR_HALF, 0, DOOR_Z, DOOR_HALF, 0, DOOR_Z
+  ], 3));
+  mark.add(new THREE.LineSegments(t, new THREE.LineBasicMaterial({ color: 0xFF4488 })));
+
+  /* the ceiling would hide everything from above */
+  scene.traverse((n) => {
+    if (n.isMesh && n.rotation.x === Math.PI / 2 && n.position.y === CEIL) n.visible = false;
+  });
+  scene.add(new THREE.AmbientLight(0xFFFFFF, 2.2));
 }
 
 function plateTex() {
@@ -969,23 +1088,29 @@ function takeUp(id) {
 
   /* move it out of the shelf and into your hands */
   scene.attach(o.group);
-  /* out of the shelf and into your hands, just in front of the doorway */
-  const target = new THREE.Vector3(Math.sin(yaw) * 0.5 - 0.34, 1.24 + pitch * 0.4, 1.95);
+  /* Out of the shelf and into your hands: a fixed distance IN FRONT of the
+     camera along the way it is looking.  Never a hard-coded z - the camera
+     moved into the doorway and a hard-coded z put this behind it. */
+  const dir = new THREE.Vector3();
+  camera.getWorldDirection(dir);
+  const target = camera.position.clone()
+    .addScaledVector(dir, 0.95)
+    .add(new THREE.Vector3(-0.24, -0.09, 0));
   const g = window.gsap;
   if (g && !Hotel.stillFrame) {
     g.to(o.group.position, { x: target.x, y: target.y, z: target.z, duration: 0.7, ease: 'power3.out' });
-    const K = 1.85;
+    const K = 1.20;
     g.to(o.group.scale, { x: K, y: K, z: K, duration: 0.7, ease: 'power3.out' });
   } else {
     o.group.position.copy(target);
-    o.group.scale.setScalar(1.85);
+    o.group.scale.setScalar(1.20);
   }
 
   /* the tag swings round */
   heldTag.material.map = texTag(t.name, t.story);
   heldTag.material.needsUpdate = true;
   heldTag.visible = true;
-  heldTag.position.set(target.x + 0.66, target.y - 0.08, target.z + 0.18);
+  heldTag.position.set(target.x + 0.52, target.y - 0.05, target.z + 0.06);
   if (g && !Hotel.stillFrame) {
     g.fromTo(heldTag.rotation, { y: -1.9, z: 0.5 },
       { y: -0.34, z: 0.10, duration: 0.85, ease: 'elastic.out(1, 0.6)' });
@@ -1107,30 +1232,61 @@ function keepIt(id) {
 }
 
 /* --------------------------------------- the buttons, over the objects */
-
 const proj = new THREE.Vector3();
+const occRay = new THREE.Raycaster();
+const camPos = new THREE.Vector3();
+const dirTo = new THREE.Vector3();
+let occTick = 0;
+const occluded = {};
 
+/* Each accessible button is moved on to its object every frame and hidden
+   when the object is off screen or behind something.  At rest the button
+   shows nothing at all: the object itself is the affordance.  A name appears
+   on hover and on keyboard focus, with a visible ring on :focus-visible. */
 function placeButtons() {
   if (!camera || document.documentElement.classList.contains('room-flatmode')) return;
+
   /* The renderer updates these inside render(), which has not run yet this
-     frame.  Without this the first frame projects against an identity
-     camera and every pip lands in the middle of the picture. */
+     frame.  Without it the first frame projects against an identity camera
+     and every button lands in the middle of the picture. */
   camera.updateMatrixWorld(true);
   camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
   scene.updateMatrixWorld(true);
+  camera.getWorldPosition(camPos);
+
+  /* occlusion is steady between frames, so it does not need doing on all of
+     them: twelve rays against a dozen boxes, every third frame */
+  const doOcc = (occTick++ % 3) === 0 && occluders.length > 0;
+
   for (const id in objects) {
     const b = btnFor(id);
     if (!b) continue;
     const o = objects[id];
+    const li = b.parentNode;
+
     o.group.getWorldPosition(proj);
-    proj.y += 0.03;
+    if (held && held.def.id === id) proj.y += 0.10;
+
+    if (doOcc) {
+      dirTo.copy(proj).sub(camPos);
+      const dist = dirTo.length();
+      dirTo.divideScalar(dist);
+      occRay.set(camPos, dirTo);
+      occRay.far = Math.max(0.01, dist - o.radius * 0.85);
+      occluded[id] = occRay.intersectObjects(occluders, false).length > 0;
+    }
+
     proj.project(camera);
     const x = (proj.x * 0.5 + 0.5) * 100;
     const y = (-proj.y * 0.5 + 0.5) * 100;
-    const on = proj.z < 1 && x > -6 && x < 106 && y > -6 && y < 106;
-    b.parentNode.style.setProperty('--x', x + '%');
-    b.parentNode.style.setProperty('--y', y + '%');
-    b.parentNode.style.opacity = on ? '1' : '0';
-    b.parentNode.style.pointerEvents = on ? 'auto' : 'none';
+    const onScreen = proj.z < 1 && x > -4 && x < 104 && y > -4 && y < 104;
+    const show = onScreen && !occluded[id];
+
+    li.style.setProperty('--x', x + '%');
+    li.style.setProperty('--y', y + '%');
+    li.style.opacity = show ? '1' : '0';
+    li.style.pointerEvents = show ? 'auto' : 'none';
+    b.setAttribute('aria-hidden', show ? 'false' : 'true');
+    if (!show && document.activeElement === b) b.blur();
   }
 }
