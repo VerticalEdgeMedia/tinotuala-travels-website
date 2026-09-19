@@ -1031,6 +1031,9 @@ html:not(.js) .roomfull .room-flat { position: absolute; inset: 0; aspect-ratio:
 .room-flatmode .roomfull .lost-list,
 html:not(.js) .roomfull .lost-list {
   position: absolute;
+  /* the base rule sets inset:0, so left has to be released by hand or the
+     list stays pinned to the left and the drawing never gets a look in */
+  left: auto;
   right: 0; top: 0; bottom: 0;
   width: min(330px, 46vw);
   display: block;
@@ -1091,4 +1094,108 @@ html:not(.js) .roomfull .lost-list { position: static; width: auto; height: auto
     transform: none;
     text-align: center;
   }
+}
+
+/* ==========================================================================
+   PART B ROOMS.  The five rooms share the room-page pattern above and add a
+   little of their own.  Everything here is small: the rooms are drawn in
+   WebGL, and what is left in the page is the brass, the parchment and the
+   accessible buttons that ride on top of the scene.
+   ========================================================================== */
+
+/* a running count, top right, out of the hint's way */
+.room-count {
+  position: absolute;
+  right: clamp(14px, 2.4vw, 34px);
+  top: clamp(14px, 2.4vw, 30px);
+  z-index: 6;
+  margin: 0;
+  padding: 7px 12px;
+  border-radius: 2px;
+  background: rgba(10,8,5,.55);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.4);
+  color: var(--gold-lite, #E9CE7A);
+  font: 500 .58rem/1.3 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.lantern-count { composes: room-count; }
+.lantern-count, .bar-count, .gallery-count, .map-count, .book-count {
+  position: absolute;
+  right: clamp(14px, 2.4vw, 34px);
+  top: clamp(14px, 2.4vw, 30px);
+  z-index: 6;
+  margin: 0;
+  padding: 7px 12px;
+  border-radius: 2px;
+  background: rgba(10,8,5,.55);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.4);
+  color: var(--gold-lite, #E9CE7A);
+  font: 500 .58rem/1.3 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 700px) {
+  .lantern-count, .bar-count, .gallery-count, .map-count, .book-count {
+    font-size: .5rem; padding: 5px 9px;
+  }
+}
+
+/* a button whose thing is already done, and one the room wants you to press */
+.room-3d .lost-btn.is-done { opacity: .55; }
+.room-3d .lost-btn.is-done:hover, .room-3d .lost-btn.is-done:focus-visible { opacity: 1; }
+.lost-btn.is-wanted {
+  box-shadow: inset 0 0 0 2px var(--gold-lite, #E9CE7A), 0 0 22px rgba(233,206,122,.5);
+  border-radius: 50%;
+}
+.room-3d .lost-btn.is-wanted { background: rgba(201,162,39,.22); }
+.lost-btn.is-calling { animation: callPulse 1.1s ease-out 3; }
+@keyframes callPulse {
+  0%, 100% { box-shadow: inset 0 0 0 2px rgba(233,206,122,.9), 0 0 0 rgba(233,206,122,0) }
+  50% { box-shadow: inset 0 0 0 2px rgba(233,206,122,.9), 0 0 26px rgba(233,206,122,.75) }
+}
+.room-flatmode .lost-btn.is-done { opacity: .7; box-shadow: inset 0 0 0 1px rgba(201,162,39,.85); }
+.room-flatmode .lost-btn.is-done .lost-name::after { content: ' \2713'; color: var(--gold, #C9A227); }
+
+/* --- the Lantern Room ----------------------------------------------------- */
+
+/* the flat drawing's lanterns light up too */
+.fl-lantern ellipse { transition: fill .5s ease, stroke .5s ease; }
+.fl-lantern.is-lit ellipse { fill: #E8B24E; stroke: #FFE9B0; }
+
+/* the picture on the wall, in the flat version only: the 3D room draws its
+   own inside the arch */
+.lantern-arch {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: min(42%, 420px);
+  margin: 0;
+  z-index: 3;
+}
+.lantern-arch[hidden] { display: none !important; }
+.lantern-arch img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+  border-radius: 46% 46% 3px 3px / 30% 30% 3px 3px;
+  box-shadow: 0 0 0 2px var(--gold, #C9A227), 0 0 0 5px rgba(10,8,5,.9),
+              0 0 0 6.5px rgba(201,162,39,.6), 0 26px 60px rgba(0,0,0,.7);
+}
+.lantern-arch figcaption {
+  margin-top: 10px;
+  text-align: center;
+  font: 500 .58rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-lite, #E9CE7A);
+}
+.room-3d .lantern-arch { display: none; }
+@media (max-width: 860px) {
+  .lantern-arch { width: min(60%, 320px); top: 38%; }
 }

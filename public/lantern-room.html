@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>The Lantern Room | Tino Tuala Travels</title>
-<meta name="description" content="Preview mock-up. Pictures hung close together, lit by paper, the way a small room full of them should be.">
+<meta name="description" content="Preview mock-up. A dark room of paper lanterns. Light one and it throws a picture on the wall.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23081410'/%3E%3Cpath d='M16 5c3 5 3.4 10 0 21-3.4-11-3-16 0-21z' fill='%23C9A227'/%3E%3Cpath d='M9.6 10.5c3.6 3.6 5 7.6 6.4 15.5-5.6-7-7-11-6.4-15.5z' fill='%23A8842E'/%3E%3Cpath d='M22.4 10.5c-3.6 3.6-5 7.6-6.4 15.5 5.6-7 7-11 6.4-15.5z' fill='%23A8842E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,24 +70,151 @@
 </header>
 
 <main id="roomMain">
-  <!-- THE ROOM-PAGE SKELETON.  The room is the page: a full-bleed section
-       under the header with everything floating on it.  Part B replaces the
-       contents of .roomfull with its own scene and leaves the rest alone.
-       See the "For part B" section of CLAUDE.md. -->
-  <section class="roomfull room-waiting" id="roomStage">
-    <span class="waiting-ground" aria-hidden="true"></span>
+  <section class="roomfull" id="roomStage">
+
+    <div class="room-flat" id="roomFlat">
+      <svg viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" role="img"
+           aria-label="A dark room with nine paper lanterns hanging on cords. A tall gold arch on the back wall is empty until a lantern is lit. A brazier of paper fire stands at the left.">
+        <defs>
+          <linearGradient id="lrWall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0C1C16"/><stop offset="1" stop-color="#050E0B"/>
+          </linearGradient>
+          <linearGradient id="lrFloor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1A1710"/><stop offset="1" stop-color="#090705"/>
+          </linearGradient>
+          <linearGradient id="lrGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8A6A24"/><stop offset=".35" stop-color="#E9CE7A"/>
+            <stop offset="1" stop-color="#96752A"/>
+          </linearGradient>
+        </defs>
+        <rect width="1000" height="620" fill="url(#lrWall)"/>
+        <rect y="470" width="1000" height="150" fill="url(#lrFloor)"/>
+        <path d="M400 470 V300 C400 232 444 196 500 176 C556 196 600 232 600 300 V470 Z"
+              fill="#0A1712" stroke="url(#lrGold)" stroke-width="3"/>
+        <path d="M410 462 V302 C410 240 450 206 500 188 C550 206 590 240 590 302 V462 Z"
+              fill="none" stroke="url(#lrGold)" stroke-width="1.2" opacity=".75"/>
+            <g class="fl-lantern" data-flat="l1">
+              <line x1="120" y1="0" x2="120" y2="110" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="120" cy="150" rx="34" ry="41" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M86 150 h68" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l2">
+              <line x1="250" y1="0" x2="250" y2="201" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="250" cy="235" rx="28" ry="34" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M222 235 h56" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l3">
+              <line x1="360" y1="0" x2="360" y2="74" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="360" cy="120" rx="40" ry="48" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M320 120 h80" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l4">
+              <line x1="470" y1="0" x2="470" y2="233" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="470" cy="265" rx="26" ry="31" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M444 265 h52" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l5">
+              <line x1="600" y1="0" x2="600" y2="55" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="600" cy="105" rx="44" ry="53" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M556 105 h88" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l6">
+              <line x1="720" y1="0" x2="720" y2="214" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="720" cy="250" rx="30" ry="36" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M690 250 h60" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l7">
+              <line x1="840" y1="0" x2="840" y2="118" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="840" cy="160" rx="36" ry="43" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M804 160 h72" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l8">
+              <line x1="930" y1="0" x2="930" y2="213" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="930" cy="245" rx="26" ry="31" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M904 245 h52" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+            <g class="fl-lantern" data-flat="l9">
+              <line x1="540" y1="0" x2="540" y2="139" stroke="#3A3226" stroke-width="2"/>
+              <ellipse cx="540" cy="175" rx="30" ry="36" fill="#2A2A22" stroke="#6E5A32" stroke-width="2"/>
+              <path d="M510 175 h60" stroke="#6E5A32" stroke-width="1.4" opacity=".7"/>
+            </g>
+        <g>
+          <path d="M120 470 h96 l-14 -34 h-68 z" fill="#3A2C14"/>
+          <ellipse cx="168" cy="432" rx="42" ry="13" fill="#6E5418" stroke="#C9A227" stroke-width="2"/>
+          <path d="M150 432 c4 -22 10 -30 18 -44 c8 14 14 22 18 44 z" fill="#C33A12"/>
+        </g>
+      </svg>
+      <div class="flat-veil" aria-hidden="true"></div>
+      <figure class="lantern-arch" id="archBox" hidden>
+        <img id="archImg" alt="" width="1400" height="933">
+        <figcaption id="archCap"></figcaption>
+      </figure>
+    </div>
 
     <h1 class="room-plate">
       <span class="rp-no">311</span>
       <span class="rp-name">The Lantern Room</span>
     </h1>
 
-    <div class="waiting-card">
-      <p class="room-lede">Pictures hung close together, lit by paper, the way a small room full of them should be.</p>
-      <p class="rule"><svg class="rule-mark" aria-hidden="true"><use href="#orn-lotus"></use></svg></p>
-      <p><span class="chip">Being prepared</span> The hanging is not finished. There are pictures leaning against the wall in the order somebody thought was right at the time.</p>
-      <p class="room-small">Your passport has been stamped for 311. The door stays open from here on.</p>
+    <p class="room-hint" id="roomHint">Carry the taper to a lantern. Slowly.</p>
+
+    <p class="lantern-count room-count" id="lanternCount"><span id="lcNum">0</span> of 9 lit</p>
+
+    <ul class="lost-list" id="lanternList" aria-label="The lanterns, and the brazier">
+      <li style="--x:18%;--y:26%"><button type="button" class="lost-btn" data-obj="l1">
+        <span class="lost-name">A round lantern, patched with paper</span>
+        <span class="tag-line">Somebody mended this one with a page out of a timetable.</span>
+      </button></li>
+      <li style="--x:44%;--y:26%"><button type="button" class="lost-btn" data-obj="l2">
+        <span class="lost-name">A tall lantern, hung low</span>
+        <span class="tag-line">Hung low enough that everybody ducks, and everybody still forgets.</span>
+      </button></li>
+      <li style="--x:70%;--y:26%"><button type="button" class="lost-btn" data-obj="l3">
+        <span class="lost-name">A fat lantern with a scorch mark</span>
+        <span class="tag-line">Lit too keenly once. It has not forgotten about it.</span>
+      </button></li>
+      <li style="--x:18%;--y:44%"><button type="button" class="lost-btn" data-obj="l4">
+        <span class="lost-name">A small lantern on a long cord</span>
+        <span class="tag-line">It swings whenever the lift moves, two floors below.</span>
+      </button></li>
+      <li style="--x:44%;--y:44%"><button type="button" class="lost-btn" data-obj="l5">
+        <span class="lost-name">A lantern with a crooked rib</span>
+        <span class="tag-line">Bent in a box somewhere between two countries.</span>
+      </button></li>
+      <li style="--x:70%;--y:44%"><button type="button" class="lost-btn" data-obj="l6">
+        <span class="lost-name">A pale lantern, nearly new</span>
+        <span class="tag-line">The only one nobody has put an elbow through yet.</span>
+      </button></li>
+      <li style="--x:18%;--y:62%"><button type="button" class="lost-btn" data-obj="l7">
+        <span class="lost-name">A lantern gone the colour of tea</span>
+        <span class="tag-line">Forty years of smoke, and it suits it.</span>
+      </button></li>
+      <li style="--x:44%;--y:62%"><button type="button" class="lost-btn" data-obj="l8">
+        <span class="lost-name">A lantern missing its tassel</span>
+        <span class="tag-line">The tassel is in 102B. Of course it is.</span>
+      </button></li>
+      <li style="--x:70%;--y:62%"><button type="button" class="lost-btn" data-obj="l9">
+        <span class="lost-name">The last lantern, furthest back</span>
+        <span class="tag-line">Hung where the ladder only just reaches.</span>
+      </button></li>
+      <li style="--x:14%;--y:74%"><button type="button" class="lost-btn" data-obj="brazier">
+        <span class="lost-name">The brazier</span>
+        <span class="tag-line">A dish of paper fire on a stand. Dip the taper in it.</span>
+      </button></li>
+    </ul>
+
+    <div class="held" id="held" hidden>
+      <p class="held-kick" id="heldKick">On the wall</p>
+      <p class="held-name" id="heldName"></p>
+      <p class="held-tag" id="heldTag"></p>
+      <p class="held-acts">
+        <button type="button" class="btn btn-small" id="heldAct" hidden>Relight at the brazier</button>
+      </p>
     </div>
+
+    <p class="room-draft"><span class="chip">Draft</span> The lanterns, the taper and the
+    draught are invented for this mock-up. The photographs are stand-ins for places, not
+    pictures of anybody's trip.</p>
 
     <a class="room-out" href="index.html#corridor">
       <span class="ro-arrow" aria-hidden="true"></span>
@@ -111,13 +238,7 @@
 
 <script src="hotel.js"></script>
 <script src="vendor/gsap.min.js"></script>
-<script>
-/* Every room page is the same one line: gate on the key, and the shared code
-   opens the door, stamps the passport and burns the paper off the doorway. */
-Hotel.ready(function () {
-  if (!Hotel.gateRoom('lantern-room')) return;
-});
-</script>
+<script src="room-lantern.js" type="module"></script>
 <!-- TEMP:versions — test-site only, delete before the real domain goes live. Self-contained: style, markup, script. -->
 <style>
 .vdock{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;font:700 13px/1 'DM Sans',system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em}

@@ -116,7 +116,34 @@
       alt: 'A gummed hotel luggage label showing a camel rider in front of the Sphinx and a pyramid.'
     },
     hat: { title: 'A tiny straw hat', icon: 'hat', carried: true,
-      note: 'Far too small for a person.' }
+      note: 'Far too small for a person.' },
+
+    /* one per room, part B */
+    lantern: {
+      title: 'A lantern float, drawn in Edo',
+      img: 'img/reward-lantern-01.jpg', w: 763, h: 1050,
+      alt: 'A Japanese woodblock print: children in patterned robes gathered around a tall festival lantern float on a stand, with a block of writing in a cartouche above them.'
+    },
+    chart: {
+      title: 'A chart of the steamship routes',
+      img: 'img/reward-chart-01.jpg', w: 984, h: 1400,
+      alt: 'An Admiralty chart of the Atlantic: fine ruled steamship tracks crossing a pale sea between outlined coastlines, with a panel of sailing notes down one side.'
+    },
+    barcard: {
+      title: 'A bar-tender\u2019s plate, 1891',
+      img: 'img/reward-bar-01.jpg', w: 747, h: 1100,
+      alt: 'A colour plate of a man\u2019s head on a rooster\u2019s body with long green tail feathers, standing in a stemmed bowl and pouring from a jug, over the words Standard Authority.'
+    },
+    bookmark: {
+      title: 'A label, pressed between two pages',
+      img: 'img/reward-label-03.jpg', w: 787, h: 1100,
+      alt: 'A gummed hotel luggage label: a dark sailing boat on a red lake below white mountains, lettered Touring Hotel Balance, Geneve.'
+    },
+    backlabel: {
+      title: 'A label off the back of a frame',
+      img: 'img/reward-label-04.jpg', w: 1100, h: 1092,
+      alt: 'A gummed hotel luggage label with a red torii gate and a lake below a snow-capped peak, lettered for a hotel at Hakone in Japan.'
+    }
   };
 
   /* ---------------------------------------------------------------- hooks */
