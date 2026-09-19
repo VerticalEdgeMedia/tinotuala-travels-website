@@ -1490,3 +1490,138 @@ html:not(.js) .roomfull .lost-list { position: static; width: auto; height: auto
   .book-flat { width: calc(100% - 24px); top: 36%; }
   .bf-rules { height: 50px; }
 }
+
+/* ==========================================================================
+   THE FINALE.  The sixth stamp can land in any room, so the passport shuts
+   itself wherever you are standing; the home page does the rest.
+   ========================================================================== */
+
+.finale-shut {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: radial-gradient(60% 60% at 50% 45%, rgba(6,16,12,.72), rgba(4,10,8,.92));
+  opacity: 0;
+  transition: opacity .42s ease;
+}
+.finale-shut.is-in { opacity: 1; }
+.fs-book { width: min(420px, 92vw); text-align: center; }
+.fs-cover {
+  position: relative;
+  padding: clamp(26px, 5vw, 44px) 22px clamp(74px, 13vw, 118px);
+  border-radius: 3px 8px 8px 3px;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,.07), rgba(0,0,0,.18)),
+    linear-gradient(160deg, #123A2A, #0A2118 60%, #071711);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.45),
+              inset 4px 0 0 rgba(0,0,0,.4), 0 30px 70px rgba(0,0,0,.7);
+  transform: perspective(900px) rotateY(-16deg) rotateX(6deg);
+  transform-origin: left center;
+  animation: fsShut .9s cubic-bezier(.2,1,.3,1) both;
+}
+@keyframes fsShut {
+  from { transform: perspective(900px) rotateY(-74deg) rotateX(10deg); opacity: .4 }
+  to   { transform: perspective(900px) rotateY(-16deg) rotateX(6deg); opacity: 1 }
+}
+.fs-arms svg { width: 62px; height: 46px; display: block; margin: 0 auto .6rem; }
+.fs-kick {
+  margin: 0 0 .3rem;
+  font: 500 .52rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .3em; text-transform: uppercase; color: var(--gold, #C9A227);
+}
+.fs-title {
+  margin: 0;
+  font: 500 clamp(1.7rem, 4vw, 2.4rem)/1 var(--f-display, Georgia, serif);
+  color: #F3ECDC;
+}
+.fs-stamp {
+  position: absolute;
+  right: clamp(10px, 3vw, 22px);
+  bottom: clamp(6px, 1.4vw, 14px);
+  width: clamp(96px, 21vw, 128px);
+  animation: fsThump .5s cubic-bezier(.2,1.5,.35,1) .85s both;
+}
+.fs-stamp svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 3px 6px rgba(0,0,0,.6)); }
+@keyframes fsThump {
+  from { transform: scale(2.1) rotate(-16deg); opacity: 0 }
+  to   { transform: scale(1) rotate(-6deg); opacity: .95 }
+}
+.fs-say {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-radius: 2px;
+  background: linear-gradient(160deg, var(--ivory, #F3ECDC), var(--ivory-2, #E7DCC4));
+  color: var(--ink, #1A1611);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.5), 0 18px 40px rgba(0,0,0,.5);
+}
+.fs-say p { margin: 0 0 .8rem; font: italic 400 1rem/1.45 var(--f-display, Georgia, serif); }
+.fs-acts { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 0 !important; }
+@media (prefers-reduced-motion: reduce) {
+  .finale-shut, .fs-cover, .fs-stamp { transition: none !important; animation: none !important; opacity: 1 }
+}
+
+/* the far end of the corridor, on the home page */
+.finale {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 54px);
+  margin-top: clamp(30px, 5vw, 66px);
+  padding: clamp(20px, 3.4vw, 40px);
+  background:
+    linear-gradient(170deg, rgba(255,255,255,.05), rgba(0,0,0,.2)),
+    linear-gradient(160deg, #0F2C20, #071710);
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.45), 0 30px 70px rgba(0,0,0,.5);
+}
+.finale[hidden] { display: none !important; }
+.finale.is-burning { visibility: hidden; }
+.finale-fig { margin: 0; }
+.finale-fig img {
+  display: block; width: 100%; height: auto;
+  box-shadow: 0 0 0 2px var(--gold, #C9A227), 0 0 0 5px rgba(7,23,16,.9), 0 20px 46px rgba(0,0,0,.6);
+}
+.finale-fig figcaption {
+  margin-top: .7rem;
+  font: 500 .52rem/1.5 var(--f-caps, Georgia, serif);
+  letter-spacing: .2em; text-transform: uppercase; color: var(--gold-lite, #E9CE7A);
+}
+.finale-copy p { color: #CFC6AE; }
+.finale-copy .display { margin: .2rem 0 1rem; }
+@media (max-width: 760px) { .finale { grid-template-columns: 1fr; } }
+
+/* the line above the enquiry form */
+.finale-note {
+  position: relative;
+  margin-bottom: clamp(20px, 3vw, 36px);
+  padding: clamp(18px, 2.6vw, 30px) clamp(18px, 2.6vw, 34px);
+  border-radius: 2px;
+  background:
+    linear-gradient(170deg, rgba(255,255,255,.45), rgba(255,255,255,0) 36%),
+    linear-gradient(160deg, var(--ivory, #F3ECDC), var(--ivory-2, #E7DCC4));
+  color: var(--ink, #1A1611);
+  box-shadow: inset 0 0 0 1px rgba(122,96,42,.5), 0 20px 46px rgba(0,0,0,.4);
+}
+.finale-note[hidden] { display: none !important; }
+.finale-note.is-in { animation: fnIn .7s cubic-bezier(.16,1,.3,1) both; }
+@keyframes fnIn { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
+.fn-kick {
+  margin: 0 0 .25rem;
+  font: 500 .52rem/1.4 var(--f-caps, Georgia, serif);
+  letter-spacing: .3em; text-transform: uppercase; color: #8A6A24;
+}
+.fn-head { margin: 0 0 .6rem; font: 500 clamp(1.4rem, 2.4vw, 2rem)/1.05 var(--f-display, Georgia, serif); }
+.fn-line { margin: 0 0 1rem; max-width: 62ch; color: var(--ink-2, #3B3427); }
+.fn-acts { display: flex; align-items: center; gap: 14px; margin: 0; }
+.fn-arrow {
+  width: 30px; height: 16px; flex: none;
+  background: #8A6A24;
+  clip-path: polygon(50% 100%, 0 42%, 34% 42%, 34% 0, 66% 0, 66% 42%, 100% 42%);
+  animation: fnNod 1.9s ease-in-out infinite;
+}
+@keyframes fnNod { 0%,100% { transform: translateY(0) } 50% { transform: translateY(5px) } }
+@media (prefers-reduced-motion: reduce) {
+  .finale-note.is-in, .fn-arrow { animation: none !important; }
+}

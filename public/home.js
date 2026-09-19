@@ -738,6 +738,11 @@ async function buildCorridor3d(stageEl, doorEls) {
 
 /* ==================================================================== boot */
 
+/* declared up here on purpose: Hotel.ready() runs its callback immediately
+   when the hotel has already booted, which is before a `let` further down
+   the module has been initialised */
+let finaleRun = false;
+
 Hotel.ready(() => {
   lightTheFires();
   setUpBell();
@@ -754,10 +759,54 @@ Hotel.ready(() => {
     $$('.hunt').forEach((h) => h.classList.remove('is-done'));
     $('.reception') && $('.reception').classList.remove('is-done');
   });
-  Hotel.on('passport-full', () => {
-    Hotel.say('Six of six. Come down to the desk when you have a minute.', { sticky: true });
-  });
+  /* THE FINALE.  hotel.js shuts the passport and stamps the cover wherever
+     you are standing; this is the home page's half of it: the paper over the
+     far end of the corridor burns away, and the enquiry section gains a line
+     and a way to start the whole thing again.  The form itself is untouched:
+     it still posts nowhere and still says so. */
+  Hotel.on('passport-full', () => { runFinale(true); });
+  if (Hotel.state().stamps.length >= Hotel.DOORS.length) runFinale(false);
 
   /* The whole point of the enquiry form is still the enquiry form. */
   if (Hotel.hooks.shot) $$('.hunt').forEach((h) => { h.hidden = false; });
 });
+
+async function runFinale(fresh) {
+  if (finaleRun) return;
+  finaleRun = true;
+  const panel = $('#finale');
+  const note = $('#finaleNote');
+
+  if (note) {
+    note.hidden = false;
+    if (fresh && !Hotel.stillFrame) note.classList.add('is-in');
+    const reset = $('#finaleReset');
+    if (reset && !reset.dataset.wired) {
+      reset.dataset.wired = '1';
+      reset.addEventListener('click', () => {
+        Hotel.reset();
+        Hotel.say('Reset. Every key, every door and every stamp gone. Ring the bell again.',
+          { for: 12000 });
+        window.setTimeout(() => { window.location.href = 'index.html'; }, 900);
+      });
+    }
+  }
+  if (!panel) return;
+  panel.hidden = false;
+
+  if (!fresh || Hotel.stillFrame) {
+    panel.classList.add('is-open');
+    return;
+  }
+  /* the paper over the end of the corridor goes, and what is behind shows */
+  Hotel.say('Six of six. Something at the end of the corridor has just given way.',
+    { for: 13000 });
+  panel.classList.add('is-burning');
+  panel.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  await new Promise((r) => setTimeout(r, 420));
+  await Hotel.burn({ el: panel, paper: '#3A2A18', duration: 1500,
+    origin: (() => { const r = panel.getBoundingClientRect();
+      return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.42 }; })() });
+  panel.classList.remove('is-burning');
+  panel.classList.add('is-open');
+}

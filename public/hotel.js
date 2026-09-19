@@ -669,7 +669,7 @@
      even: they have to look pressed on, not printed. */
   function stampSvg(kind) {
     var ink = { lost: '#7A2340', map: '#1F5B4E', book: '#2B2F6B', lantern: '#8A4418',
-      gallery: '#4A2B6B', bar: '#7A5A14' }[kind] || '#7A2340';
+      gallery: '#4A2B6B', bar: '#7A5A14', full: '#7A2340' }[kind] || '#7A2340';
     var head = '<svg viewBox="0 0 140 116" role="img" aria-hidden="true" focusable="false" ' +
       'style="--tilt:' + (kind.length % 2 ? '-5deg' : '4deg') + '">' +
       '<g fill="none" stroke="' + ink + '" stroke-width="3" stroke-linecap="round" ' +
@@ -706,6 +706,15 @@
           '<path d="M22 74 l14-22 10 14 8-10 10 18z"/><path d="M84 68 l12-18 9 12 7-8 8 14z"/>' +
           '<circle cx="34" cy="36" r="5"/>';
         label = '<text x="70" y="106" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="9" fill="' + ink + '" opacity=".9" letter-spacing="3">402</text>';
+        break;
+      case 'full':
+        body = '<circle cx="70" cy="58" r="50" stroke-dasharray="20 3"/>' +
+          '<circle cx="70" cy="58" r="41"/>' +
+          '<path d="M70 22 l7 14 15 2 -11 11 3 15 -14 -7 -14 7 3 -15 -11 -11 15 -2z"/>' +
+          '<path d="M34 88 c14 10 58 10 72 0"/>';
+        label = '<text x="70" y="56" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="15" font-weight="600" fill="' + ink + '" opacity=".92" letter-spacing="2">SIX OF</text>' +
+          '<text x="70" y="76" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="15" font-weight="600" fill="' + ink + '" opacity=".92" letter-spacing="2">SIX</text>' +
+          '<text x="70" y="106" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="8" fill="' + ink + '" opacity=".8" letter-spacing="2.4">THE WHOLE HOTEL</text>';
         break;
       case 'bar':
         body = '<circle cx="70" cy="56" r="44" stroke-dasharray="16 3"/>' +
@@ -1099,6 +1108,59 @@
     return first;
   }
 
+  /* ------------------------------------------------------------ the finale
+     The sixth stamp lands in whichever room you happened to leave until last,
+     so this runs on any page: the passport shuts itself, a last stamp goes on
+     the cover, and the hotel points you back down to the front desk.  The
+     home page then does its own part (the far end of the corridor burns away
+     and the enquiry section gains a line).  Nothing here claims anything
+     about anybody's business. */
+
+  var finaleDone = false;
+
+  function finale() {
+    if (finaleDone) return;
+    finaleDone = true;
+    closePassport();
+
+    var wrap = document.createElement('div');
+    wrap.className = 'finale-shut';
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-labelledby', 'finaleShutTitle');
+    wrap.innerHTML =
+      '<div class="fs-book">' +
+      '<div class="fs-cover">' +
+      '<span class="fs-arms" aria-hidden="true"><svg viewBox="0 0 120 88"><use href="#orn-lotus"></use></svg></span>' +
+      '<p class="fs-kick">Guest passport</p>' +
+      '<p id="finaleShutTitle" class="fs-title">Six of six</p>' +
+      '<span class="fs-stamp" aria-hidden="true">' + stampSvg('full') + '</span>' +
+      '</div>' +
+      '<div class="fs-say">' +
+      '<p>Every door on this floor is open and the book is full. There is nothing left upstairs.</p>' +
+      '<p class="fs-acts">' +
+      '<a class="btn btn-small" href="index.html#enquire">Down to the front desk</a> ' +
+      '<button type="button" class="btn btn-small btn-ghost" id="fsClose">Not yet</button>' +
+      '</p></div></div>';
+    document.body.appendChild(wrap);
+    window.requestAnimationFrame(function () { wrap.classList.add('is-in'); });
+    if (state.sound) {
+      sound.play('rustle');
+      window.setTimeout(function () { sound.play('thump'); }, stillFrame ? 0 : 900);
+    }
+    announce('Six of six. The passport is full. The hotel suggests the front desk.');
+    var go = function () {
+      wrap.classList.remove('is-in');
+      window.setTimeout(function () { wrap.remove(); }, stillFrame ? 0 : 420);
+    };
+    wrap.querySelector('#fsClose').addEventListener('click', go);
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) go(); });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') { go(); document.removeEventListener('keydown', esc); }
+    });
+  }
+
+  on('passport-full', finale);
+
   function reset() {
     state = blank();
     try { window.localStorage.removeItem(STORE_KEY); } catch (e) {}
@@ -1450,7 +1512,8 @@
     keySvg: keySvg,
     stampSvg: stampSvg,
 
-    gateRoom: gateRoom
+    gateRoom: gateRoom,
+    finale: finale
   };
 
   if (document.readyState === 'loading') {
